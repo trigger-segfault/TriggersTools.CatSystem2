@@ -1,0 +1,16 @@
+//DIALOGEX : 132
+
+//CAPTION
+//コンバート中...
+$CAPTION$コンバート中...
+Converting...
+
+//CONTROL 2
+//キャンセル
+$2$キャンセル
+Cancel
+
+//CONTROL -1
+//全体の進行度
+$-1$全体の進行度
+Overall Progress

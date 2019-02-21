@@ -1,0 +1,127 @@
+//DIALOGEX : 145
+
+//CAPTION
+//WGC設定
+$CAPTION$WGC設定
+WGC Settings
+
+//CONTROL 1
+//OK
+$1$OK
+OK
+
+//CONTROL 2
+//キャンセル
+$2$キャンセル
+Cancel
+
+//CONTROL 1008
+//先頭に @ が付いたレイヤをコンバート(psdのみ)
+$1008$先頭に @ が付いたレイヤをコンバート(psdのみ)
+Convert layers with leading @ sign (psd only)
+
+//CONTROL 1009
+//α値を計算する (cs.exe用データ出力)
+$1009$α値を計算する (cs.exe用データ出力)
+Calculate alpha value (data output for cs.exe)
+
+//CONTROL 1010
+//α値を強制除去
+$1010$α値を強制除去
+Forcibly remove alpha value
+
+//CONTROL 1011
+//出力画像を上下反転させる
+$1011$出力画像を上下反転させる
+Vertically flip the output image
+
+//CONTROL 1012
+//左上矩形を除去
+$1012$左上矩形を除去
+Remove upper left rect
+
+//CONTROL 1013
+//右下矩形を除去
+$1013$右下矩形を除去
+Remove lower right rect
+
+//CONTROL 1014
+//透明部分を黒く塗りつぶす(圧縮率UP)
+$1014$透明部分を黒く塗りつぶす(圧縮率UP)
+Fill transpareny with black (increases compression)
+
+//CONTROL 1015
+//統合画像をコンバート(psdのみ)
+$1015$統合画像をコンバート(psdのみ)
+Convert integrated image (psd only)
+
+//CONTROL 1016
+//クリッピング（透明領域削除）を行わない
+$1016$クリッピング（透明領域削除）を行わない
+Do not perform clipping (transparent area deletion)
+
+//CONTROL -1
+//出力形式
+$-1$出力形式
+Output Format
+
+//CONTROL 1017
+//HG3
+$1017$HG3
+$nr$
+
+//CONTROL 1018
+//HG2
+$1018$HG2
+$nr$
+
+//CONTROL 1019
+//BMP
+$1019$BMP
+$nr$
+
+//CONTROL 1020
+//JPEG
+$1020$JPEG
+$nr$
+
+//CONTROL 1023
+//出力先の設定
+$1023$出力先の設定
+Output Destination
+
+//CONTROL 1024
+//出力ファイル名にソースファイル名を使用する(psdのみ)
+$1024$出力ファイル名にソースファイル名を使用する(psdのみ)
+Use source filename for output filename (psd only)
+
+//CONTROL 1025
+//JPEG圧縮モードを使用する(HG3のみ)
+$1025$JPEG圧縮モードを使用する(HG3のみ)
+Use JPEG compression (HG3 only)
+
+//CONTROL -1
+//JPEG圧縮レベル
+$-1$JPEG圧縮レベル
+JPEG compression
+
+//CONTROL 1027
+//num
+$1027$num
+$nr$
+
+//CONTROL -1
+//拡大・縮小率
+$-1$拡大・縮小率
+Scaling factor
+
+//CONTROL 1029
+//PNG
+$1029$PNG
+$nr$
+
+//CONTROL 1030
+//WPM
+$1030$WPM
+$nr$
+

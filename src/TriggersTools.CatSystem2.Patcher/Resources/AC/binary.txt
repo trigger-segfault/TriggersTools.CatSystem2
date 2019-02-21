@@ -1,0 +1,283 @@
+﻿//Bytes=36,Offset=0x000504EC
+アニメーションスクリプトコンバータ\n
+Animation script converter\n
+
+//Bytes=32,Offset=0x00050510
+usage : ac [file] [file] ...\n
+$nr$
+
+//Bytes=32,Offset=0x00050530
+ファイルが見つかりません : %s\n
+File not found : %s\n
+
+//Bytes=8,Offset=0x00050550
+%s\\%s
+$nr$
+
+//Bytes=8,Offset=0x00050558
+%s\\%s
+$nr$
+
+//Bytes=4,Offset=0x00050560
+anm
+$nr$
+
+//Bytes=36,Offset=0x00050564
+ファイルのロードに失敗しました : %s
+Failed to load file : %s\n
+
+//Bytes=36,Offset=0x00050588
+error (%d) : 不正なラベル名です。\n
+error (%d) : Invalid label name.\n
+
+//Bytes=56,Offset=0x000505AC
+error (%d) : %s このラベル名は既に使用されています。\n
+error (%d) : %s This label name is already in use.\n
+
+//Bytes=40,Offset=0x000505E4
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=36,Offset=0x0005060C
+error (%d) : 変数番号が不正です。\n
+error (%d) : Invalid var number.\n
+
+//Bytes=60,Offset=0x00050630
+error (%d) : 使用できる変数の範囲(0～63)を超えています。\n
+error (%d) : Outside range of usable variables (0-63).\n
+
+//Bytes=40,Offset=0x0005066C
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=8,Offset=0x00050694
+jump
+$nr$
+
+//Bytes=40,Offset=0x0005069C
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=8,Offset=0x000506C4
+loop
+$nr$
+
+//Bytes=40,Offset=0x000506CC
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=40,Offset=0x000506F4
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=4,Offset=0x0005071C
+set
+$nr$
+
+//Bytes=40,Offset=0x00050720
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=40,Offset=0x00050748
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=4,Offset=0x00050770
+if
+$nr$
+
+//Bytes=40,Offset=0x00050774
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=40,Offset=0x0005079C
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=4,Offset=0x000507C4
+ife
+$nr$
+
+//Bytes=40,Offset=0x000507C8
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=40,Offset=0x000507F0
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=40,Offset=0x00050818
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=4,Offset=0x00050840
+ifn
+$nr$
+
+//Bytes=40,Offset=0x00050844
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=40,Offset=0x0005086C
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=40,Offset=0x00050894
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=4,Offset=0x000508BC
+ifg
+$nr$
+
+//Bytes=40,Offset=0x000508C0
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=40,Offset=0x000508E8
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=40,Offset=0x00050910
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=4,Offset=0x00050938
+ifs
+$nr$
+
+//Bytes=40,Offset=0x0005093C
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=40,Offset=0x00050964
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=40,Offset=0x0005098C
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=8,Offset=0x000509B4
+ifge
+$nr$
+
+//Bytes=40,Offset=0x000509BC
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=40,Offset=0x000509E4
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=40,Offset=0x00050A0C
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=8,Offset=0x00050A34
+ifse
+$nr$
+
+//Bytes=40,Offset=0x00050A3C
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=40,Offset=0x00050A64
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=40,Offset=0x00050A8C
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=4,Offset=0x00050AB4
+max
+$nr$
+
+//Bytes=40,Offset=0x00050AB8
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=8,Offset=0x00050AE0
+blend
+$nr$
+
+//Bytes=40,Offset=0x00050AE8
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=8,Offset=0x00050B10
+disp
+$nr$
+
+//Bytes=40,Offset=0x00050B18
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=4,Offset=0x00050B40
+pos
+$nr$
+
+//Bytes=40,Offset=0x00050B44
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=40,Offset=0x00050B6C
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=8,Offset=0x00050B94
+wait
+$nr$
+
+//Bytes=40,Offset=0x00050B9C
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=4,Offset=0x00050BC4
+add
+$nr$
+
+//Bytes=40,Offset=0x00050BC8
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=40,Offset=0x00050BF0
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=4,Offset=0x00050C18
+sub
+$nr$
+
+//Bytes=40,Offset=0x00050C1C
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=40,Offset=0x00050C44
+error (%d) : パラメータが不正です。\n
+error (%d) : Invalid parameter.\n
+
+//Bytes=44,Offset=0x00050C6C
+error : ラベル変換中に異常が発生しました。\n
+error : Error during label conversion.\n
+
+//Bytes=36,Offset=0x00050C98
+error (%d) : 変数番号が不正です。\n
+error (%d) : Invalid var number.\n
+
+//Bytes=36,Offset=0x00050CBC
+error (%d) : 変数番号が不正です。\n
+error (%d) : Invalid var number.\n
+
+//Bytes=36,Offset=0x00050CE0
+error (%d) : 未定義のラベルです。\n
+error (%d) : Label is undefined.\n
+
+//Bytes=40,Offset=0x00050D04
+出力ファイル %s がオープンできません。\n
+The output file %s cannot be opened.\n
+
+//Bytes=16,Offset=0x00050D2C
+anm out -> %s
+$nr$

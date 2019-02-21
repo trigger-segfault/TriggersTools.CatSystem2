@@ -1,0 +1,55 @@
+//MENU : 109
+
+//POPUP L0
+//ファイル(&F)
+$POPUP$ファイル(&F)
+&File
+
+//MENUITEM 129 L1
+//リストを開く(&O)
+$129$リストを開く(&O)
+&Open List
+
+//MENUITEM 130 L1
+//リストを保存(&S)
+$130$リストを保存(&S)
+&Save List
+
+//MENUITEM 105 L1
+//WGCの終了(&X)
+$105$WGCの終了(&X)
+&Close
+
+//POPUP L1
+//最近使ったリスト(&L)
+$POPUP$最近使ったリスト(&L)
+&Recently Used List
+
+//MENUITEM 138 L2
+//最近使ったリスト
+$138$最近使ったリスト
+Recently used list
+
+//POPUP L0
+//コンバート！(&C)
+$POPUP$コンバート！(&C)
+&Convert
+
+//MENUITEM 131 L1
+//全てコンバート！(&A)
+$131$全てコンバート！(&A)
+Convert &All
+
+//MENUITEM 136 L1
+//選択ファイルだけコンバート！(&S)
+$136$選択ファイルだけコンバート！(&S)
+Convert &Selected Files Only
+
+//&Options
+&Options
+&Options
+
+//MENUITEM 32790 L0
+//設定(&E)
+$32790$設定(&E)
+&Settings

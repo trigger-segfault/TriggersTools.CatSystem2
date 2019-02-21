@@ -1,0 +1,11 @@
+//MENU : 137
+
+//MENUITEM 136 L1
+//選択ﾌｧｲﾙをコンバート
+$136$選択ﾌｧｲﾙをコンバート
+Convert Selected File
+
+//MENUITEM 140 L1
+//選択ﾌｧｲﾙを削除
+$140$選択ﾌｧｲﾙを削除
+Delete Selected File

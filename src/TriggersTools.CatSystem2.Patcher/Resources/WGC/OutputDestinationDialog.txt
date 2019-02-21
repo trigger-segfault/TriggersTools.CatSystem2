@@ -1,0 +1,7 @@
+﻿Output Destination
+OK
+Cancel
+Output to the same folder as the source file
+Specify the output folder
+...
+Create a folder with source filename

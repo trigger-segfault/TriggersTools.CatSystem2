@@ -1,0 +1,3 @@
+﻿ 
+Convert selected file
+Delete selected file

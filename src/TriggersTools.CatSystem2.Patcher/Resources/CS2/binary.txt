@@ -1,0 +1,8 @@
+﻿//Bytes=16,Offset=0x00596368
+--全て表示--
+--Show All--
+
+//Bytes=16,Offset=0x00596378
+--モノローグ--
+--Monologue--
+

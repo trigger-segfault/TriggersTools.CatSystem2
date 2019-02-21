@@ -1,0 +1,36 @@
+//DIALOGEX : 144
+
+//CAPTION
+//出力先の指定
+$CAPTION$出力先の指定
+Output Destination
+
+//CONTROL 1
+//OK
+$1$OK
+OK
+
+//CONTROL 2
+//キャンセル
+$2$キャンセル
+Cancel
+
+//CONTROL 1004
+//ソースファイルと同じフォルダに出力する
+$1004$ソースファイルと同じフォルダに出力する
+Output to the same folder as the source file
+
+//CONTROL 1005
+//出力フォルダを指定する
+$1005$出力フォルダを指定する
+Specify the output folder
+
+//CONTROL 1007
+//...
+$1007$...
+...
+
+//CONTROL 1024
+//ソースファイル名でフォルダを作成する
+$1024$ソースファイル名でフォルダを作成する
+Create a folder with source filename

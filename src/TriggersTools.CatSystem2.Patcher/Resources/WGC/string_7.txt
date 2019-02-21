@@ -1,0 +1,11 @@
+//STRINGTABLE : 7
+
+//STRING 103
+//WGC
+$103WGC
+$nr$
+
+//STRING 109
+//WGC
+$109WGC
+$nr$
