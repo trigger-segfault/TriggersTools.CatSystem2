@@ -1,0 +1,3796 @@
+// 空にする場合 : $empty$
+// 変換しない場合 : $nr$
+
+// Exe Strings /////////////////////////////////////////////////
+
+//■■ システム情報 ■■
+$0000-0001$
+** System Information **
+
+//Eメールでサポートを受ける時は、このファイルを添付してください。
+$0000-0002$
+Please include this file in your email when contacting support.
+
+//起動情報の取得に失敗しました。 >lock failed
+$0000-0003$
+Acquisition of start-up data failed. > lock
+
+//起動情報の取得に失敗しました。 >load failed
+$0000-0004$
+Acquisition of start-up data failed. > load
+
+//起動情報の取得に失敗しました。 >resource size = 0
+$0000-0005$
+Acquisition of start-up data failed > resource = 0
+
+//当ゲームシステムはこのゲームでは動作出来ません。
+$0000-0006$
+This game is incompatible with this system.
+
+//ゲームが正常にインストールされていません。 再度インストールを行ってください
+$0000-0007$
+The game is not installed correctly. Please re-install and try again.
+
+//CD/DVD-ROMからの起動は出来ません。 インストールを行ってください
+$0000-0008$
+The game cannot be run from CD/DVD-ROM. Please install first.
+
+//多重起動のため、プログラムを終了します。
+$0000-0009$
+Program closing due to multiple instances.
+
+//画面色数チェック
+$0000-0010$
+Screen Color Check
+
+//画面色数が 16bit 又は 32bit 以外では強制的にフルスクリーンモードになります。よろしいですか？
+$0000-0011$
+The game will be forced to full screen mode unless color depth is set to 16-bit or 32-bit.
+
+//この環境は画面解像度 %d x %d 32bit/16bit が使用できません
+$0000-0012$
+This system does not support %d x %d at 16-bit/32-bit.
+
+//解像度エラー
+$0000-0013$
+Resolution Error
+
+//ゲームウィンドウサイズがデスクトップのサイズを超えている為、フルスクリーンモードで起動します。
+$0000-0014$
+The game window exceeds the resolution of the desktop, so the game will start in fullscreen.
+
+//項目
+$0000-0015$
+Item
+
+//内容
+$0000-0016$
+Content
+
+//ゲームタイトル
+$0000-0017$
+Game Title
+
+//ゲームバージョン
+$0000-0018$
+Game Version
+
+//システムバージョン
+$0000-0019$
+System Version
+
+//ＰＣメーカー名
+$0000-0020$
+PC Manufacturer
+
+//ＰＣモデル名
+$0000-0021$
+PC Model Name
+
+//ＯＳ
+$0000-0022$
+OS
+
+//ＣＰＵメーカー
+$0000-0023$
+CPU Type
+
+//ＣＰＵクロック(測定値)
+$0000-0024$
+CPU Clock Rate
+
+//空きメモリ／全メモリ
+$0000-0025$
+Free Ram / Total Ram
+
+//ビデオカード
+$0000-0026$
+Video Card
+
+//ビデオドライババージョン
+$0000-0027$
+Video Driver Version
+
+//画面解像度
+$0000-0028$
+Resolution
+
+//画面色数
+$0000-0029$
+Bit Depth
+
+//32bit フルカラー
+$0000-0030$
+32bit Full Color
+
+//24bit フルカラー
+$0000-0031$
+24bit Full Color
+
+//16bit ハイカラー
+$0000-0032$
+16bit High Color
+
+//8bit インデックスカラー
+$0000-0033$
+8bit Indexed Color
+
+//DirectX バージョン
+$0000-0034$
+DirectX Version
+
+//タイトル画面に戻る
+$0000-0035$
+Title Screen
+
+//タイトル画面に戻ってよろしいですか？
+$0000-0036$
+Return to Title Screen?
+
+//注意
+$0000-0037$
+Note
+
+//この設定は cs2.exe 再起動後に有効になります
+$0000-0038$
+Changes will take effect after restart.
+
+//To Full Screen
+$0000-0039$
+To Fullscreen
+
+//To Window
+$0000-0040$
+To Window
+
+//START SCRIPT
+$0000-0041$
+START SCRIPT
+
+//%s を終了してよろしいですか？
+$0000-0042$
+Would you like to exit "%s"?
+
+//終了
+$0000-0043$
+Exit
+
+//notepad.exe
+$0000-0044$
+notepad.exe
+
+//無題 - メモ帳
+$0000-0045$
+Untitled - Notepad
+
+//システム情報を %s に保存する
+$0000-0046$
+Save system information to %s
+
+//テキストファイル(*.txt)
+$0000-0047$
+Text files (*.txt)
+
+//全てのファイル(*.*)
+$0000-0048$
+All files (*.*)
+
+//環境情報の保存先
+$0000-0049$
+Destination Path
+
+//キーボード
+$0000-0050$
+Keyboard
+
+//マウス
+$0000-0051$
+Mouse
+
+//ジョイパッド
+$0000-0052$
+Joypad
+
+//SystemInfo.DLLが見つかりません.
+$0000-0053$
+SystemInfo.dll was not found
+
+//FWActivate.DLLのID認証に失敗しました.
+$0000-0054$
+FWActivate.dll could not verify the ID
+
+//FWActivate.DLLが見つかりません.
+$0000-0055$
+FWActivate.dll was not found
+
+//FWHash.DLLが見つかりません.
+$0000-0056$
+FWHash.dll was not found
+
+//テキスト書き込み失敗
+$0000-0057$
+Failed to read text
+
+//@セーブデータの作成に失敗しました
+$0000-0058$
+@Failed to create save data
+
+//エラー
+$0000-0059$
+Error
+
+//ファイル読み込みに失敗しました -File read error- : %s
+$0000-0060$
+Could not read file - File read error : %s
+
+//ファイル読み込みに失敗しました -Can't alloc memory- : %s
+$0000-0061$
+Could not read file - Cannot allocate memory: %s
+
+//ファイル読み込みに失敗しました -File not found- : %s
+$0000-0062$
+Could not read file - File not found : %s
+
+//名前テーブルファイルのオープンに失敗
+$0000-0063$
+Failed to open name table
+
+//CGリストファイルのオープンに失敗
+$0000-0064$
+Failed to open CG list file
+
+//背景テーブルファイルのオープンに失敗
+$0000-0065$
+Failed to open background table file.
+
+//スクリプトコマンド fopen のオープンモードが正しくありません
+$0000-0066$
+Script command fopen failed to open file
+
+//レジストリ [%s\%s] の読み込みに失敗しました
+$0000-0067$
+Failed to read registry key [%s\%s]
+
+//レジストリ [%s] のオープンに失敗しました
+$0000-0068$
+Could not open registry [%s]
+
+//レジストリ [%s\%s] への書き込みに失敗しました
+$0000-0069$
+Could not write to registry key [%s\%s]
+
+//(%02d)空き仮想メモリ : %d MB
+$0000-0070$
+(%02d) Free virtual memory: %d MB
+
+//(%02d)全仮想メモリ : %d MB
+$0000-0071$
+(%02d) Total virtual memory: %d MB
+
+//(%02d)空き物理メモリ : %d MB
+$0000-0072$
+(%02d) Free physical memory: %d MB
+
+//(%02d)全物理メモリ : %d MB
+$0000-0073$
+(%02d) Total physical memory: %d MB
+
+//情報の書き出しに失敗しました
+$0000-0074$
+Failed to output information
+
+//DDEより環境情報を取得しました
+$0000-0075$
+Obtained environment information via DDE
+
+//ゲーム環境設定
+$0000-0076$
+Game Settings
+
+//起動エラー
+$0000-0077$
+Boot Error
+
+//環境設定に内部エラーが発生しました。環境設定を終了します。
+$0000-0078$
+An internal error has occurred. Settings will now close.
+
+//環境設定の起動に失敗しました。環境設定を終了します。
+$0000-0079$
+Settings failed to start. Settings will now close.
+
+//ゲームに必要なファイルが見つかりません。 ゲームディスクを入れて再実行してください。
+$0000-0080$
+A necessary game file could not be found. Please re-install the game and try again.
+
+//セーブフォルダを選択してください
+$0000-0081$
+Please select the save folder.
+
+
+// Shortcut Keys /////////////////////////////////////////////////
+
+//設定無し
+$0010-0001$
+Unassigned
+
+//BackSpace
+$0010-0002$
+BackSpace
+
+//Tab
+$0010-0003$
+Tab
+
+//Enter
+$0010-0004$
+Enter
+
+//Shift
+$0010-0005$
+Shift
+
+//Ctrl
+$0010-0006$
+Ctrl
+
+//Alt
+$0010-0007$
+Alt
+
+//Esc
+$0010-0008$
+Esc
+
+//Space
+$0010-0009$
+Space
+
+//PageUp
+$0010-0010$
+PageUp
+
+//PageDown
+$0010-0011$
+PageDown
+
+//End
+$0010-0012$
+End
+
+//Home
+$0010-0013$
+Home
+
+//←(カーソルキー)
+$0010-0014$
+Left Arrow
+
+//↑(カーソルキー)
+$0010-0015$
+Up Arrow
+
+//→(カーソルキー)
+$0010-0016$
+Right Arrow
+
+//↓(カーソルキー)
+$0010-0017$
+Down Arrow
+
+//Insert
+$0010-0018$
+Insert
+
+//Delete
+$0010-0019$
+Delete
+
+//0 (テンキー)
+$0010-0020$
+0 (Numpad)
+
+//1 (テンキー)
+$0010-0021$
+1 (Numpad)
+
+//2 (テンキー)
+$0010-0022$
+2 (Numpad)
+
+//3 (テンキー)
+$0010-0023$
+3 (Numpad)
+
+//4 (テンキー)
+$0010-0024$
+4 (Numpad)
+
+//5 (テンキー)
+$0010-0025$
+5 (Numpad)
+
+//6 (テンキー)
+$0010-0026$
+6 (Numpad)
+
+//7 (テンキー)
+$0010-0027$
+7 (Numpad)
+
+//8 (テンキー)
+$0010-0028$
+8 (Numpad)
+
+//9 (テンキー)
+$0010-0029$
+9 (Numpad)
+
+//*(テンキー)
+$0010-0030$
+* (Numpad)
+
+//+(テンキー)
+$0010-0031$
+= (Numpad)
+
+//-(テンキー)
+$0010-0032$
+- (Numpad)
+
+//.(テンキー)
+$0010-0033$
+. (Numpad)
+
+///(テンキー)
+$0010-0034$
+/ (Numpad)
+
+//0
+$0010-0035$
+0
+
+//1
+$0010-0036$
+1
+
+//2
+$0010-0037$
+2
+
+//3
+$0010-0038$
+3
+
+//4
+$0010-0039$
+4
+
+//5
+$0010-0040$
+5
+
+//6
+$0010-0041$
+6
+
+//7
+$0010-0042$
+7
+
+//8
+$0010-0043$
+8
+
+//9
+$0010-0044$
+9
+
+//A
+$0010-0045$
+A
+
+//B
+$0010-0046$
+B
+
+//C
+$0010-0047$
+C
+
+//D
+$0010-0048$
+D
+
+//E
+$0010-0049$
+E
+
+//F
+$0010-0050$
+F
+
+//G
+$0010-0051$
+G
+
+//H
+$0010-0052$
+H
+
+//I
+$0010-0053$
+I
+
+//J
+$0010-0054$
+J
+
+//K
+$0010-0055$
+K
+
+//L
+$0010-0056$
+L
+
+//M
+$0010-0057$
+M
+
+//N
+$0010-0058$
+N
+
+//O
+$0010-0059$
+O
+
+//P
+$0010-0060$
+P
+
+//Q
+$0010-0061$
+Q
+
+//R
+$0010-0062$
+R
+
+//S
+$0010-0063$
+S
+
+//T
+$0010-0064$
+T
+
+//U
+$0010-0065$
+U
+
+//V
+$0010-0066$
+V
+
+//W
+$0010-0067$
+W
+
+//X
+$0010-0068$
+X
+
+//Y
+$0010-0069$
+Y
+
+//Z
+$0010-0070$
+Z
+
+//F1
+$0010-0071$
+F1
+
+//F2
+$0010-0072$
+F2
+
+//F3
+$0010-0073$
+F3
+
+//F4
+$0010-0074$
+F4
+
+//F5
+$0010-0075$
+F5
+
+//F6
+$0010-0076$
+F6
+
+//F7
+$0010-0077$
+F7
+
+//F8
+$0010-0078$
+F8
+
+//F9
+$0010-0079$
+F9
+
+//F10
+$0010-0080$
+F10
+
+//F11
+$0010-0081$
+F11
+
+//F12
+$0010-0082$
+F12
+
+//F13
+$0010-0083$
+F13
+
+//F14
+$0010-0084$
+F14
+
+//F15
+$0010-0085$
+F15
+
+//F16
+$0010-0086$
+F16
+
+//F17
+$0010-0087$
+F17
+
+//F18
+$0010-0088$
+F18
+
+//F19
+$0010-0089$
+F19
+
+//F20
+$0010-0090$
+F20
+
+//F21
+$0010-0091$
+F21
+
+//F22
+$0010-0092$
+F22
+
+//F23
+$0010-0093$
+F23
+
+//F24
+$0010-0094$
+F24
+
+//:
+$0010-0095$
+:
+
+//;
+$0010-0096$
+;
+
+//,
+$0010-0097$
+,
+
+//- (キーボード)
+$0010-0098$
+-
+
+//. (キーボード)
+$0010-0099$
+.
+
+/// (キーボード)
+$0010-0100$
+/
+
+//@
+$0010-0101$
+@
+
+//[
+$0010-0102$
+[
+
+//\
+$0010-0103$
+\
+
+//]
+$0010-0104$
+]
+
+//^
+$0010-0105$
+^
+
+//＼ (キーボード)
+$0010-0106$
+_
+
+//設定無し
+$0010-0107$
+Unassigned
+
+//左クリック
+$0010-0108$
+Left Click
+
+//中クリック
+$0010-0109$
+Middle Click
+
+//右クリック
+$0010-0110$
+Right Click
+
+//X1クリック
+$0010-0111$
+Mouse 4 Click
+
+//X2クリック
+$0010-0112$
+Mouse 5 Click
+
+//ホイールアップ
+$0010-0113$
+Wheel Up
+
+//ホイールダウン
+$0010-0114$
+Wheel Down
+
+//設定無し
+$0010-0115$
+Unassigned
+
+//↑
+$0010-0116$
+Up
+
+//↓
+$0010-0117$
+Down
+
+//←
+$0010-0118$
+Left
+
+//→
+$0010-0119$
+Right
+
+//ボタン１
+$0010-0120$
+Button 1
+
+//ボタン２
+$0010-0121$
+Button 2
+
+//ボタン３
+$0010-0122$
+Button 3
+
+//ボタン４
+$0010-0123$
+Button 4
+
+//ボタン５
+$0010-0124$
+Button 5
+
+//ボタン６
+$0010-0125$
+Button 6
+
+//ボタン７
+$0010-0126$
+Button 7
+
+//ボタン８
+$0010-0127$
+Button 8
+
+//ボタン９
+$0010-0128$
+Button 9
+
+//ボタン１０
+$0010-0129$
+Button 10
+
+
+
+// Menu /////////////////////////////////////////////////
+
+//システム(&S)
+$0011-0001$
+&System
+
+//タイトル画面に戻る(&T)
+$0011-0002$
+Return to &Title
+
+//セーブフォルダを開く(&S)
+$0011-0003$
+Open &Save Folder
+
+//ゲームの終了(&X)
+$0011-0004$
+&E&xit Game
+
+//表示(&V)
+$0011-0005$
+&Display
+
+//フルスクリーン(&F)
+$0011-0006$
+&Fullscreen Mode
+
+//ウィンドウ(&W)
+$0011-0007$
+&Windowed Mode
+
+//最小化(&S)
+$0011-0008$
+&Minimize
+
+//メッセージウィンドウ位置を戻す(&R)
+$0011-0009$
+&Reset Message Window Position
+
+//設定(&C)
+$0011-0010$
+&Config
+
+//ゲーム環境設定(&C)
+$0011-0011$
+&Game Config
+
+//システム環境設定(&S)
+$0011-0012$
+&Engine Config
+
+//システムボリューム設定(&V)
+$0011-0013$
+Open &Volume Mixer
+
+//オンラインマニュアル(&M)
+$0011-0014$
+Online &Manual
+
+//ヘルプ(&H)
+$0011-0015$
+&Help
+
+//バージョン情報(&A)
+$0011-0016$
+&Version Info
+
+//システム情報(&S)
+$0011-0017$
+&Engine Info
+
+//システム詳細情報(&I)
+$0011-0018$
+&System Details
+
+
+//セーブフォルダの設定(&S)
+$0011-0019$
+&Save Folder Settings
+
+//デバッグ(&D)
+$0011-0020$
+&Debug
+
+//画面キャプチャ(BMP)(&P)
+$0011-0021$
+Screen Ca&pture (BMP)
+
+//メッセージリスト(&M)
+$0011-0022$
+&Message List
+
+//シーンリスト(&S)
+$0011-0023$
+&Scene List
+
+//全てのイメージを保存(&I)
+$0011-0024$
+Save All &Images
+
+//デバッグログ(&L)
+$0011-0025$
+Debug &Log
+
+//画面キャプチャ(JPG)(&J)
+$0011-0026$
+Screen Capture (&JPG)
+
+
+// Version Info /////////////////////////////////////////////////
+
+//バージョン情報
+$0012-0001$
+Version Info
+
+//オフィシャルホームページ
+$0012-0002$
+Official Homepage:
+
+
+// Screen Mode /////////////////////////////////////////////////
+
+//画面モードを選択してください
+$0013-0001$
+Choose a display mode
+
+//フルスクリーン
+$0013-0002$
+Full Screen
+
+//ウィンドウ
+$0013-0003$
+Windowed
+
+
+// System Info /////////////////////////////////////////////////
+
+//システム情報
+$0014-0001$
+System Information
+
+
+// SystemInfo 2 /////////////////////////////////////////////////
+
+//システム情報
+$0015-0001$
+System Information
+
+//システム情報を info.txt に保存する
+$0015-0002$
+Save System Information as info.txt
+
+
+// Save Image /////////////////////////////////////////////////
+
+//イメージ保存中...
+$0016-0001$
+Saving Image...
+
+//キャンセル
+$0016-0002$
+Cancel
+
+//スタティック
+$0016-0003$
+Static
+
+
+// Name Input /////////////////////////////////////////////////
+
+//名前を入力してください
+$0017-0001$
+Please enter your name
+
+//キャンセル
+$0017-0002$
+Cancel
+
+
+// Input /////////////////////////////////////////////////
+
+//入力
+$0018-0001$
+Input
+
+//ボタンリスト
+$0018-0002$
+Button List
+
+//キーボード 1
+$0018-0003$
+Keyboard 1
+
+//キーボード 2
+$0018-0004$
+Keyboard 2
+
+//マウス 1
+$0018-0005$
+Mouse 1
+
+//マウス 2
+$0018-0006$
+Mouse 2
+
+//ジョイパッド 1
+$0018-0007$
+Gamepad 1
+
+//ジョイパッド 2
+$0018-0008$
+Gamepad 2
+
+//初期値に戻す
+$0018-0009$
+Restore Default
+
+//リピート
+$0018-0010$
+Repeat
+
+//ジョイパッドを有効にする
+$0018-0011$
+Enable Gamepad
+
+
+// Input 2 /////////////////////////////////////////////////
+
+//入力
+$0019-0001$
+Input
+
+//ボタンリスト
+$0019-0002$
+Button List
+
+//ボタン 1
+$0019-0003$
+Button 1
+
+//ボタン 2
+$0019-0004$
+Button 2
+
+//ボタン 3
+$0019-0005$
+Button 3
+
+//ボタン 4
+$0019-0006$
+Button 4
+
+//初期値に戻す
+$0019-0007$
+Restore Default
+
+//リピート
+$0019-0008$
+Repeat
+
+//入力デバイスの選択
+$0019-0009$
+Select Input Device
+
+//ジョイパッドを有効にする
+$0019-0010$
+Enable Gamepad Support
+
+
+// Message /////////////////////////////////////////////////
+
+//秒
+$0020-0001$
+s
+
+//オートモードのとき、音声再生が終了するまで待つ
+$0020-0002$
+Wait for voice acting to finish during Auto Mode
+
+//履歴に残す最大文章数
+$0020-0003$
+Max number of messages to keep in Message Log
+
+//行
+$0020-0004$
+line
+
+
+// Message 2 /////////////////////////////////////////////////
+
+//メッセージ
+$0021-0001$
+Message
+
+//メッセージ速度
+$0021-0002$
+Message Speed
+
+//遅い
+$0021-0003$
+Slow
+
+//速い
+$0021-0004$
+Fast
+
+//サンプルメッセージ
+$0021-0005$
+Sample Message
+
+//速い
+$0021-0006$
+Fast
+
+//遅い
+$0021-0007$
+Slow
+
+//初期値に戻す
+$0021-0008$
+Restore Default
+
+//オートモードの速度
+$0021-0009$
+Auto Mode Speed
+
+//既読メッセージの瞬間表示
+$0021-0010$
+Display already-read messages instantly
+
+//選択肢後のオートモードを継続
+$0021-0011$
+Continue Auto Mode after choices
+
+//オートモードのとき、音声再生が終了するまで待つ
+$0021-0012$
+Wait for voice acting to finish during Auto Mode
+
+//基本の待ち時間
+$0021-0013$
+$nr$
+
+//1文字あたりの待ち時間
+$0021-0014$
+Wait time per character
+
+//詳細設定
+$0021-0015$
+Advanced Settings
+
+//秒
+$0021-0016$
+Seconds
+
+//履歴に残す最大文章数
+$0021-0017$
+Max number of messages to keep in Message Log
+
+//行
+$0021-0018$
+line
+
+//まだ読んでいないメッセージのスキップを可能にする
+$0021-0019$
+Allow Skip Mode to skip unread messages
+
+
+
+// Screen /////////////////////////////////////////////////
+
+//画面効果
+$0022-0001$
+Screen
+
+//画面演出の速度
+$0022-0002$
+Animation Speed
+
+//ボタンのヘルプを表示する
+$0022-0003$
+Display help for buttons.
+
+//マウスカーソル自動移動を行う
+$0022-0004$
+Automatically move cursor.
+
+//マウスカーソル自動消去を行う
+$0022-0005$
+Automatically hide cursor.
+
+//消去までの時間
+$0022-0006$
+Hide after
+
+//秒
+$0022-0007$
+seconds
+
+//初期値に戻す
+$0022-0008$
+Restore Default
+
+//X 1.0
+$0022-0009$
+1.0x
+
+//X 1.5
+$0022-0010$
+1.5x
+
+//X 2.0
+$0022-0011$
+2.0x
+
+//X 3.0
+$0022-0012$
+3.0x
+
+//X 4.0
+$0022-0013$
+4.0x
+
+//ドラマティックモードを有効にする
+$0022-0014$
+Enable 'Dramatic Mode'.
+
+//画面切り替えを瞬間表示にする
+$0022-0015$
+Skip scene transitions.
+
+
+// Screen 2 /////////////////////////////////////////////////
+
+//画面効果
+$0023-0001$
+Screen
+
+//初期値に戻す
+$0023-0002$
+Restore Default
+
+//ドラマティックモードを有効にする
+$0023-0003$
+Use Dramatic Mode(Hide text).
+
+//ボタンのヘルプを表示する
+$0023-0004$
+Display help for buttons.
+
+//マウスカーソル自動移動を行う
+$0023-0005$
+Automatically move mouse.
+
+
+// Font /////////////////////////////////////////////////
+
+//フォント
+$0024-0001$
+Font
+
+//ABC あいうえお
+$0024-0002$
+ABCDEFabcdef
+
+//初期値に戻す
+$0024-0003$
+Restore Default
+
+//太字にする
+$0024-0004$
+Bolden
+
+//使用するフォント
+$0024-0005$
+Font to use
+
+//プロポーショナルフォントを使用する
+$0024-0006$
+Use proportional fonts
+
+//プロポーショナルフォントを可変幅で表示する
+$0024-0007$
+Display proportional font in variable width
+
+//※フォントによっては文章がメッセージウィンドウに収まらない場合があります
+$0024-0008$
+*Depending on the font, sentences may not fit in the message window
+
+//文字の右下に影を付ける
+$0024-0009$
+$nr$
+
+//文字を縁取る
+$0024-0010$
+$nr$
+
+//文字装飾
+$0024-0011$
+Character Decoration
+
+
+// Font 2 /////////////////////////////////////////////////
+
+//フォント
+$0025-0001$
+Font
+
+//ABC あいうえお
+$0025-0002$
+$nr$
+
+//初期値に戻す
+$0025-0003$
+Restore Default
+
+//太字にする
+$0025-0004$
+Bolden
+
+//使用するフォント
+$0025-0005$
+Font to use
+
+//プロポーショナルフォントを使用する
+$0025-0006$
+Use proportional fonts
+
+//プロポーショナルフォントを可変幅で表示する
+$0025-0007$
+Display proportional font in variable width
+
+//※フォントによっては文章がメッセージウィンドウに収まらない場合があります
+$0025-0008$
+*Depending on the font, sentences may not fit in the message window
+
+//文字の右下に影を付ける
+$0025-0009$
+$nr$
+
+//文字を縁取る
+$0025-0010$
+$nr$
+
+//文字装飾
+$0025-0011$
+Character Decoration
+
+
+// Window /////////////////////////////////////////////////
+
+//ウィンドウ
+$0026-0001$
+Window
+
+//初期値に戻す
+$0026-0002$
+Restore Default
+
+//ウィンドウカラー
+$0026-0003$
+Window Color
+
+//R
+$0026-0004$
+R
+
+//G
+$0026-0005$
+G
+
+//B
+$0026-0006$
+B
+
+//不透明度
+$0026-0007$
+Opacity
+
+//メッセージウィンドウをドラッグできるようにする
+$0026-0008$
+Allow message window to be dragged
+
+//メッセージウィンドウ枠を描画する
+$0026-0009$
+Draw a message window frame
+
+//(動かしたウインドウを元の位置に戻すにはウィンドウメニューの
+$0026-0010$
+(To return the moved window to its original position, use the window menu
+
+//[表示]-[ウィンドウ位置を元に戻す]を選択してください)
+$0026-0011$
+Select [View] - [Restore Window Position])
+
+
+// Window 2 /////////////////////////////////////////////////
+
+//ウィンドウ
+$0027-0001$
+Window
+
+//初期値に戻す
+$0027-0002$
+Restore Default
+
+//メッセージウィンドウをドラッグできるようにする
+$0027-0003$
+Allow message window to be dragged
+
+//(動かしたウインドウを元の位置に戻すにはウィンドウメニューの
+$0027-0004$
+(To return the moved window to its original position, use the window menu
+
+//[表示]-[ウィンドウ位置を元に戻す]を選択してください)
+$0027-0005$
+Select [View] - [Restore Window Position])
+
+//メッセージウィンドウ枠を描画する
+$0027-0006$
+Draw a message window frame
+
+
+// Window 3 /////////////////////////////////////////////////
+
+//ウィンドウ
+$0028-0001$
+Window
+
+//初期値に戻す
+$0028-0002$
+Restore Default
+
+//メッセージウィンドウをドラッグできるようにする
+$0028-0003$
+Allow message window to be dragged
+
+//(動かしたウインドウを元の位置に戻すにはウィンドウメニューの
+$0028-0004$
+(To return the moved window to its original position, use the window menu
+
+//[表示]-[ウィンドウ位置を元に戻す]を選択してください)
+$0028-0005$
+Select [View] - [Restore Window Position])
+
+//ウィンドウの不透明度
+$0028-0006$
+Window Opacity
+
+//メッセージウィンドウ枠を描画する
+$0028-0007$
+Draw a message window frame
+
+
+// Mode /////////////////////////////////////////////////
+
+//モード変更
+$0029-0001$
+Mode Change
+
+//システム情報
+$0029-0002$
+System Information
+
+//環境設定のタイプ
+$0029-0003$
+Configuration Type
+
+//簡易モード
+$0029-0004$
+Simple Mode
+
+//詳細モード
+$0029-0005$
+Advanced Mode
+
+//システム情報を info.txt に保存する
+$0029-0006$
+Save system information to info.txt
+
+
+// Sound /////////////////////////////////////////////////
+
+//音声
+$0030-0001$
+Voice
+
+//初期値に戻す
+$0030-0002$
+Restore Default
+
+//BGM
+$0030-0003$
+BGM
+
+//効果音
+$0030-0004$
+Sounds
+
+//音声
+$0030-0005$
+Voice
+
+//(音声再生時)
+$0030-0006$
+(During audio playback)
+
+//ボリューム
+$0030-0007$
+Volume
+
+//再生
+$0030-0008$
+Regeneration
+
+//全てON
+$0030-0009$
+All ON
+
+//全てOFF
+$0030-0010$
+All OFF
+
+//次の音声再生まで再生中の音声を止めない
+$0030-0011$
+Do not stop playing audio until the next audio playback
+
+//マスター
+$0030-0012$
+Master
+
+//Mute
+$0030-0013$
+Mute
+
+
+// Loading /////////////////////////////////////////////////
+
+//設定を反映させています。しばらくお待ちください。
+$0031-0001$
+Loading game system configuration...
+
+
+// System Voice /////////////////////////////////////////////////
+
+//システムボイス
+$0032-0001$
+System Voice
+
+//初期値に戻す
+$0032-0002$
+Restore Default
+
+//再生するシステムボイス  （複数選択されている場合、ランダムで再生されます）
+$0032-0003$
+System voices to be played (If more than one is selected, it will be played at random)
+
+//全てON
+$0032-0004$
+All ON
+
+//全てOFF
+$0032-0005$
+All OFF
+
+
+// System Voice 2 /////////////////////////////////////////////////
+
+//システムボイス
+$0033-0001$
+System Voice
+
+//初期値に戻す
+$0033-0002$
+Restore Default
+
+//再生するシステムボイス  （複数選択されている場合、ランダムで再生されます）
+$0033-0003$
+System voices to be played (If more than one is selected, it will be played at random)
+
+//全てON
+$0033-0004$
+All ON
+
+//全てOFF
+$0033-0005$
+All OFF
+
+
+// Advanced Config /////////////////////////////////////////////////
+
+//システム環境設定
+$0034-0001$
+System
+
+//システム環境設定を開く
+$0034-0002$
+Launch System Config
+
+//ボタンを押すとシステム環境設定ウィンドウが開きます。
+$0034-0003$
+Click the button to launch the system config window.
+
+
+// Tooltips /////////////////////////////////////////////////
+
+//ジョイパッドのどのボタンに割り当てるか指定します。
+$0035-0001$
+Specify which button of the joypad to assign.
+
+//キーを押しっぱなしにした時、連打されるようにします。(一部キーでは無効になります)
+$0035-0002$
+When you leave the key pressed, it will be triggered repeatedly. (Ignored by some keys)
+
+//BGMの音量を変更できます。
+$0035-0003$
+Change the BGM volume.
+
+//BGMの音量を変更できます。
+$0035-0004$
+Change the BGM volume.
+
+//BGMの音量を変更できます。
+$0035-0005$
+Change the BGM volume.
+
+//１文字あたりの待ち時間です。
+$0035-0006$
+Wait time per character.
+
+//効果音の音量を変更できます。
+$0035-0007$
+Change the sound effect volume.
+
+//既に読んだことのある文章の場合、表示スピードの設定にかかわらず即座に表示します。
+$0035-0008$
+For sentences that have already been read, they are displayed immediately regardless of the display speed setting.
+
+//効果音の音量を変更できます。
+$0035-0009$
+Change the sound effect volume.
+
+//オートモード中に選択肢があった場合、オートモードを中断するかどうか設定します。
+$0035-0010$
+If there is a choice during the auto mode, set whether to interrupt the auto mode or not.
+
+//全てのサウンドのボリュームを調整します。
+$0035-0011$
+Adjust the volume of all sounds.
+
+//効果音の音量を変更できます。
+$0035-0012$
+Change the sound effect volume.
+
+//音声(ボイス)の音量を変更できます。
+$0035-0014$
+Change the voice volume.
+
+//音声(ボイス)の音量を変更できます。
+$0035-0015$
+Change the voice volume.
+
+//音声(ボイス)の音量を変更できます。
+$0035-0016$
+Change the voice volume.
+
+//音声再生時のBGMの音量を変更できます。
+$0035-0017$
+Change the BGM volume during playback.
+
+//メッセージウィンドウ等にあるボタンの上にマウスカーソルが乗った時、その効果説明を表示するかどうか設定します。
+$0035-0018$
+When the mouse hovers over the button in the message window etc., it sets whether or not to display the effect explanation.
+
+//音声再生時のBGMの音量を変更できます。
+$0035-0019$
+Change the BGM volume during playback.
+
+//画面エフェクトの動作スピードを通常にします。
+$0035-0020$
+The default screen effect animation speed.
+
+//画面エフェクトの動作スピードを１．５倍にします。
+$0035-0021$
+Increases the speed of screen effects by 1.5 times.
+
+//画面エフェクトの動作スピードを２倍にします。
+$0035-0022$
+Increases the speed of screen effects by 2 times.
+
+//画面エフェクトの動作スピードを３倍にします。
+$0035-0023$
+Increases the speed of screen effects by 3 times.
+
+//画面エフェクトの動作スピードを４倍にします。
+$0035-0024$
+Increases the speed of screen effects by 4 times.
+
+//選択肢等になった時、自動的にマウスカーソルを選択肢まで移動させるか設定します。
+$0035-0025$
+Snaps the mouse cursor to the selection when an option appears.
+
+//音声再生時のBGMの音量を変更できます。
+$0035-0026$
+Change the BGM volume during playback.
+
+//マウスカーソルを一定時間動かさなかった場合、カーソルを消すかどうか設定します。
+$0035-0027$
+Automatically hides the cursor after not moving the mouse for a short while.
+
+//BGM / 効果音(SE) / 各キャラボイス を再生するかどうか設定できます。
+$0035-0028$
+BGM / Sound Effect (SE) / Set whether each character voice is played or not.
+
+//カーソル消去までの時間を設定します。
+$0035-0029$
+The time to wait before hiding the cursor.
+
+//全てを再生します。
+$0035-0030$
+Play everything.
+
+//カーソル消去までの時間を設定します。
+$0035-0031$
+The time to wait before hiding the cursor.
+
+//全てを再生しません。
+$0035-0032$
+Do not play everything.
+
+//オートモードの時、ボイス再生が行われる文章中はメッセージウィンドウを非表示にします。
+$0035-0033$
+In Auto-Mode, hides the message window while a character with voice is speaking.
+
+//通常、ボイス再生中にキー入力をすると、ボイス再生を停止させて次の文章を表示しますが、この項目をチェックすることで、ボイスを停止させないまま次の文章を表示します。
+$0035-0034$
+Normally, key input during voice play will stop voice playback and display the next sentence. By checking this item, the next sentence will be displayed without stopping the voice.
+
+//フォント一覧より、ゲーム中に使用する文字フォントを選択できます。
+$0035-0035$
+From the font list, you can select the character font to use during the game.
+
+//文章の表示スピードを変更します。
+$0035-0036$
+Change the display speed of messages.
+
+//文字を通常より太くします。
+$0035-0037$
+Make the character thicker than normal.
+
+//オートモード時の文章送り速度を設定します。詳細設定をチェックすることにより、より詳細な時間を設定できます。
+$0035-0038$
+Sets the text feed speed in auto mode. By checking the detailed settings, you can set more detailed time.
+
+//オートプレイ時間を詳細に指定します。
+$0035-0039$
+Specify the auto play time in detail.
+
+//文字に影を付けるか設定します。
+$0035-0040$
+Sets whether to add a shadow to the character.
+
+//文字の右下に黒い影を描画します。
+$0035-0041$
+Draws a black shadow at the lower right of the character.
+
+//基本待ち時間です。
+$0035-0042$
+$nr$
+
+//文字を囲むように黒い影を描画します。（細い）
+$0035-0043$
+Draw a black shadow to surround the character. (thin)
+
+//文字を囲むように黒い影を描画します。（太い）
+$0035-0044$
+Draw a black shadow to surround the character. (thick)
+
+//メッセージウィンドウ等の中の色の赤成分を設定します。
+$0035-0045$
+Sets the red component of the color in the message window etc.
+
+//メッセージウィンドウ等の中の色の緑成分を設定します。
+$0035-0046$
+Sets the green component of the color in the message window etc.
+
+//メッセージウィンドウ等の中の色の青成分を設定します。
+$0035-0047$
+Sets the blue component of the color in the message window etc.
+
+//メッセージウィンドウ等の中の色の不透明度を設定します。
+$0035-0048$
+Sets the opacity of the color in the message window etc.
+
+//これがチェックされていると、メッセージウィンドウ枠をドラッグして動かすことができます。
+$0035-0049$
+If this is checked, you can move the message window frame by dragging it.
+
+//これがチェックされていないと、ウィンドウ枠は描画されず、ボタンだけになります。
+$0035-0050$
+If this is not checked, the window pane will not be drawn, only the buttons.
+
+//設定を初期値に戻します。
+$0035-0051$
+Restores settings to their default value.
+
+//環境設定の設定項目に簡易タイプを使用します。
+$0035-0052$
+Displays the most commonly used game settings.
+
+//環境設定の設定項目に詳細タイプを使用します。
+$0035-0053$
+Displays all available game settings.
+
+//オートモード時の文章送り速度を設定します。
+$0035-0054$
+Sets the text feed speed in auto mode.
+
+//未読メッセージの表示中であっても、メッセージウィンドウのスキップボタンを押下可能にします。
+$0035-0055$
+Even when unread messages are being displayed, you can press the skip button in the message window.
+
+//可変幅フォントを使用します。フォントによってはメッセージウィンドウから文字がはみ出す場合があります。
+$0035-0056$
+Use variable width font. Depending on the font, there may be characters out of the message window.
+
+//タイトル画面等で再生するシステムボイスのキャラクタを選択します。
+$0035-0057$
+Select the character of the system voice to be played on the title screen etc.
+
+//画面切り替え時のフェードイン・フェードアウト処理を行わないようにします。
+$0035-0058$
+Disables fade in and fade out transitions.
+
+
+// Export /////////////////////////////////////////////////
+
+//保存先を指定して下さい
+$0036-0001$
+Please select a folder to save to.
+
+//ソースファイル [%s] のオープンに失敗しました。
+$0036-0002$
+Failed to open source file [%s].
+
+//ソースファイル [%s] の読み込みに失敗しました。
+$0036-0003$
+Failed to load source file [%s].
+
+//フォルダ [%s] の作成に失敗しました。書き込み禁止になっている可能性があります。違うフォルダを指定してください。
+$0036-0004$
+Creation of folder [%s] failed. It's possible that writing is prohibited. Please specify a different folder.
+
+//ファイル [%s] の書き込みに失敗しました。
+$0036-0005$
+Failed to write file [%s].
+
+//ファイル [%s] のオープンに失敗しました。
+$0036-0006$
+Failed to open file [%s].
+
+
+
+// Open Config /////////////////////////////////////////////////
+
+//環境設定を起動しています
+$0041-0001$
+Starting Engine Settings
+
+//設定を反映させています。しばらくお待ちください。
+$0041-0002$
+Settings are saving. Please wait.
+
+
+
+// System /////////////////////////////////////////////////
+
+//実行エラー
+$0100-0000$
+Execution error
+
+//メモリまたはリソースが不足しています。
+$0100-0001$
+Memory or resource is insufficient.
+
+//指定されたファイルが見つかりませんでした。
+$0100-0002$
+The specified file could not be found.
+
+//指定されたパスが見つかりませんでした。
+$0100-0003$
+The specified path was not found.
+
+//.exe ファイルが無効です。Win32 の .exe ではないか、.exe イメージ内にエラーがあります。
+$0100-0004$
+The .exe file is invalid. It is not a Win32 .exe, or there is an error in the .exe image.
+
+//オペレーティングシステムが、指定されたファイルへのアクセスを拒否しました。
+$0100-0005$
+The operating system denied access to the specified file.
+
+//ファイル名の関連付けが不完全または無効です。
+$0100-0006$
+File name association is incomplete or invalid.
+
+//ほかの DDE トランザクションが現在処理中なので、DDE トランザクションを完了できませんでした。
+$0100-0007$
+The DDE transaction could not be completed because another DDE transaction is currently being processed.
+
+//DDE トランザクションが失敗しました。
+$0100-0008$
+DDE transaction failed.
+
+//要求がタイムアウトしたので、DDE トランザクションを完了できませんでした。
+$0100-0008$
+DDE transaction could not be completed as request timed out.
+
+//指定されたダイナミックリンクライブラリ（DLL）が見つかりませんでした。
+$0100-0010$
+The specified dynamic link library (DLL) could not be found.
+
+//指定されたファイル拡張子に関連付けられたアプリケーションがありません。
+$0100-0011$
+There is no application associated with the specified file extension.
+
+//操作を完了するのに十分なメモリがありません。
+$0100-0012$
+There is not enough memory to complete the operation.
+
+//共有違反が発生しました。
+$0100-0013$
+A sharing violation occurred.
+
+
+
+// cs2conf.dll /////////////////////////////////////////////////
+
+//%s システム環境設定
+$0500-0001$
+%s System Preferences
+
+//項目
+$0500-0002$
+Item
+
+//内容
+$0500-0003$
+Content
+
+//システム情報を %s に保存する
+$0500-0004$
+Save system information to %s
+
+//環境情報の保存先
+$0500-0005$
+Storage location of environment information
+
+//テキストファイル(*.txt)
+$0500-0006$
+Text files (*.txt)
+
+//*.txt
+$0500-0007$
+*.txt
+
+//全てのファイル(*.*)
+$0500-0008$
+All files (*.*)
+
+//*.*
+$0500-0009$
+*.*
+
+//起動時に"%s"を作成する
+$0500-0010$
+Generate '%s' on startup.
+
+//解像度を変更しない
+$0500-0011$
+Keep resolution the same
+
+//%d x %d
+$0500-0012$
+%d x %d
+
+//標準
+$0500-0013$
+Standard
+
+//1/2
+$0500-0014$
+1/2
+
+//1/4
+$0500-0015$
+1/4
+
+//圧縮しない
+$0500-0016$
+Do not compress
+
+//圧縮する
+$0500-0017$
+Compress
+
+//%d MB
+$0500-0018$
+%d MB
+
+//ゲームタイトル
+$0500-0019$
+Game Title
+
+//ゲームバージョン
+$0500-0020$
+Game Version
+
+//%d.%d
+$0500-0021$
+%d.%d
+
+//システムバージョン
+$0500-0022$
+System Version
+
+//ＰＣメーカー名
+$0500-0023$
+PC Manufacturer
+
+//ＰＣモデル名
+$0500-0024$
+PC Model Name
+
+//ＯＳ
+$0500-0025$
+OS
+
+//ＣＰＵメーカー
+$0500-0026$
+CPU Type
+
+//ＣＰＵクロック(測定値)
+$0500-0027$
+CPU Clock Rate
+
+//%dMHz (%d.%dGHz)
+$0500-0028$
+%dMHz (%d.%dGHz)
+
+//空きメモリ／全メモリ
+$0500-0029$
+Free Ram / Total Ram
+
+//%dMB / %dMB
+$0500-0030$
+%dMB / %dMB
+
+//ビデオカード
+$0500-0031$
+Video Card
+
+//ビデオドライババージョン
+$0500-0032$
+Video Driver Version
+
+//画面解像度
+$0500-0033$
+Resolution
+
+//%d x %d (%dHz)
+$0500-0034$
+%d x %d (%dHz)
+
+//画面色数
+$0500-0035$
+Bit Depth
+
+//32bit フルカラー
+$0500-0036$
+32bit Full Color
+
+//24bit フルカラー
+$0500-0037$
+24bit Full Color
+
+//16bit ハイカラー
+$0500-0038$
+16bit High Color
+
+//8bit インデックスカラー
+$0500-0039$
+8bit Indexed Color
+
+//DirectX バージョン
+$0500-0040$
+DirectX Version
+
+
+// cs2conf.dll - Dialog 1 /////////////////////////////////////////////////
+
+//全般
+$0501-0001$
+General
+
+//起動時のスクリーンモード
+$0501-0002$
+Startup Screen Mode
+
+//前回ゲーム終了時の設定を使用する
+$0501-0003$
+Use the same setting as last time
+
+//フルスクリーンモード
+$0501-0004$
+Fullscreen Mode
+
+//ウィンドウモード
+$0501-0005$
+Window Mode
+
+//ゲーム中はスクリーンセーバーを起動させない
+$0501-0006$
+Prevent screensaver from starting while playing.
+
+//ウィンドウを最小化させた時、タイトルを”メモ帳”に偽装する
+$0501-0007$
+When minimized, display the game title as 'Notepad'.
+
+//（最小化時、サウンドの再生を中断させるには、
+$0501-0008$
+(When minimized, to stop sound from playing,
+
+//『サウンド』-『スティッキーフォーカス』をOFFにしてください）
+$0501-0009$
+make sure 'Sound/Other' -> 'Sticky Focus' is turned off.
+
+//初期値に戻す
+$0501-0010$
+Restore Default
+
+//起動時に"info.txt"を作成する
+$0501-0011$
+Generate 'info.txt' on startup.
+
+
+// cs2conf.dll - Dialog 1 /////////////////////////////////////////////////
+
+//表示 1
+$0502-0001$
+Display 1
+
+//ゲームウィンドウサイズ
+$0502-0002$
+Game Screen Size
+
+//フレームレート
+$0502-0003$
+Frame Rate
+
+//640 X 480
+$0502-0004$
+640 X 480
+
+//800 X 600
+$0502-0005$
+800 X 600
+
+//1024 X 768
+$0502-0006$
+1024 X 768
+
+//1280 X 960
+$0502-0007$
+1280 X 960
+
+//1600 X 1200
+$0502-0008$
+1600 X 1200
+
+//30 FPS
+$0502-0009$
+30 FPS
+
+//60 FPS
+$0502-0010$
+60 FPS
+
+//初期値に戻す
+$0502-0011$
+Restore Default
+
+//カーソル
+$0502-0012$
+Cursor
+
+//オリジナルカーソル
+$0502-0013$
+Original Cursor
+
+//システムカーソル
+$0502-0014$
+System Cursor
+
+//フルスクリーン時の画面サイズ
+$0502-0015$
+Full Screen Window Size
+
+//ウィンドウモード時のウィンドウサイズ制限を行う
+$0502-0016$
+Limit window size in windowed mode
+
+//※再起動後に変更されます
+$0502-0017$
+*Requires restart.
+
+
+// cs2conf.dll - Dialog 3 /////////////////////////////////////////////////
+
+//サウンド・その他
+$0503-0001$
+Sound/Other
+
+//Direct3DSound を使用する
+$0503-0002$
+Use Direct3DSound
+
+//スティッキーフォーカスを有効にする
+$0503-0003$
+Enable sticky focus
+
+//（スティッキーフォーカスを有効にすると、
+$0503-0004$
+(When sticky focus is enabled,
+
+//ウィンドウが非アクティブの時も音声が再生されるようになります）
+$0503-0005$
+even when the game loses focus, sound will continue to play)
+
+//初期値に戻す
+$0503-0006$
+Restore Default
+
+//キャッシュメモリ使用量 (0なら使用しない)
+$0503-0007$
+Memory used for cache (0 for none)
+
+//複数コアCPUに対応させる
+$0503-0008$
+Utilize multiple CPU cores
+
+//効果音・ボイスのパンを有効にする
+$0503-0009$
+Enable voice and sound panning
+
+//この設定はゲームの再起動が必要です。
+$0503-0010$
+You will need to restart the game for these settings to take effect
+
+
+// cs2conf.dll - Dialog 4 /////////////////////////////////////////////////
+
+//環境依存
+$0504-0001$
+Compatability
+
+//初期値に戻す
+$0504-0002$
+Restore Default
+
+//セーブ・ロード画面でセーブデータのサムネイルが黒くなってしまう対策
+$0504-0003$
+Fix for blank saved game thumbnails on the save/load screen.
+
+//Rage128 対策 (Rage128ビデオカードを使用してる場合はチェックしてください）
+$0504-0004$
+Measures against Rage 128 (Please check if you are using Rage 128 video card)
+
+//Z バッファを使用しない
+$0504-0005$
+Do not use Z buffer
+
+//フルスクリーンの時、ワイドディスプレイ用処理を行う
+$0504-0006$
+When full screen, perform processing for widescreen display
+
+//ファイル先読み機能を無効にする
+$0504-0007$
+Disable file read-ahead function
+
+//ムービー再生を行わない
+$0504-0008$
+Don't play movies.
+
+//この設定はゲームの再起動が必要です。
+$0504-0009$
+You will need to restart the game for these settings to take effect
+
+//ピクセルシェーダーを使用しない
+$0504-0010$
+Do not use pixel shader
+
+//Direct3D同期待ちを行う
+$0504-0011$
+Enable Vsync
+
+
+// cs2conf.dll - Dialog 5 /////////////////////////////////////////////////
+
+//環境設定を起動しています
+$0505-0001$
+Loading configuration...
+
+
+// cs2conf.dll - Dialog 6 /////////////////////////////////////////////////
+
+//システム情報
+$0506-0001$
+System Info
+
+//システム情報
+$0506-0002$
+System Information
+
+//システム情報を info.txt に保存する
+$0506-0003$
+Save system information to info.txt
+
+
+// cs2conf.dll - Dialog 7 /////////////////////////////////////////////////
+
+//設定を反映させています。しばらくお待ちください。
+$0507-0001$
+Settings are saving. Please wait.
+
+
+// cs2conf.dll - Dialog 8 /////////////////////////////////////////////////
+
+//3D設定 1
+$0508-0001$
+3D Settings 1
+
+//初期値に戻す
+$0508-0002$
+Restore Default
+
+//ハードウェアTnLを使用する
+$0508-0003$
+Use Hardware TnL
+
+//ライトを使用する
+$0508-0004$
+Use lights
+
+//バックバッファを使用する
+$0508-0005$
+Use a backbuffer
+
+//テクスチャ補間(縮小)
+$0508-0006$
+Downsizing
+
+//POINT （低質）
+$0508-0007$
+POINT (Low Quality)
+
+//LINEAR （標準）
+$0508-0008$
+BILINEAR (Default)
+
+//ANISOTROPIC (上質)
+$0508-0009$
+ANISOTROPIC (High)
+
+//テクスチャ補間(拡大)
+$0508-0010$
+Upscaling
+
+//POINT (低質)
+$0508-0011$
+POINT (Low Quality)
+
+//LINEAR (標準)
+$0508-0012$
+BILINEAR (Default)
+
+//ANISOTROPIC (上質)
+$0508-0013$
+ANISOTROPIC (High)
+
+//テクスチャ解像度
+$0508-0014$
+Texture Deph
+
+//16 bit (ハイカラー)
+$0508-0015$
+16 bit (High Color)
+
+//32 bit (フルカラー)
+$0508-0016$
+32 bit (Full Color)
+
+//全般
+$0508-0017$
+General
+
+//V-Sync待ちを行う
+$0508-0018$
+Enable V-sync
+
+//この設定はゲームの再起動が必要です。
+$0508-0019$
+You will need to restart the game for these settings to take effect
+
+
+// cs2conf.dll - Dialog 9 /////////////////////////////////////////////////
+
+//3D設定 2
+$0509-0001$
+3D setting 2
+
+//初期値に戻す
+$0509-0002$
+Restore Defaults
+
+//テクスチャ解像度が 16bit の時、ディザリング補間を行う
+$0509-0003$
+Use dithering when using 16 bit textures
+
+//アンチエイリアス処理を有効にする
+$0509-0004$
+Enable anti-aliasing
+
+//フォグタイプ
+$0509-0005$
+Fog type
+
+//ピクセルフォグ
+$0509-0006$
+Pixel fog
+
+//頂点フォグ
+$0509-0007$
+Vertex fog
+
+//フォグを使用しない
+$0509-0008$
+Do not use fog
+
+//テクスチャ
+$0509-0009$
+Texture
+
+//サイズ
+$0509-0010$
+Size
+
+//圧縮
+$0509-0011$
+Compression
+
+//この設定はゲームの再起動が必要です。
+$0509-0012$
+You will need to restart the game for these settings to take effect
+
+
+// cs2conf.dll - Dialog 10 /////////////////////////////////////////////////
+
+//表示 2
+$0510-0001$
+Display 2
+
+//初期値に戻す
+$0510-0002$
+Restore Default
+
+//フルスクリーン時の表示1
+$0510-0003$
+Full Screen Window Scaling
+
+//画面サイズに拡大
+$0510-0004$
+Scale to Fit
+
+//ウィンドウ時のサイズ
+$0510-0005$
+Use Window Size
+
+//フルスクリーン時の表示2
+$0510-0006$
+Full Screen Window Vertical Position
+
+//中央に表示
+$0510-0007$
+Centered
+
+//上に表示
+$0510-0008$
+Top Align
+
+//下に表示
+$0510-0009$
+Bottom Align
+
+//メッセージウィンドウ位置
+$0510-0010$
+Message Window Position
+
+//標準の位置
+$0510-0011$
+Default
+
+//画面の下隅
+$0510-0012$
+Below the Screen
+
+//画面の上隅
+$0510-0013$
+Above the Screen
+
+//ゲーム画面外の背景
+$0510-0014$
+Outside Background
+
+//黒
+$0510-0015$
+Black
+
+//パターンの壁紙
+$0510-0016$
+Use a Pattern
+
+
+// cs2conf.dll - Dialog 11 /////////////////////////////////////////////////
+
+//3D設定
+$0511-0001$
+3D Settings
+
+//初期値に戻す
+$0511-0002$
+Restore Default
+
+//ハードウェアTnLを使用する
+$0511-0003$
+Use Hardware TnL
+
+//バックバッファを使用する
+$0511-0004$
+Use a backbuffer
+
+//縮小
+$0511-0005$
+Downsizing
+
+//POINT （低質）
+$0511-0006$
+POINT (Low Quality)
+
+//LINEAR （標準）
+$0511-0007$
+BILINEAR (Default)
+
+//ANISOTROPIC (上質)
+$0511-0008$
+ANISOTROPIC (High)
+
+//拡大
+$0511-0009$
+Upscaling
+
+//POINT (低質)
+$0511-0010$
+POINT (Low Quality)
+
+//LINEAR (標準)
+$0511-0011$
+BILINEAR (Default)
+
+//ANISOTROPIC (上質)
+$0511-0012$
+ANISOTROPIC (High)
+
+//テクスチャ解像度
+$0511-0013$
+Texture Deph
+
+//16 bit (ハイカラー)
+$0511-0014$
+16 bit (High Color)
+
+//32 bit (フルカラー)
+$0511-0015$
+32 bit (Full Color)
+
+//全般
+$0511-0016$
+General
+
+//この設定はゲームの再起動が必要です。
+$0511-0017$
+You will need to restart the game for these settings to take effect
+
+//テクスチャ解像度が 16bit の時、ディザリング補間を行う
+$0511-0018$
+Use dithering when using 16 bit textures
+
+//テクスチャ補間
+$0511-0019$
+Texture Sampling
+
+
+// cs2conf.dll - Dialog tooltip /////////////////////////////////////////////////
+
+//前回ゲームプレイを終了した時の設定を使用します。
+$0520-0001$
+Remembers the last used setting from when the game was previously closed.
+
+//常にフルスクリーンモードで起動します。
+$0520-0002$
+Always start the game in fullscreen mode.
+
+//常にウィンドウモードで起動します。
+$0520-0003$
+Always start the game in windowed mode.
+
+//オリジナルカーソルを使用します。
+$0520-0004$
+Use the game's custom cursor.
+
+//カーソルの変更は行わずに、ウィンドウズのマウスカーソルを使用します。
+$0520-0005$
+If you have problem with the cursor use this to use the default windows cursor.
+
+//ゲーム起動中はスクリーンセーバーを起動しないようにします。
+$0520-0006$
+Prevents the screensaver from starting while the game is open.
+
+//ゲームウィンドウを最小化した時、タスクバーに”メモ帳”として表示されるようにします。
+$0520-0007$
+When minimized, the game will appear on the taskbar as notepad.
+
+//ゲーム起動時にPC環境情報ファイル(info.txt)を作成しないことで、起動を若干早くすることができます
+$0520-0008$
+Automatically exports your computer specs to info.txt on launch.
+
+//ゲームウィンドウサイズを変更します。
+$0520-0009$
+Changes the game window size.
+
+//ゲームウィンドウサイズを変更します。
+$0520-0010$
+Changes the game window size.
+
+//ゲームウィンドウサイズを変更します。
+$0520-0011$
+Changes the game window size.
+
+//ゲームウィンドウサイズを変更します。
+$0520-0012$
+Changes the game window size.
+
+//ゲームウィンドウサイズを変更します。
+$0520-0013$
+Changes the game window size.
+
+//ゲーム動作スピードを 30fps にします。
+$0520-0014$
+Run the game at 30 frames per second.
+
+//ゲーム動作スピードを 60fps にします。
+$0520-0015$
+Run the game at 60 frames per second.
+
+//16bit テクスチャを使用します。ビデオメモリの消費は少ないですが、画像は荒くなります。
+$0520-0016$
+Use 16bit textures. Uses less video memory, but has lower image quality.
+
+//32bit テクスチャを使用します。16bitよりビデオメモリを多く使用しますが綺麗です。
+$0520-0017$
+Use 32bit textures. Uses more video memory than 16bit textures.
+
+//テスクチャ拡大縮小補完に『点フィルタリング』を使用します。画面に縦横線が入る場合はこれを選択してください。
+$0520-0018$
+Use 'Point filtering' when resizing textures. Fast, but poor image quality.
+
+//テスクチャ拡大縮小補完に『バイリニアフィルタリング』を使用します。
+$0520-0019$
+Use 'Bilinear Filtering' for resizing textures. Default setting.
+
+//テスクチャ拡大縮小補完に『異方性テクスチャフィルタリング』を使用します。
+$0520-0020$
+Use 'Antistropic Filtering' for resizing textures. Highest quality, but slower.
+
+//テスクチャ拡大縮小補完に『点フィルタリング』を使用します。画面に縦横線が入る場合はこれを選択してください。
+$0520-0021$
+Use 'Point filtering' when resizing textures. Fast, but poor image quality.
+
+//テスクチャ拡大縮小補完に『バイリニアフィルタリング』を使用します。
+$0520-0022$
+Use 'Bilinear Filtering' for resizing textures. Default Setting.
+
+//テスクチャ拡大縮小補完に『異方性テクスチャフィルタリング』を使用します。
+$0520-0023$
+Use 'Antistropic Filtering' for resizing textures. Highest quality, but slower.
+
+//減色処理時にディザリング処理を行います。
+$0520-0024$
+Enables dithering when downscaling the bitdepth of images.
+
+//ゲームウィンドウがアクティブでない時も音声が聞こえるようにします。
+$0520-0025$
+The game will continue to play audio even when the window is not in focus.
+
+//サウンド再生に Direct3DSound を使用します。OFFの場合はDirectSoundを使用します。
+$0520-0026$
+Use Direct3DSound for audio playback. When disabled, falls back to DirectSound.
+
+//設定を初期値に戻します。
+$0520-0027$
+Restore the values to their original setting.
+
+//セーブ画面でセーブしてもサムネイル(縮小された画面)部分が真っ黒になってしまう場合があります。このような場合は、この項目にチェックしてください。
+$0520-0028$
+If when on the save/load screen the thumbnails appear blank, try this option.
+
+//ビデオカードにRage128系列を使用していると、画面描画が正しく行われない場合があります。そのような場合は、この項目にチェックしてください。
+$0520-0029$
+If you use the Rage 128 series for the video card, screen drawing may not be performed correctly. In such cases, please check this item.
+
+//上記設定を行っても画面描画が正しく行われない場合、この項目をチェックしてみてください。
+$0520-0030$
+If screen rendering can not be performed correctly even after making the above settings, please check this item.
+
+//ワイドディスプレイでフルスクリーン表示にした時、縦横比が変わらないように調整します。(ディスプレイ側で対応できない場合の応急処置として使用してください)
+$0520-0031$
+Adjust so that aspect ratio does not change when full screen is displayed with wide display. (Please use it as a first aid if you can not respond on the display side)
+
+//ゲームの動作が不安定になることがある場合、こちらをチェックすることで解決できる場合があります。
+$0520-0032$
+If the behavior of the game becomes unstable, you may be able to solve it by checking here.
+
+//ムービー再生の不具合が解消しない場合、これをチェックしてください。
+$0520-0033$
+If movie playback hangs or crashes, use this to disable movies.
+
+//画面が正常に表示されない場合、ピクセルシェーダーが正常に動作していない可能性があります。これをチェックすることでピクセルシェーダーを無効にします。
+$0520-0034$
+If the screen does not display correctly, the pixel shader may not be working properly. By checking this you invalidate the pixel shader.
+
+//画像データのキャッシュに使用するメモリ量を指定します。
+$0520-0035$
+Specify the memory allocated to caching image data.
+
+//ポリゴン計算とライティング計算をビデオカード側で行います。
+$0520-0036$
+Allows polygon and lighting calculations to be accelerated by hardware.
+
+//ライト演出を有効にします。
+$0520-0037$
+Activate direct lighting.
+
+//画面演出用にVRAMを使用します。OFFにすると一部演出が無効になります。
+$0520-0038$
+Loads images into video memory for display. You should probably leave this on.
+
+//VSYNC待ちを行いティアリングを防ぎます。擬似的な処理の為、環境によっては有効にしていてもティアリングが発生する場合があります。
+$0520-0039$
+VSYNC waits and prevents tearing. Because of pseudo processing, depending on the environment, tearing may occur even if it is enabled.
+
+//２つ以上のCPUがある場合、処理を分散させて処理速度を向上させます。
+$0520-0040$
+With 2 or more CPU cores, distributes processing and improves performance.
+
+//サウンドのパン処理（音を左右に振る）を行います。環境によって左右どちらかの音が消えてしまう場合はOFFにして下さい。
+$0520-0041$
+Allows usage of sound panning and directional audio.
+
+//ポリゴンモデルのエッジ部分にアンチエイリアス処理を行います。ビデオカードがアンチエイリアスに対応している必要があります。
+$0520-0042$
+Anti-alias processing is performed on the edge part of the polygon model. The video card must support anti-aliasing.
+
+//高品位なフォグですが、処理が重くなる場合があります。ピクセルシェーダに対応したビデオカードが必要です。
+$0520-0043$
+Although it is a high-quality fog, processing may be heavy. You need a video card that supports pixel shaders.
+
+//標準的なフォグです。ピクセルフォグに対応していない場合はこちらを使用してください。
+$0520-0044$
+Standard fog. Please use here if it does not correspond to pixel fog.
+
+//フォグを使用しません。フォグ効果を使用すると画面に異常が出る場合は、これを選択してください。
+$0520-0045$
+Do not use fog. Please select this when the fog effect is used and the screen appears abnormal.
+
+//３Ｄモードで使用するテクスチャのサイズを指定します。サイズを小さくすると処理が軽くなりますが、画像が荒くなります。
+$0520-0046$
+Specify the size of the texture to use in 3D mode. Processing will be lighter if you reduce the size, but the image becomes rough.
+
+//３Ｄモードで使用するテクスチャを圧縮するか指定します。圧縮すると処理が軽くなりますが、画像が荒くなることがあります。
+$0520-0047$
+Specify whether texture compression should be used in 3D mode. Although compression will reduce processing time, the image may become rough.
+
+//フルスクリーン時のゲーム画面サイズをディスプレイに収まるサイズまで拡大縮小します。 
+$0520-0048$
+When in fullscreen mode, the game screen scales to the size of the window.
+
+//フルスクリーン時のゲーム画面サイズをウィンドウ表示時の画面サイズのまま表示します。
+$0520-0049$
+When in fullscreen mode, the game screen stays at its specified size.
+
+//フルスクリーン時にゲーム画面をスクリーン中央に表示します。
+$0520-0050$
+When in fullscreen mode, the game window is centre aligned.
+
+//フルスクリーン時にゲーム画面をスクリーン上部に表示します。
+$0520-0051$
+When in fullscreen mode, the game window is top aligned.
+
+//フルスクリーン時にゲーム画面をスクリーン下部に表示します。
+$0520-0052$
+When in fullscreen mode, the game window is bottom aligned.
+
+//フルスクリーン時のメッセージウィンドウの表示位置をウィンドウモード時と同じ初期位置にします。 
+$0520-0053$
+When in full screenmode, the message window is in the same position as normal.
+
+//フルスクリーン時のメッセージウィンドウの初期表示位置を画面下にします。 
+$0520-0054$
+When in fullscreen mode, the message window displays below the game screen.
+
+//フルスクリーン時のメッセージウィンドウの初期表示位置を画面上にします。 
+$0520-0055$
+When in fullscreen mode, the message window displays above the game screen.
+
+//ゲーム画面外の余り部分を黒にします。
+$0520-0056$
+The screen outside of the game area is black.
+
+//ゲーム画面外の余り部分を壁紙にします。
+$0520-0057$
+The screen outside of the game area uses a background patern.
+
+//ウィンドウサイズよりデスクトップのサイズが小さい場合、フルスクリーンモードにしてゲームウィンドウが画面からあふれてしまうのを防ぎます。
+$0520-0058$
+Prevents you from using a screen size larger than the fullscreen resolution.
+
+//画面表示に異常（一部が表示されない・残像が残る等）が出てしまう場合、このオプションを有効にすることで正常に表示される可能性があります。
+$0520-0059$
+If an abnormality (part not displayed, residual image remaining, etc.) appears on the screen display, it may be displayed normally by enabling this option.
+
+
+
+// BootMenu.exe /////////////////////////////////////////////////
+
+//DFNエラー
+$1000-0001$
+DFN error.
+
+//title パラメータに不正があります
+$1000-0002$
+title parameter error.
+
+//bg パラメータに不正があります
+$1000-0003$
+bg parameter error.
+
+//regpath パラメータに不正があります
+$1000-0004$
+regpath parameter error.
+
+//pathkey パラメータに不正があります
+$1000-0005$
+pathkey parameter error.
+
+//uninst パラメータに不正があります
+$1000-0006$
+uninst parameter error.
+
+//inst パラメータに不正があります
+$1000-0007$
+inst parameter error.
+
+//boot パラメータに不正があります
+$1000-0008$
+boot parameter error.
+
+//mutex パラメータに不正があります
+$1000-0009$
+mutex parameter error.
+
+//mutex_b パラメータに不正があります
+$1000-0010$
+mutex_b parameter error.
+
+//manual パラメータに不正があります
+$1000-0011$
+manual parameter error.
+
+//config パラメータに不正があります
+$1000-0012$
+config parameter error.
+
+//brand パラメータに不正があります
+$1000-0013$
+brand parameter error.
+
+//instkey パラメータに不正があります
+$1000-0014$
+instkey parameter error.
+
+//save パラメータに不正があります
+$1000-0015$
+save parameter error.
+
+//configpath パラメータに不正があります
+$1000-0016$
+configpath parameter error.
+
+//instreg パラメータに不正があります
+$1000-0017$
+instreg parameter error.
+
+//browse_url パラメータに不正があります
+$1000-0018$
+browse_url parameter error.
+
+//browse_title パラメータに不正があります
+$1000-0019$
+browse_title parameter error.
+
+//#INIT内に不正な行が検出されました : %d
+$1000-0020$
+Error found at line %d in #INIT.
+
+//boot error
+$1000-0021$
+boot error
+
+//設定ファイル boot.dfn の読み込みに失敗しました
+$1000-0022$
+Failed to read configuration file boot.dfn.
+
+//このゲームにはDirectX%d.%d以上が必要です。\n[%s]を実行してDirectXをインストールして下さい
+$1000-0023$
+This game requires DirectX %d.%d or above.\nPlease open [%s] and install DirectX.
+
+//DirectXがインストールされていません
+$1000-0024$
+DirectX is not installed.
+
+//古いバージョンのDirectX%d.%d%cがインストールされています。\n[%s]を実行してDirectXをインストールして下さい
+$1000-0025$
+An older version (DirectX %d.%d) is installed.\nPlease open [%s] and install DirectX.
+
+//DirectXバージョンエラー
+$1000-0026$
+DirectX version error.
+
+//正常にインストールされていません。ゲームディスクより再インストールを行って下さい。
+$1000-0027$
+Installation error. Please insert the game disc and re-install.
+
+//起動エラー
+$1000-0028$
+Boot error.
+
+//多重起動は出来ません
+$1000-0029$
+You cannot run this application more than once.
+
+//起動ファイル [%s\\%s] の実行に失敗しました。 インストール状況を確認してください
+$1000-0030$
+The boot file [%s\\%s] could not be opened. Please check if it was installed properly.
+
+//環境設定に内部エラーが発生しました。環境設定を終了します。
+$1000-0032$
+An error has occurred in system settings. System settings will now close.
+
+//インストール
+$1000-0033$
+Install
+
+//ゲーム起動
+$1000-0034$
+Start 
+
+//マニュアル
+$1000-0035$
+Manual
+
+//アンインストール
+$1000-0036$
+Uninstall
+
+//メニューを終了する
+$1000-0037$
+Close menu
+
+//システム環境設定
+$1000-0038$
+System settings
+
+//セーブフォルダを開く
+$1000-0039$
+Open save data folder
+
+
+// install.exe /////////////////////////////////////////////////
+
+//インストールを終了します。
+$1010-0001$
+Finish installation
+
+//インストール
+$1010-0002$
+Install
+
+//このメディアからはインストールできません。 インストールを終了します
+$1010-0003$
+You cannot install from this media. Closing installer.
+
+//ゲームが起動しています。終了させてから再度実行してください。
+$1010-0005$
+The game is currently running. Please close the game and try installation again.
+
+//システムファイルが改変されています。実行を中止します。
+$1010-0006$
+System files have been modified. Closing installation.
+
+//Boot Error
+$1010-0007$
+Boot Error
+
+//%s。インストールを中止します
+$1010-0008$
+%s. Closing installation.
+
+//インストールエラー
+$1010-0009$
+Installation error
+
+//インストール情報の書き込みに失敗しました
+$1010-0010$
+Failed to write installation information.
+
+//不要なファイルを削除しています
+$1010-0011$
+Deleting unnecessary files.
+
+//データをインストールしています
+$1010-0012$
+Installing data.
+
+//インストールを中止しますか？
+$1010-0013$
+Stop installation?
+
+//キャンセル
+$1010-0014$
+Cancel
+
+//『%s』のインストールを開始します
+$1010-0015$
+Installing "%s".
+
+//インストールを中止してよろしいですか？
+$1010-0016$
+Would you like to stop the installation?
+
+//確認
+$1010-0017$
+Confirm
+
+//(インストール済み)
+$1010-0018$
+(Installation finished)
+
+//このゲームはインストールデータの選択は出来ません。『次へ』を押してください。
+$1010-0019$
+The install data cannot be selected. Please press "Next".
+
+//インストール先フォルダを選択してください
+$1010-0020$
+Select installation path.
+
+//インストール済みの『%s』が見つかりました。
+$1010-0021$
+Found "%s", already installed.
+
+//このフォルダにインストールします。『次へ』を押してください
+$1010-0022$
+The game will be installed in this folder. Please press "Next".
+
+//既にインストールされているファイルは削除されません。 よろしいですか？
+$1010-0023$
+The installed files cannot be deleted. Accept?
+
+//注意
+$1010-0024$
+Warning
+
+//インストール先指定に誤りがあります。
+$1010-0025$
+There is an error in the specified path.
+
+//インストール先エラー
+$1010-0026$
+Install destination error
+
+//インストール先にはハードディスクを選択してください
+$1010-0027$
+Please select which hard disk drive to install the game in.
+
+//インストール先ドライブ情報の取得に失敗しました。インストール先を再設定してください
+$1010-0028$
+Failed to get information about the installation drive. Please choose a different destiation.
+
+//インストール先ドライブの残り容量が足りません。インストール先を再設定してください
+$1010-0029$
+The selected hard disk does not have enough space. Please choose a different destination.
+
+//インストール先フォルダ名が長過ぎます。インストール先を再設定してください
+$1010-0030$
+The destination path name is too long. Please choose a different destination.
+
+//以下のデータをインストールします
+$1010-0031$
+Installing the following data:
+
+//以下のデータを削除します
+$1010-0032$
+Deleting the following data:
+
+//以下のフォルダにインストールされます
+$1010-0033$
+Installing in this folder:
+
+//デスクトップにショートカットを作成します
+$1010-0034$
+Create a desktop shortcut
+
+//スタートメニューにゲームを登録します
+$1010-0035$
+Place a shortcut in the start menu
+
+//DFNエラー
+$1010-0036$
+DFN error
+
+//title パラメータに不正があります
+$1010-0037$
+title parameter error.
+
+//bg パラメータに不正があります
+$1010-0038$
+bg parameter error.
+
+//モード数が上限を超えています
+$1010-0039$
+Limit on number of modes exceeded.
+
+//set1 パラメータに不正があります
+$1010-0040$
+set1 parameter error.
+
+//set2 パラメータに不正があります
+$1010-0041$
+set2 parameter error.
+
+//set3 パラメータに不正があります
+$1010-0042$
+set3 parameter error.
+
+//folder パラメータに不正があります
+$1010-0043$
+folder parameter error.
+
+//deffolder パラメータに不正があります
+$1010-0044$
+deffolder parameter error.
+
+//regpath パラメータに不正があります
+$1010-0045$
+regpath parameter error.
+
+//pathkey パラメータに不正があります
+$1010-0046$
+pathkey parameter error.
+
+//mutex パラメータに不正があります
+$1010-0047$
+mutex parameter error.
+
+//mutex_i パラメータに不正があります
+$1010-0048$
+mutex_i parameter error.
+
+//startmenu パラメータに不正があります
+$1010-0049$
+startmenu parameter error.
+
+//shortcut パラメータに不正があります
+$1010-0050$
+shortcut parameter error.
+
+//link パラメータに不正があります
+$1010-0051$
+link parameter error.
+
+//icon パラメータに不正があります
+$1010-0052$
+icon parameter error.
+
+//uninst パラメータに不正があります
+$1010-0053$
+uninst parameter error.
+
+//uninstkey パラメータに不正があります
+$1010-0054$
+uninstkey parameter error.
+
+//manual パラメータに不正があります
+$1010-0055$
+manual parameter error.
+
+//cmode パラメータに不正があります
+$1010-0056$
+cmode parameter error.
+
+//v_code パラメータに不正があります
+$1010-0057$
+v_code parameter error.
+
+//brand パラメータに不正があります
+$1010-0058$
+brand parameter error.
+
+//instkey パラメータに不正があります
+$1010-0059$
+instkey parameter error.
+
+//instimg パラメータに不正があります
+$1010-0060$
+instimg parameter error.
+
+//instscr パラメータに不正があります
+$1010-0061$
+instscr parameter error.
+
+//defpfolder パラメータに不正があります
+$1010-0062$
+defpfolder parameter error.
+
+//keyurl パラメータに不正があります
+$1010-0063$
+keyurl parameter error.
+
+//keycrc パラメータに不正があります
+$1010-0064$
+keyrc parameter error.
+
+//keyretry パラメータに不正があります
+$1010-0065$
+keyretry parameter error.
+
+//qrcode パラメータに不正があります
+$1010-0066$
+qrcode parameter error.
+
+//#INIT内に不正な行が検出されました : %d
+$1010-0067$
+Error found at line %d in #INIT.
+
+//copy パラメータに不正があります
+$1010-0068$
+copy parameter error.
+
+//ファイル %s が見つかりません
+$1010-0069$
+Cannot find file %s.
+
+//dcopy パラメータに不正があります
+$1010-0070$
+parameter error.
+
+//del パラメータに不正があります
+$1010-0071$
+del parameter error.
+
+//excopy パラメータに不正があります
+$1010-0072$
+excopy parameter error.
+
+//wallmode パラメータに不正があります
+$1010-0073$
+wallmode parameter error.
+
+//インストールウィザード
+$1010-0100$
+Installation wizard
+
+//開始する場合は次へを押してください。
+$1010-0101$
+Press next to begin.
+
+//（インストーラはセーフモードで起動されています）
+$1010-0102$
+(the installer is running in safe mode)
+
+//インストールデータの選択
+$1010-0103$
+Install data selection
+
+//インストールするデータを選択してください。
+$1010-0104$
+Please choose which data to install.
+
+//必要空き容量
+$1010-0105$
+Required free space
+
+//ハードディスク情報
+$1010-0106$
+Hard disk information
+
+//インストールフォルダの選択
+$1010-0107$
+Installation folder selection
+
+//必要空き容量
+$1010-0108$
+Required free space
+
+//ハードディスク情報
+$1010-0109$
+Hard disk information
+
+//インストールフォルダ
+$1010-0110$
+Installation folder
+
+//インストール先の変更
+$1010-0111$
+Change installation destination
+
+//にインストールされます
+$1010-0112$
+Installation destination
+
+//強制的に別フォルダにインストールする
+$1010-0113$
+Force installation in this folder.
+
+//オプションの選択
+$1010-0114$
+Options
+
+//インストールオプションを設定してください
+$1010-0115$
+Pleas set installation options.
+
+//ショートカットの作成
+$1010-0116$
+Create shortcut
+
+//デスクトップにショートカットを作成する
+$1010-0117$
+Create a shortcut on the desktop
+
+//スタートメニューに登録する
+$1010-0118$
+Register on the start menu
+
+//ゲームをプレイできるユーザー (設定変更にはAdministrator権限が必要です)
+$1010-0119$
+Users who can play the game (you must have administrator privileges to change this option)
+
+//全てのユーザーでプレイ可能にする
+$1010-0120$
+Allow all users to play the game.
+
+//現在のユーザーのみプレイ可能にする
+$1010-0121$
+Allow only the current user to play thegame.
+
+//最終確認
+$1010-0122$
+Final confirmation
+
+//以下の設定を元にインストールを行います
+$1010-0123$
+Install based on the following settings
+
+//この設定でよろしければ『完了』を押してください
+$1010-0124$
+If you would like to accept these settings, then click "Finish".
+
+//設定を変更する場合は、『戻る』を押して再設定してください
+$1010-0125$
+If you would like to change these settings, click "Back".
+
+//キャンセル
+$1010-0126$
+Cancel
+
+//全体の進行状況
+$1010-0127$
+Total installation progress
+
+//現在インストール中のファイル
+$1010-0128$
+File currently being installed
+
+//インストール中止
+$1010-0129$
+Stop installation
+
+//インストール中のファイルは削除されました
+$1010-0130$
+Files that were being installed have been deleted.
+
+//ゲームをプレイする場合は、再度インストールを行ってください
+$1010-0131$
+To play the game again, please reinstalll the game.
+
+//インストールは中止されました
+$1010-0132$
+The installation has been stopped.
+
+//ご使用マシンの環境を確認の上、再度インストールを行ってください
+$1010-0133$
+After confirming your system settings, please run the installation again.
+
+//インストールはエラーの為、中止されました
+$1010-0134$
+The installation has stopped due to an error.
+
+//インストール終了
+$1010-0135$
+Finish installation
+
+//インストールが終了しました
+$1010-0136$
+Installation finished
+
+//インストール設定を変更したい場合は、再度インストールを実行してください
+$1010-0137$
+If you would like to change the installation configuration, please run the installer again.
+
+//オプションの選択
+$1010-0138$
+Options selection
+
+//インストールオプションを設定してください
+$1010-0139$
+Please set the installation options.
+
+//ショートカットの作成
+$1010-0140$
+Create shortcut
+
+//デスクトップにショートカットを作成する
+$1010-0141$
+Creates a desktop shortcut
+
+//スタートメニューに登録する
+$1010-0142$
+Register on start menu
+
+//インストール
+$1010-0143$
+Install
+
+//既にインストールされているファイルもすべて上書きする
+$1010-0144$
+Overwrite any currently existing files.
+
+//DirectX
+$1010-0145$
+DirectX
+
+//本ゲームを始めるにはDirectX%d.%d以上をインストールする必要があります。
+$1010-0146$
+DirectX %d.%d or above is required to start the game.
+
+//ゲームを始める前に本ゲームディスク内の[%s]を実行して
+$1010-0147$
+Start [%s] on the game's disk before starting the actual game.
+
+//DirectXをインストールを行って下さい。
+$1010-0148$
+Please install DirectX.
+
+//インストールウィザード
+$1010-0149$
+Installer wizard
+
+//現在、管理者権限を持たないユーザーとしてインストールを行おうとしています。
+$1010-0150$
+You are currently trying to install as a non-administrator.
+
+//現在の権限ではシステム系フォルダ（Program Filesなど）にインストールを
+$1010-0151$
+With your current access privileges, installation in system folders (e.g. Program Files, etc.)
+
+//行うことが出来ません。
+$1010-0152$
+is not allowed.
+
+//※※ご注意下さい※※
+$1010-0153$
+※※Notice※※
+
+//インストール開始時に書き込みエラーが出る場合は、再度インストールを実行し、
+$1010-0154$
+If a write error occurs during installation, restart the installation
+
+//エラー時に選択したフォルダとは違うフォルダにインストールを行ってください。
+$1010-0155$
+and choose a different destination folder.
+
+//インターネット接続を使用してインストールに必要な情報をダウンロードします。
+$1010-0156$
+Connects to the internet and downloads required information.
+
+//このパソコンがインターネットに接続されている場合は『次へ』を押してください。
+$1010-0157$
+Click "Next" if this computer is currently connected to the internet.
+
+//『直接入力』を押すと、インストールに必要な情報を直接入力するダイアログが表示されます。\nインターネットに接続されていないパソコンの場合は『直接入力』を押してください。
+$1010-0158$
+Clicking on "Direct input" will create a dialog box for you to input the required information. Choose this if your computer is not connected to the internet.
+
+//直接入力
+$1010-0159$
+Direct input
+
+//インストールに必要な情報をダウンロードしています。
+$1010-0160$
+Downloading the necessary information for installation.
+
+//しばらくお待ちください。
+$1010-0161$
+Please wait.
+
+//起動パスワードを、この入力ウインドウに入力してください。
+$1010-0162$
+Please input the boot password in this window.
+
+//起動パスワード
+$1010-0163$
+Boot password
+
+//インストールに必要な情報のダウンロードに失敗しました。
+$1010-0164$
+Failed to download the necessary information for installation.
+
+//再度この入力ウィンドウに起動パスワードを入力してください。
+$1010-0165$
+Please input the boot password again.
+
+//入力された起動パスワードに誤りがあります。
+$1010-0166$
+There is an error with the password you have input.
+
+//インストールに必要な情報の取得が完了しました。
+$1010-0167$
+Finished downloading the necessary information for installation.
+
+//『次へ』 を押して下さい。
+$1010-0168$
+Please press "Next".
+
+
+//another パラメータに不正があります
+$1010-0169$
+another parameter error.
+
+//instreg パラメータに不正があります
+$1010-0170$
+instreg parameter error.
+
+//フォルダ [%s] が作成出来ません
+$1010-0171$
+Could not create folder [%s].
+
+//ファイル [%s] がオープン出来ません
+$1010-0172$
+Could not open folder [%s].
+
+
+// uninst.exe /////////////////////////////////////////////////
+
+//DFNエラー
+$1020-0001$
+DFN error.
+
+//title パラメータに不正があります
+$1020-0002$
+title parameter error.
+
+//bg パラメータに不正があります
+$1020-0003$
+bg parameter error.
+
+//regpath パラメータに不正があります
+$1020-0004$
+regpath parameter error.
+
+//pathkey パラメータに不正があります
+$1020-0005$
+pathkey parameter error.
+
+//uninstreg パラメータに不正があります
+$1020-0006$
+uninstreg parameter error.
+
+//mutex パラメータに不正があります
+$1020-0007$
+mutex parameter error.
+
+//mutex_u パラメータに不正があります
+$1020-0008$
+mutex_u parameter error.
+
+//startmenu パラメータに不正があります
+$1020-0009$
+startmenu parameter error.
+
+//shortcut パラメータに不正があります
+$1020-0010$
+shortcut parameter error.
+
+//brand パラメータに不正があります
+$1020-0011$
+brand parameter error.
+
+//savedel_force パラメータに不正があります
+$1020-0012$
+savedel_force parameter error.
+
+//wallmode パラメータに不正があります
+$1020-0013$
+wallmode parameter error.
+
+//warning_ds パラメータに不正があります
+$1020-0014$
+warning_ds parameter error.
+
+//save パラメータに不正があります
+$1020-0015$
+save parameter error.
+
+//instreg パラメータに不正があります
+$1020-0016$
+instreg parameter error.
+
+//startmenuex パラメータに不正があります
+$1020-0017$
+startmenuex parameter error.
+
+//#INIT内に不正な行が検出されました : %d
+$1020-0018$
+Error found at line %d in #INIT.
+
+//ゲームが起動しています。終了させてから再度実行してください。
+$1020-0019$
+The game is currently running. Please close the game and try uninstalling again.
+
+//アンインストール
+$1020-0020$
+Uninstall
+
+//『%s』はインストールされていません
+$1020-0021$
+"%s" is not installed.
+
+//インストールしたユーザーと違うユーザーがアンインストールを行おうとしています。\nこのままアンインストールを行うと一部削除されないファイルが出る可能性があります。\nアンインストールを続行しますか？
+$1020-0022$
+A different user has installed this game.\nIf you continue uninstallation, there will be some files that cannot be deleted.\nContinue with uninstall?
+
+//インストールログファイル[%s]が見つかりません
+$1020-0023$
+Could not find install log file [%s].
+
+//アンインストールエラー
+$1020-0024$
+Uninstall error
+
+//『%s』のアンインストールを開始します
+$1020-0025$
+Beginning uninstall of "%s".
+
+//アンインストールを中止してよろしいですか？
+$1020-0026$
+Stop uninstallation?
+
+//確認
+$1020-0027$
+Confirm
+
+//アンインストールウィザード
+$1020-0028$
+Uninstall wizard
+
+//続けるには『次へ』を押してください
+$1020-0029$
+Please click "Next" to continue.
+
+//アンインストールオプションの選択
+$1020-0030$
+Uninstallation options
+
+//アンインストールのオプションを設定してください
+$1020-0031$
+Please set options for this uninstall.
+
+//セーブデータを削除する
+$1020-0032$
+Delete save data
+
+//最終確認
+$1020-0033$
+Final confirmation
+
+//アンインストールの準備が整いました
+$1020-0034$
+Ready to uninstall.
+
+//アンインストールを開始するには『完了』を押してください
+$1020-0035$
+Click "Finish" to begin uninstallation.
+
+//アンインストールしています。しばらくお待ちください。
+$1020-0036$
+Uninstalling, please wait.
+
+//終了
+$1020-0037$
+Complete
+
+//アンインストールが終了しました
+$1020-0038$
+Uninstallation has been completed.
+
+
+
+
+// Template /////////////////////////////////////////////////

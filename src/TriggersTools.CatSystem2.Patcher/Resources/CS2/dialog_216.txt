@@ -1,0 +1,7 @@
+//DIALOGEX : 216
+
+//CAPTION
+//ToolWindow
+$CAPTION$ToolWindow
+$nr$
+

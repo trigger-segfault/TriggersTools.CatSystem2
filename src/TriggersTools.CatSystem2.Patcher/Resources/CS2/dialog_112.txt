@@ -1,0 +1,172 @@
+﻿//DIALOGEX : 112
+
+//CAPTION
+//デバッグ情報
+$CAPTION$デバッグ情報
+Debug Information
+
+//CONTROL 1
+//OK
+$1$OK
+$nr$
+
+//CONTROL -1
+//VRAM(テクスチャ)容量
+$-1$VRAM(テクスチャ)容量
+VRAM(Texture) capacity
+
+//CONTROL -1
+//:
+$-1$:
+$nr$
+
+//CONTROL 1031
+//dwVRam
+$1031$dwVRam
+$nr$
+
+//CONTROL -1
+//byte
+$-1$byte
+$nr$
+
+//CONTROL -1
+//VRAM(テクスチャ)使用量
+$-1$VRAM(テクスチャ)使用量
+VRAM(Texture) usage
+
+//CONTROL -1
+//:
+$-1$:
+$nr$
+
+//CONTROL 1032
+//dwVRamUsed
+$1032$dwVRamUsed
+$nr$
+
+//CONTROL -1
+//byte
+$-1$byte
+$nr$
+
+//CONTROL -1
+//テクスチャブロック数
+$-1$テクスチャブロック数
+Number of texture blocks
+
+//CONTROL -1
+//:
+$-1$:
+$nr$
+
+//CONTROL 1034
+//dwBlock
+$1034$dwBlock
+$nr$
+
+//CONTROL -1
+//block
+$-1$block
+$nr$
+
+//CONTROL -1
+//使用中のテクスチャブロック数
+$-1$使用中のテクスチャブロック数
+Number of texture blocks in use
+
+//CONTROL -1
+//:
+$-1$:
+$nr$
+
+//CONTROL 1035
+//dwBlockUsed
+$1035$dwBlockUsed
+$nr$
+
+//CONTROL -1
+//block
+$-1$block
+$nr$
+
+//CONTROL -1
+//現在のポリゴン数
+$-1$現在のポリゴン数
+Current number of polygons
+
+//CONTROL -1
+//:
+$-1$:
+$nr$
+
+//CONTROL 1036
+//dwPolygon
+$1036$dwPolygon
+$nr$
+
+//CONTROL -1
+//poly
+$-1$poly
+$nr$
+
+//CONTROL -1
+//空きテクスチャメモリ(推定値)
+$-1$空きテクスチャメモリ(推定値)
+Free texture memory (estimate)
+
+//CONTROL -1
+//:
+$-1$:
+$nr$
+
+//CONTROL 1037
+//dwFreeVRam
+$1037$dwFreeVRam
+$nr$
+
+//CONTROL -1
+//MB
+$-1$MB
+$nr$
+
+//CONTROL -1
+//TASK(Exec) Cycle
+$-1$TASK(Exec) Cycle
+$nr$
+
+//CONTROL -1
+//:
+$-1$:
+$nr$
+
+//CONTROL 1040
+//dwExecCycle
+$1040$dwExecCycle
+$nr$
+
+//CONTROL -1
+//cycle
+$-1$cycle
+$nr$
+
+//CONTROL -1
+//TASK(Draw) Cycle
+$-1$TASK(Draw) Cycle
+$nr$
+
+//CONTROL -1
+//:
+$-1$:
+$nr$
+
+//CONTROL 1041
+//dwDrawCycle
+$1041$dwDrawCycle
+$nr$
+
+//CONTROL -1
+//cycle
+$-1$cycle
+$nr$
+

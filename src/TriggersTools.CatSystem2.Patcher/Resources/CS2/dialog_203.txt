@@ -1,0 +1,17 @@
+﻿//DIALOGEX : 203
+
+//CAPTION
+//名前を入力してください
+$CAPTION$名前を入力してください
+Please enter your name
+
+//CONTROL 1
+//OK
+$1$OK
+$nr$
+
+//CONTROL 2
+//キャンセル
+$2$キャンセル
+Cancel
+

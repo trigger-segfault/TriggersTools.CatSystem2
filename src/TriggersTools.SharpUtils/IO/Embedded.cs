@@ -652,6 +652,68 @@ namespace TriggersTools.SharpUtils.IO {
 
 		#endregion
 
+		#region GetFileName
+
+		/// <summary>
+		///  Gets the file name from an embedded resource path. Requires the user to know if the file has an extension.
+		/// </summary>
+		/// <param name="path">The embedded resource path to get the file name from.</param>
+		/// <param name="hasExtension">If true, the resource will ignore the first '.'.</param>
+		/// <returns>The file name of the embedded resource.</returns>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="path"/> is null.
+		/// </exception>
+		public static string GetFileName(string path, bool hasExtension) {
+			if (path == null)
+				throw new ArgumentNullException(nameof(path));
+			for (int i = path.Length - 1; i >= 0; i--) {
+				char c = path[i];
+				if (c == '.') {
+					if (hasExtension) {
+						hasExtension = false;
+					}
+					else {
+						return path.Substring(i + 1);
+					}
+				}
+			}
+			return path;
+		}
+		/// <summary>
+		///  Gets the file name without an extension from an embedded resource path. Requires the user to know if the
+		///  file has an extension.
+		/// </summary>
+		/// <param name="path">The embedded resource path to get the file name from.</param>
+		/// <param name="hasExtension">If true, the resource will ignore the first '.'.</param>
+		/// <returns>The file name of the embedded resource without an extension.</returns>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="path"/> is null.
+		/// </exception>
+		public static string GetFileNameWithoutExtension(string path, bool hasExtension = true) {
+			if (path == null)
+				throw new ArgumentNullException(nameof(path));
+			int extensionIndex = -1;
+			for (int i = path.Length - 1; i >= 0; i--) {
+				char c = path[i];
+				if (c == '.') {
+					if (hasExtension) {
+						extensionIndex = i;
+						hasExtension = false;
+					}
+					else {
+						return path.Substring(i + 1, extensionIndex - (i + 1));
+					}
+				}
+			}
+			if (extensionIndex != -1)
+				return path.Substring(0, extensionIndex);
+			return path;
+		}
+
+		#endregion
+
 		#region Combine
 
 		/// <summary>

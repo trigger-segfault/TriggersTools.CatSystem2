@@ -1,0 +1,7 @@
+﻿//DIALOGEX : 206
+
+//CAPTION
+//チャット ログ
+$CAPTION$チャット ログ
+Chat Log
+

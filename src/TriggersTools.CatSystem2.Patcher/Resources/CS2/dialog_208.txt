@@ -1,0 +1,27 @@
+﻿//DIALOGEX : 208
+
+//CAPTION
+//変数の設定
+$CAPTION$変数の設定
+Set Variable
+
+//CONTROL 1
+//OK
+$1$OK
+$nr$
+
+//CONTROL 2
+//キャンセル
+$2$キャンセル
+Cancel
+
+//CONTROL -1
+//10進数
+$-1$10進数
+Dec Number
+
+//CONTROL -1
+//16進数
+$-1$16進数
+Hex Number
+

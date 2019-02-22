@@ -1,0 +1,12 @@
+//DIALOGEX : 214
+
+//CAPTION
+//INPUT TEXT
+$CAPTION$INPUT TEXT
+$nr$
+
+//CONTROL 1
+//OK
+$1$OK
+$nr$
+

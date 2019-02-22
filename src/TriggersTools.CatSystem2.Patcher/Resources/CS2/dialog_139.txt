@@ -1,0 +1,37 @@
+﻿//DIALOGEX : 139
+
+//CAPTION
+//saveフォルダの設定
+$CAPTION$saveフォルダの設定
+Select Save Folder
+
+//CONTROL 1
+//OK
+$1$OK
+$nr$
+
+//CONTROL 2
+//キャンセル
+$2$キャンセル
+Cancel
+
+//CONTROL -1
+//セーブデータ保存先フォルダを設定して下さい
+$-1$セーブデータ保存先フォルダを設定して下さい
+Please set the destination save folder
+
+//CONTROL -1
+//（cs2の再起動後に適用されます）
+$-1$（cs2の再起動後に適用されます）
+(Changes will be applied after restart of cs2)
+
+//CONTROL 1046
+//参照
+$1046$参照
+Select
+
+//CONTROL -1
+//デフォルトに戻すには、フォルダ指定を空にしてください
+$-1$デフォルトに戻すには、フォルダ指定を空にしてください
+To restore defaults, empty the specified folder
+

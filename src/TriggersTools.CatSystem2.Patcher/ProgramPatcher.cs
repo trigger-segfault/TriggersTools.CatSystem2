@@ -9,6 +9,8 @@ using TriggersTools.CatSystem2.Patcher.Patches;
 using ClrPlus.Windows.Api.Enumerations;
 using ClrPlus.Windows.PeBinary.ResourceLib;
 using ClrPlus.Windows.PeBinary.Utility;
+using TriggersTools.SharpUtils.IO;
+using System.Text.RegularExpressions;
 
 namespace TriggersTools.CatSystem2.Patcher {
 	public class ProgramPatcher {
@@ -41,6 +43,24 @@ namespace TriggersTools.CatSystem2.Patcher {
 
 		public List<IResourcePatch> ResourcePatches { get; } = new List<IResourcePatch>();
 		public List<BinaryStringsPatch> BinaryPatches { get; } = new List<BinaryStringsPatch>();
+
+		private static readonly Regex NumberRegex = new Regex(@"\d+$");
+
+		public void AddResourceStringsPatches(string resourceDir) {
+			string resPath = Embedded.Combine(Constants.ResourcesPath, resourceDir);
+			string[] paths = Embedded.GetResources(resPath);
+			foreach (string path in paths) {
+				string name = Embedded.GetFileNameWithoutExtension(path, true);
+				Match match = NumberRegex.Match(name);
+				ushort resourceName = (match.Success ? ushort.Parse(match.Value) : (ushort) 0);
+				if (name.StartsWith("menu_"))
+					Add(new MenuStringsPatch(Embedded.ReadAllLines(path), resourceName));
+				else if (name.StartsWith("dialog_"))
+					Add(new DialogStringsPatch(Embedded.ReadAllLines(path), resourceName));
+				else if(name.StartsWith("string_"))
+					Add(new StringTableStringsPatch(Embedded.ReadAllLines(path), resourceName));
+			}
+		}
 
 		public bool Patch(string srcFileName, string dstFileName) {
 			if (MD5 != null) {
@@ -87,6 +107,7 @@ namespace TriggersTools.CatSystem2.Patcher {
 					Thread.Sleep(100);
 					foreach (Resource resource in patchedResources) {
 						resource.SaveTo(dstFileName);
+						Console.WriteLine($"Updated resource {resource.Name}");
 					}
 				}
 			}

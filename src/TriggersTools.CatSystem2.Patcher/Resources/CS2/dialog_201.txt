@@ -1,0 +1,17 @@
+﻿//DIALOGEX : 201
+
+//CAPTION
+//接続先アドレスを入力してください
+$CAPTION$接続先アドレスを入力してください
+Connection Destination Address
+
+//CONTROL 1
+//OK
+$1$OK
+$nr$
+
+//CONTROL 2
+//キャンセル
+$2$キャンセル
+Cancel
+

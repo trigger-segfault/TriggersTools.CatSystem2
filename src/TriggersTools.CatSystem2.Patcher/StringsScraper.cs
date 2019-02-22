@@ -16,6 +16,7 @@ using MenuTemplate = ClrPlus.Windows.PeBinary.ResourceLib.MenuTemplate;
 using MenuExTemplate = ClrPlus.Windows.PeBinary.ResourceLib.MenuExTemplate;
 using DialogTemplate = ClrPlus.Windows.PeBinary.ResourceLib.DialogTemplate;
 using DialogExTemplate = ClrPlus.Windows.PeBinary.ResourceLib.DialogExTemplate;
+using TriggersTools.CatSystem2.Patcher.Patches;
 
 namespace TriggersTools.CatSystem2.Patcher {
 	public enum StringScrapeType {
@@ -38,7 +39,7 @@ namespace TriggersTools.CatSystem2.Patcher {
 		public const string ResourceLanguageFilename = "resource_language.txt";
 		
 		private static readonly Regex BinaryHeaderRegex =
-			new Regex(@"^{Comment}Bytes=(?'reserved'\d+),Offset=0x(?'offset'[A-Fa-f0-9]+)$");
+			new Regex($@"^{Comment}Bytes=(?'reserved'\d+),Offset=0x(?'offset'[A-Fa-f0-9]+)$");
 		private static readonly Regex TranslatableRegex =
 			new Regex(@"^\$[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}\$");
 
@@ -81,25 +82,30 @@ namespace TriggersTools.CatSystem2.Patcher {
 
 		#region BinarySearch
 
-		public static void BinarySearch(string fileName, string value, long start = 0, long end = -1) {
+		public static void BinarySearch(string fileName, string value, long start = 0, long end = 0) {
+			BinarySearch(fileName, value, new BinaryRange(start, end));
+		}
+		public static void BinarySearch(string fileName, string value, params BinaryRange[] ranges) {
 			using (Stream stream = File.OpenRead(fileName)) {
-				BinaryReader reader = new BinaryReader(stream, Constants.ShiftJIS);
+				foreach (BinaryRange range in ranges) {
+					BinaryReader reader = new BinaryReader(stream, Constants.ShiftJIS);
 
-				end = (end != -1 ? end : stream.Length);
-				stream.Position = start;
-				while (stream.Position < end) {
-					long position = stream.Position;
-					string line;
-					try {
-						line = reader.ReadTerminatedString();
-					} catch { break; }
-					long reserved = (stream.Position - position);
-					long bytes = reserved;
-					reserved = MathUtils.Pad(reserved, 4);
-					stream.SkipPadding(4);
+					long end = (range.End != 0 ? Math.Min(range.End, stream.Length) : stream.Length);
+					stream.Position = range.Start;
+					while (stream.Position < end) {
+						long position = stream.Position;
+						string line;
+						try {
+							line = reader.ReadTerminatedString();
+						} catch { break; }
+						long reserved = (stream.Position - position);
+						long bytes = reserved;
+						reserved = MathUtils.Pad(reserved, 4);
+						stream.SkipPadding(4);
 
-					if (line == value) {
-						Console.WriteLine($"{position:X8} = {bytes} B, \"{TextUtils.EscapeNormal(line, false)}\" Length={line.Length}");
+						if (line == value) {
+							Console.WriteLine($"{position:X8} = {bytes} B, \"{TextUtils.EscapeNormal(line, false)}\" Length={line.Length}");
+						}
 					}
 				}
 			}
@@ -110,38 +116,43 @@ namespace TriggersTools.CatSystem2.Patcher {
 		#region BinaryScrape
 
 
-		public static void BinaryScrape(string fileName, string outputDir, long start = 0, long end = -1) {
+		public static void BinaryScrape(string fileName, string outputDir, long start = 0, long end = 0) {
+			BinaryScrape(fileName, outputDir, new BinaryRange(start, end));
+		}
+		public static void BinaryScrape(string fileName, string outputDir, params BinaryRange[] ranges) {
 			Directory.CreateDirectory(outputDir);
 			//List<string> language = new List<string>();
 			//List<string> languageHeaders = new List<string>();
 			StringBuilder language = new StringBuilder();
 			StringBuilder normal = new StringBuilder();
 			using (Stream stream = File.OpenRead(fileName)) {
-			//using (StreamWriter writer = new StreamWriter(Path.Combine(outputDir, BinaryFileName), false, Encoding.UTF8)) {
-				BinaryReader reader = new BinaryReader(stream, Constants.ShiftJIS);
-				
-				end = (end != -1 ? end : stream.Length);
-				stream.Position = start;
+				foreach (BinaryRange range in ranges) {
+					//using (StreamWriter writer = new StreamWriter(Path.Combine(outputDir, BinaryFileName), false, Encoding.UTF8)) {
+					BinaryReader reader = new BinaryReader(stream, Constants.ShiftJIS);
 
-				while (stream.Position < end) {
-					long position = stream.Position;
-					string line;
-					try {
-						line = reader.ReadTerminatedString();
-					} catch { break; }
-					long reserved = (stream.Position - position);
-					long bytes = reserved;
-					stream.SkipPadding(4);
-					reserved = MathUtils.Pad(reserved, 4);
+					long end = (range.End != 0 ? range.End : Math.Min(range.End, stream.Length));
+					stream.Position = range.Start;
 
-					StringScrapeType type = GetStringType(line);
+					while (stream.Position < end) {
+						long position = stream.Position;
+						string line;
+						try {
+							line = reader.ReadTerminatedString();
+						} catch { break; }
+						long reserved = (stream.Position - position);
+						long bytes = reserved;
+						stream.SkipPadding(4);
+						reserved = MathUtils.Pad(reserved, 4);
 
-					string header = $"Bytes={reserved},Offset=0x{position:X8}";
-					bool added = AddResString(header, language, normal, line, line);
-					if (added) {
-						Console.WriteLine($"{position:X8} = {bytes} B, \"{TextUtils.EscapeNormal(line, false)}\" Length={line.Length}");
+						StringScrapeType type = GetStringType(line);
+
+						string header = $"Bytes={reserved},Offset=0x{position:X8}";
+						bool added = AddResString(header, language, normal, line, line);
+						if (added) {
+							Console.WriteLine($"{position:X8} = {bytes} B, \"{TextUtils.EscapeNormal(line, false)}\" Length={line.Length}");
+						}
+
 					}
-					
 				}
 			}
 			string normalPath = Path.Combine(outputDir, BinaryFileName);
@@ -155,22 +166,37 @@ namespace TriggersTools.CatSystem2.Patcher {
 
 		public static void BinaryValidate(IReadOnlyList<string> lines) {
 			for (int i = 0; i < lines.Count; ) {
-				Match match = BinaryHeaderRegex.Match(lines[i++]);
+				string line = lines[i++];
+				if (IsEmptyLine(line))
+					continue;
+				Match match = BinaryHeaderRegex.Match(line);
 				if (!match.Success)
 					throw new Exception($"Expected format \"{Comment}Bytes=#,Offset=0xXXXXXXXX\" at line {i-1}!");
+
+				for (; i < lines.Count && IsCommentedLine(lines[i]); i++) ;
+
 				int reserved = int.Parse(match.Groups["reserved"].Value);
 				long offset = long.Parse(match.Groups["offset"].Value, NumberStyles.HexNumber);
-				
+
+				if (i == lines.Count)
+					throw new Exception("Expected translation line!");
+
 				string oldLine = TextUtils.UnescapeNormal(lines[i++]);
+				if (i == lines.Count)
+					throw new Exception("Expected translation line!");
+
 				string newLine = TextUtils.UnescapeNormal(lines[i++]);
+
+				if (newLine == NotTranslated)
+					continue;
+				if (newLine == EmptyTranslation)
+					newLine = string.Empty;
 
 				byte[] lineBytes = Constants.ShiftJIS.GetBytes(newLine);
 				int bytesLength = lineBytes.Length + 1;
 				if (bytesLength > reserved) {
-					Console.WriteLine($"{bytesLength} > {reserved} | \"{lines[i+2]}\"");
+					Console.WriteLine($"{bytesLength} > {reserved} | \"{lines[i-1]}\"");
 				}
-
-				while (string.IsNullOrEmpty(lines[i])) i++;
 			}
 		}
 
@@ -357,8 +383,7 @@ namespace TriggersTools.CatSystem2.Patcher {
 			case StringScrapeType.Normal:
 				if (commentLine != null)
 					normal.AppendLine($"{Comment}{commentLine}");
-				if (s != resId)
-					normal.AppendLine($"{Comment}{TextUtils.EscapeNormal(s, false)}");
+				normal.AppendLine($"{Comment}{TextUtils.EscapeNormal(s, false)}");
 				normal.AppendLine(TextUtils.EscapeNormal(resId, false));
 				normal.AppendLine(NotTranslated);
 				normal.AppendLine();

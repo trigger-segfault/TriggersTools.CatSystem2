@@ -1,0 +1,22 @@
+﻿//DIALOGEX : 213
+
+//CAPTION
+//FW UniqueCode
+$CAPTION$FW UniqueCode
+$nr$
+
+//CONTROL 1
+//OK
+$1$OK
+$nr$
+
+//CONTROL 2
+//キャンセル
+$2$キャンセル
+Cancel
+
+//CONTROL -1
+//ユニークコードを入力してください
+$-1$ユニークコードを入力してください
+Please enter unique code
+

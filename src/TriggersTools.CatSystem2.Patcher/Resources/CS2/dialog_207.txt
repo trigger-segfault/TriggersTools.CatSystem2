@@ -1,0 +1,71 @@
+﻿//DIALOGEX : 207
+
+//CAPTION
+//デバッグダイアログ
+$CAPTION$デバッグダイアログ
+Debug Dialog
+
+//CONTROL -1
+//実行中のシーン
+$-1$実行中のシーン
+Running Scene
+
+//CONTROL -1
+//変数
+$-1$変数
+Var
+
+//CONTROL -1
+//行番号
+$-1$行番号
+Line Number
+
+//CONTROL 1151
+//10進
+$1151$10進
+Dec
+
+//CONTROL 1152
+//16進
+$1152$16進
+Hex
+
+//CONTROL -1
+//文字列変数
+$-1$文字列変数
+String Var
+
+//CONTROL -1
+//グラフィックパラメータ
+$-1$グラフィックパラメータ
+Graphics Parameters
+
+//CONTROL -1
+//履歴
+$-1$履歴
+History
+
+//CONTROL -1
+//SP
+$-1$SP
+$nr$
+
+//CONTROL 1168
+//更新
+$1168$更新
+Refresh
+
+//CONTROL -1
+//フィルタ
+$-1$フィルタ
+Filter
+
+//CONTROL 1179
+//更新
+$1179$更新
+Refresh
+
+//CONTROL 1190
+//変数更新
+$1190$変数更新
+Var Refresh

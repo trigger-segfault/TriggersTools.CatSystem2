@@ -1,0 +1,37 @@
+﻿//DIALOGEX : 215
+
+//CAPTION
+//クイズデバッグ
+$CAPTION$クイズデバッグ
+Debug Quiz
+
+//CONTROL -1
+//データベース
+$-1$データベース
+Database
+
+//CONTROL -1
+//問題ID
+$-1$問題ID
+Problem ID
+
+//CONTROL 1186
+//出題・正解・不正解ロック
+$1186$出題・正解・不正解ロック
+Question, correct answer, incorrect lock
+
+//CONTROL 1187
+//有効
+$1187$有効
+Effectiveness
+
+//CONTROL 1188
+//カウント停止
+$1188$カウント停止
+Stop counting
+
+//CONTROL 1189
+//自動インクリメント
+$1189$自動インクリメント
+Automatic Increment
+

@@ -57,6 +57,10 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Patches\BinaryStringsPatch.cs" />
     <Compile Include="Programs\AC\ACPatcher.cs" />
+    <Compile Include="Programs\CS2\CS2DebugQuizDialogPatch.cs" />
+    <Compile Include="Programs\CS2\CS2DebugDialogPatch.cs" />
+    <Compile Include="Programs\CS2\CS2ChangeWallpaperDialogPatch.cs" />
+    <Compile Include="Programs\CS2\CS2SetStringVariableDialogPatch.cs" />
     <Compile Include="Programs\CS2\CS2Patcher.cs" />
     <Compile Include="Patches\Resources\StringTableStringsPatch.cs" />
     <Compile Include="Patches\Resources\MenuStringsPatch.cs" />
@@ -79,6 +83,7 @@
     <Compile Include="Patches\Resources\EnableVisualStylesPatch.cs" />
     <Compile Include="ProgramPatcher.cs" />
     <EmbeddedResource Include="Resources\EnableVisualStylesFragment.xml" />
+    <Compile Include="Programs\CS2\CS2DebugInfoDialogPatch.cs" />
     <Compile Include="Programs\FES\FESPatcher.cs" />
     <Compile Include="Programs\MC\MCPatcher.cs" />
     <Compile Include="StringsScraper.cs" />
@@ -97,9 +102,6 @@
     <PackageReference Include="TriggersTools.Build.CopyrightYear">
       <Version>1.0.0</Version>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\CS2\binary.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TriggersTools.SharpUtils\TriggersTools.SharpUtils.csproj">
@@ -123,6 +125,36 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\FES\binary.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\CS2\binary.txt" />
+    <EmbeddedResource Include="Resources\CS2\dialog_101.txt" />
+    <EmbeddedResource Include="Resources\CS2\dialog_1049.txt" />
+    <EmbeddedResource Include="Resources\CS2\dialog_1052.txt" />
+    <EmbeddedResource Include="Resources\CS2\dialog_1064.txt" />
+    <EmbeddedResource Include="Resources\CS2\dialog_107.txt" />
+    <EmbeddedResource Include="Resources\CS2\dialog_112.txt" />
+    <EmbeddedResource Include="Resources\CS2\dialog_1155.txt" />
+    <EmbeddedResource Include="Resources\CS2\dialog_129.txt" />
+    <EmbeddedResource Include="Resources\CS2\dialog_139.txt" />
+    <EmbeddedResource Include="Resources\CS2\dialog_201.txt" />
+    <EmbeddedResource Include="Resources\CS2\dialog_203.txt" />
+    <EmbeddedResource Include="Resources\CS2\dialog_204.txt" />
+    <EmbeddedResource Include="Resources\CS2\dialog_206.txt" />
+    <EmbeddedResource Include="Resources\CS2\dialog_207.txt" />
+    <EmbeddedResource Include="Resources\CS2\dialog_208.txt" />
+    <EmbeddedResource Include="Resources\CS2\dialog_209.txt" />
+    <EmbeddedResource Include="Resources\CS2\dialog_210.txt" />
+    <EmbeddedResource Include="Resources\CS2\dialog_211.txt" />
+    <EmbeddedResource Include="Resources\CS2\dialog_212.txt" />
+    <EmbeddedResource Include="Resources\CS2\dialog_213.txt" />
+    <EmbeddedResource Include="Resources\CS2\dialog_214.txt" />
+    <EmbeddedResource Include="Resources\CS2\dialog_215.txt" />
+    <EmbeddedResource Include="Resources\CS2\dialog_216.txt" />
+    <EmbeddedResource Include="Resources\CS2\dialog_9.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\CS2\binary - Copy.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

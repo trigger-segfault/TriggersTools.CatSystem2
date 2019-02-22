@@ -1,0 +1,32 @@
+//DIALOGEX : 9
+
+//CONTROL 1
+//OK
+$1$OK
+$nr$
+
+//CONTROL -1
+//System Information
+$-1$System Information
+$nr$
+
+//CONTROL 1002
+//sysversion
+$1002$sysversion
+$nr$
+
+//CONTROL 1007
+//directx
+$1007$directx
+$nr$
+
+//CONTROL 1038
+//video name
+$1038$video name
+$nr$
+
+//CONTROL 1039
+//id
+$1039$id
+$nr$
+

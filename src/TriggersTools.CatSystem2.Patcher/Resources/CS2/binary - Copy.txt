@@ -1,7 +1,7 @@
 ﻿//Bytes=32,Offset=0x0058CFA0
 //DDEより環境情報を取得しました
 DDEより環境情報を取得しました
-Environment Info got from DDE
+Environment Information acquired from DDE
 
 //Bytes=8,Offset=0x00590960
 //エラー
@@ -51,7 +51,7 @@ $nr$
 //Bytes=64,Offset=0x00590A40
 //kcSoundWaveDS : 既に他のアプリにDirectSoundが使用されています
 kcSoundWaveDS : 既に他のアプリにDirectSoundが使用されています
-kcSoundWaveDS : Another app is already using DirectSound
+kcSoundWaveDS : Another application is already using DirectSound
 
 //Bytes=52,Offset=0x00590A80
 //kcSoundWaveDS : サウンドデバイスが見つかりません
@@ -81,7 +81,7 @@ kcSoundWaveDS : Failed to set the primary buffer format
 //Bytes=24,Offset=0x00590C14
 //OggVobis : リーク発生！
 OggVobis : リーク発生！
-OggVobis: Leak occurred
+OggVobis : Leak occurred!
 
 //Bytes=40,Offset=0x00590CA0
 //未対応のサウンドファイル形式です : %s
@@ -121,7 +121,7 @@ $nr$
 //Bytes=40,Offset=0x00590E14
 //既に違うファイルがオープンされています
 既に違うファイルがオープンされています
-A different file is already open
+A different file has already been opened
 
 //Bytes=52,Offset=0x00590E3C
 //KCFILE_READ 又は KCFILE_WRITE を指定してください
@@ -166,6 +166,7 @@ Failed to open integrated file : %s
 //Bytes=36,Offset=0x00590F5C
 //統合ファイルのヘッダ照合に失敗 : %s
 統合ファイルのヘッダ照合に失敗 : %s
+Header collation of integrated file failed : %s
 Hdr collation of file failed : %s
 
 //Bytes=4,Offset=0x00590F80
@@ -191,12 +192,12 @@ Integration file open : %s
 //Bytes=60,Offset=0x00590FD8
 //同時にオープンできるファイル数を超えています (MAX:%d) : %s
 同時にオープンできるファイル数を超えています (MAX:%d) : %s
-Exceeded count of files open at the same time (MAX:%d) : %s
+Exceeded number of files open at the same time (MAX:%d) : %s
 
 //Bytes=60,Offset=0x00591014
 //同時にオープンできるファイル数を超えています (MAX:%d) : %d
 同時にオープンできるファイル数を超えています (MAX:%d) : %d
-Exceeded count of files open at the same time (MAX:%d) : %d
+Exceeded number of files open at the same time (MAX:%d) : %d
 
 //Bytes=36,Offset=0x00591050
 //ファイルが見つかりませんでした : %d
@@ -271,7 +272,7 @@ Game thread ended
 //Bytes=40,Offset=0x00591314
 //スレッド初期化でエラーが発生しました
 スレッド初期化でエラーが発生しました
-Error occurred in thread initialization
+An error occurred in thread initialization
 
 //Bytes=52,Offset=0x0059133C
 //ゲームスレッドを起動しました  frame late : %d fps
@@ -331,7 +332,7 @@ Save data file %s can not be opened
 //Bytes=52,Offset=0x00591558
 //未定義のタスクを作成しようとしました type=%d (%s)
 未定義のタスクを作成しようとしました type=%d (%s)
-Attempted to create an undefined task type=%d (%s)
+Attempted to create an undefined task type = %d (%s)
 
 //Bytes=80,Offset=0x005915E8
 //プレーンモデル[%s]の読み込みに失敗しました。コマンドミスの可能性があります。
@@ -376,12 +377,12 @@ Task_Eff2D_Wipe : Parameter mask is invalid
 //Bytes=36,Offset=0x005919F0
 //Task_Eff2D_Fade : 画像サイズ不一致
 Task_Eff2D_Fade : 画像サイズ不一致
-Task_Eff2D_Fade : Img size mismatch
+Task_Eff2D_Fade : Image size mismatch
 
 //Bytes=36,Offset=0x00591A14
 //Task_Eff2D_Fade : 画像解像度エラー
 Task_Eff2D_Fade : 画像解像度エラー
-Task_Eff2D_Fade : Image res error
+Task_Eff2D_Fade : Image resolution error
 
 //Bytes=44,Offset=0x00591A38
 //Task_Eff2D_Fade : パラメータ src が不正です
@@ -416,7 +417,7 @@ Task_Eff2D_WipeAlpha : Parameter mask is invalid
 //Bytes=40,Offset=0x00591B6C
 //Task_Eff2D_WipeAlpha : 画像解像度エラー
 Task_Eff2D_WipeAlpha : 画像解像度エラー
-Task_Eff2D_WipeAlpha : Image res error
+Task_Eff2D_WipeAlpha : Image resolution error
 
 //Bytes=48,Offset=0x00591BD4
 //Task_Eff2D_Wipe2 : パラメータ src が不正です
@@ -461,7 +462,7 @@ Task_Eff2D_WipeAlpha3 : Parameter mask is invalid
 //Bytes=44,Offset=0x00591DA4
 //Task_Eff2D_WipeAlpha3 : 画像解像度エラー
 Task_Eff2D_WipeAlpha3 : 画像解像度エラー
-Task_Eff2D_WipeAlpha3 : Image res error
+Task_Eff2D_WipeAlpha3 : Image resolution error
 
 //Bytes=40,Offset=0x00591FD8
 //kcTaskParticle > このタスクは3D専用です
@@ -481,7 +482,7 @@ Start : %dMB Current : %dMB (%dMB used)
 //Bytes=60,Offset=0x005925C4
 //空きテクスチャメモリ  起動 : %dMB  現在 : %dMB  (%dMB used)
 空きテクスチャメモリ  起動 : %dMB  現在 : %dMB  (%dMB used)
-Free texture mem  Start : %dMB  Current : %dMB  (%dMB used)
+Free texture memory start : %dMB Current : %dMB (%dMB used)
 
 //Bytes=8,Offset=0x00592600
 //0x%08x
@@ -516,7 +517,7 @@ $nr$
 //Bytes=12,Offset=0x00592620
 //変数番号
 変数番号
-Variable #
+Variable Number
 
 //Bytes=8,Offset=0x0059262C
 //数値
@@ -576,7 +577,7 @@ Compile execution failed.
 //Bytes=36,Offset=0x005963B8
 //子スクリプトは複数実行出来ません
 子スクリプトは複数実行出来ません
-Multiple child scripts can't be run
+Multiple child scripts cannot be executed
 
 //Bytes=12,Offset=0x005963DC
 //FE Script
@@ -636,7 +637,7 @@ Failed to load package file [%s].
 //Bytes=48,Offset=0x005966A0
 //壁紙ファイル [%s] の情報取得に失敗しました。
 壁紙ファイル [%s] の情報取得に失敗しました。
-Failed to get information on wallpaper [%s].
+Failed to get information on wallpaper file [%s].
 
 //Bytes=48,Offset=0x005966D0
 //壁紙ファイル [%s] の読み込みに失敗しました。
@@ -671,12 +672,12 @@ $nr$
 //Bytes=40,Offset=0x00596738
 //壁紙ファイルの保存先を指定して下さい
 壁紙ファイルの保存先を指定して下さい
-Specify save location of the wallpaper
+Please specify the save location of the wallpaper file
 
 //Bytes=28,Offset=0x00596760
 //出力先ファイルが開けません
 出力先ファイルが開けません
-Cannot open the output file
+Cannot open the output dst file
 
 //Bytes=40,Offset=0x0059677C
 //壁紙ファイルの書き込みに失敗しました
@@ -696,7 +697,7 @@ Sound file saved. Would you like to register these files in the Windows sound se
 //Bytes=52,Offset=0x005969E8
 //セット定義ファイル[%s]のオープンに失敗しました。
 セット定義ファイル[%s]のオープンに失敗しました。
-An attempt to open the set dst file [%s] failed.
+An attempt to open the set definition file [%s] failed.
 
 //Bytes=52,Offset=0x00596A1C
 //セット定義ファイル[%s]の読み込みに失敗しました。
@@ -761,7 +762,7 @@ Please select an image file
 //Bytes=12,Offset=0x00596FEC
 //上書き確認
 上書き確認
-Overwrite
+Overwrite Confirmation
 
 //Bytes=68,Offset=0x00596FF8
 //同名のファイルが既に登録されています。上書きしてもよろしいですか？
@@ -956,7 +957,7 @@ cfGetRawInput > Invalid argument
 //Bytes=52,Offset=0x005974A4
 //cfGetRawInput > 引数は0～255までのキーコードです
 cfGetRawInput > 引数は0～255までのキーコードです
-cfGetRawInput > Argument is key code from 0 to 255
+cfGetRawInput > Argument is a key code from 0 to 255
 
 //Bytes=36,Offset=0x005974D8
 //cfCalc > パラメータに誤りがあります
@@ -971,12 +972,12 @@ $nr$
 //Bytes=32,Offset=0x0059750C
 //cvMouseX > 読み取り専用変数です
 cvMouseX > 読み取り専用変数です
-cvMouseX > Variable is readonly
+cvMouseX > Variable is read-only
 
 //Bytes=32,Offset=0x0059752C
 //cvMouseY > 読み取り専用変数です
 cvMouseY > 読み取り専用変数です
-cvMouseY > Variable is readonly
+cvMouseY > Variable is read-only
 
 //Bytes=44,Offset=0x0059797C
 //CsImage::Load > パラメータに誤りがあります
@@ -1191,12 +1192,12 @@ An older version of DirectX 9.0c is installed. Please install the latest DirectX
 //Bytes=40,Offset=0x00598424
 //kcD3DCore9クラスは複数作成出来ません
 kcD3DCore9クラスは複数作成出来ません
-Multiple kcD3DCore9's cannot be created
+Multiple kcD3DCore9 classes can not be created
 
 //Bytes=32,Offset=0x0059844C
 //Direct3Dオブジェクト作成に失敗
 Direct3Dオブジェクト作成に失敗
-Failed to create Direct3D obj
+Failed to create Direct3D object
 
 //Bytes=48,Offset=0x0059846C
 //現在のディスプレイモードの取得に失敗しました
@@ -1216,7 +1217,7 @@ $nr$
 //Bytes=28,Offset=0x005984D0
 //Direct3Dデバイス作成に失敗
 Direct3Dデバイス作成に失敗
-Didn't make D3D device
+Failed to create Direct3D device
 
 //Bytes=28,Offset=0x005984EC
 //Direct3D を初期化しました
@@ -1336,7 +1337,7 @@ $nr$
 //Bytes=40,Offset=0x00598840
 //kcView : 3Dモードの初期化に失敗しました
 kcView : 3Dモードの初期化に失敗しました
-kcView : Initialize of 3D mode failed
+kcView : Initialization of 3D mode failed
 
 //Bytes=32,Offset=0x00598868
 //kcView : 3Dモードを使用します
@@ -1351,7 +1352,7 @@ kcView : Undefined operation mode specified
 //Bytes=44,Offset=0x00598988
 //vecSortRight : 頂点数が 128 を超えています
 vecSortRight : 頂点数が 128 を超えています
-vecSortRight : Num of vertices exceeds 128
+vecSortRight : Number of vertices exceeds 128
 
 //Bytes=36,Offset=0x005989D0
 //親ウィンドウがセットされていません
@@ -1371,22 +1372,22 @@ DirectX initialization failed
 //Bytes=80,Offset=0x00598A28
 //kc2DTextureManager : X分割サイズが 2 の乗数になっていません。自動調整します。
 kc2DTextureManager : X分割サイズが 2 の乗数になっていません。自動調整します。
-kc2DTextureManager : X split size is not a multiple of 2. Automatically adjust.
+kc2DTextureManager : X split size is not a multiplier of 2. Automatically adjust.
 
 //Bytes=80,Offset=0x00598A78
 //kc2DTextureManager : Y分割サイズが 2 の乗数になっていません。自動調整します。
 kc2DTextureManager : Y分割サイズが 2 の乗数になっていません。自動調整します。
-kc2DTextureManager : Y split size is not a multiple of 2. Automatically adjust.
+kc2DTextureManager : Y split size is not a multiplier of 2. Automatically adjust.
 
 //Bytes=44,Offset=0x00598AC8
 //0未満の深度のプレーンを作成しようとしました
 0未満の深度のプレーンを作成しようとしました
-Attempted to make plane with depth < 0
+Attempted to create a plane with a depth less than 0
 
 //Bytes=32,Offset=0x00598AF4
 //カーソルは複数作成出来ません
 カーソルは複数作成出来ません
-Cannot create multiple cursors
+Multiple cursors can not be created
 
 //Bytes=40,Offset=0x00598BA8
 //4 を超える bpp はサポートしていません
@@ -1411,7 +1412,7 @@ This BPP is not supported
 //Bytes=40,Offset=0x00598E28
 //[%d to %d] この形式のコピーは未対応です
 [%d to %d] この形式のコピーは未対応です
-[%d to %d] Format copy is not supported
+[%d to %d] Copies of this format are not supported
 
 //Bytes=36,Offset=0x00598E50
 //拡大縮小コピーは対応していません
@@ -1461,7 +1462,7 @@ $nr$
 //Bytes=44,Offset=0x00598EF4
 //[%d] この形式の矩形塗りつぶしは未対応です
 [%d] この形式の矩形塗りつぶしは未対応です
-[%d] This rect fill type is not supported
+[%d] This type of rectangle fill is not supported
 
 //Bytes=16,Offset=0x00598F34
 //不正な bpp です
@@ -1531,7 +1532,7 @@ Image type is different
 //Bytes=40,Offset=0x005992AC
 //HG2(%d) : 対応するIDが見つかりません
 HG2(%d) : 対応するIDが見つかりません
-HG2 (%d): Can't find corresponding ID
+HG2 (%d): Corresponding ID cannot be found
 
 //Bytes=32,Offset=0x005992D4
 //HG2 : 未対応のバージョンです
@@ -1541,7 +1542,7 @@ $nr$
 //Bytes=24,Offset=0x005992F4
 //HG2 : ヘッダが違います
 HG2 : ヘッダが違います
-HG2 : Unsupported versn
+HG2 : Unsupported version
 
 //Bytes=44,Offset=0x0059930C
 //kcImageHg2 : バイト領域のサイズが異常です
@@ -1556,12 +1557,12 @@ kcImageHg 2: The bit area size is abnormal
 //Bytes=32,Offset=0x00599364
 //この色数には対応していません
 この色数には対応していません
-This color num is not supported
+This color number is not supported
 
 //Bytes=24,Offset=0x005993E0
 //HG3 : ヘッダが違います
 HG3 : ヘッダが違います
-HG3 : Header is wrong
+HG3 : Header is different
 
 //Bytes=32,Offset=0x005993F8
 //HG3 : ヘッダサイズが違います
@@ -1601,7 +1602,7 @@ Memory could not be secured  id = %d size = %d (0x%x)
 //Bytes=24,Offset=0x005995A8
 //rect構造体が未定義です
 rect構造体が未定義です
-rect strct is undefined
+rect structure is undefined
 
 //Bytes=28,Offset=0x005995C0
 //\\VarFileInfo\\Translation
@@ -1691,7 +1692,7 @@ kcVideo : Failed to acquire filter graph interface
 //Bytes=32,Offset=0x005AFD34
 //kcVideo : フィルタ追加に失敗
 kcVideo : フィルタ追加に失敗
-kcVideo : Filter add failed
+kcVideo : Filter addition failed
 
 //Bytes=60,Offset=0x005AFD54
 //kcVideo : フィルタグラフビルダインターフェイス取得に失敗
@@ -1711,17 +1712,17 @@ kcVideo : Failed to acquire media event
 //Bytes=28,Offset=0x005AFDE4
 //kcVideo : シーク取得に失敗
 kcVideo : シーク取得に失敗
-kcVideo : Didn't get seek
+kcVideo : Failed to acquire seek
 
 //Bytes=36,Offset=0x005AFE00
 //kcVideo : オーディオ制御取得に失敗
 kcVideo : オーディオ制御取得に失敗
-kcVideo : Didn't get audio control
+kcVideo : Failed to acquire audio control
 
 //Bytes=44,Offset=0x005B02EC
 //入力管理クラスは複数インストール出来ません
 入力管理クラスは複数インストール出来ません
-Many input managements can't be installed
+Multiple input management classes can not be installed
 
 //Bytes=40,Offset=0x005B0318
 //kcWndHookクラスは1つしか作成出来ません
@@ -1741,12 +1742,12 @@ kcInput : Started in API mode
 //Bytes=44,Offset=0x005B0374
 //kcInput : DirectInputモードはまだ未対応です
 kcInput : DirectInputモードはまだ未対応です
-kcInput : DirectInput mode is not supported
+kcInput : DirectInput mode is not supported yet
 
 //Bytes=48,Offset=0x005B03A0
 //kcInput : 未定義の動作モードが指定されました
 kcInput : 未定義の動作モードが指定されました
-kcInput : Undefined operation mode specified
+kcInput : An undefined operation mode was specified
 
 //Bytes=16,Offset=0x005B0814
 //ういんどみる
@@ -1811,12 +1812,12 @@ File write [%s] failed.
 //Bytes=24,Offset=0x005B2644
 //保存情報がありません。
 保存情報がありません。
-No save information.
+There is no save information.
 
 //Bytes=24,Offset=0x005B265C
 //保存情報がありません。
 保存情報がありません。
-No save information.
+There is no save information.
 
 //Bytes=48,Offset=0x005B2674
 //<?xml version="1.0" encoding="Shift_JIS"?>\r\n
@@ -1891,17 +1892,17 @@ Invalid tag.
 //Bytes=28,Offset=0x005B2750
 //属性(%s)の値が不正です。
 属性(%s)の値が不正です。
-Attribute val (%s) invalid.
+The value of attribute (%s) is invalid.
 
 //Bytes=28,Offset=0x005B276C
 //属性(%s)の値が不正です。
 属性(%s)の値が不正です。
-Attribute val (%s) invalid.
+The value of attribute (%s) is invalid.
 
 //Bytes=28,Offset=0x005B2788
 //属性(%s)の値が不正です。
 属性(%s)の値が不正です。
-Attribute val (%s) invalid.
+The value of attribute (%s) is invalid.
 
 //Bytes=4,Offset=0x005B27A4
 //>
@@ -1951,17 +1952,17 @@ This file cannot be read.
 //Bytes=16,Offset=0x005B2BC8
 //変数更新 : %d
 変数更新 : %d
-Var update : %d
+Variable update : %d
 
 //Bytes=56,Offset=0x005B3480
 //kcFEScriptObjPlane : 参照カウンタがマイナスになりました
 kcFEScriptObjPlane : 参照カウンタがマイナスになりました
-kcFEScriptObjPlane : Ref counter has become negative
+kcFEScriptObjPlane : Reference counter has become negative
 
 //Bytes=60,Offset=0x005B3578
 //kcFEScriptObjParticle : 参照カウンタがマイナスになりました
 kcFEScriptObjParticle : 参照カウンタがマイナスになりました
-kcFEScriptObjParticle : Ref counter has become negative
+kcFEScriptObjParticle : Reference counter has become negative
 
 //Bytes=32,Offset=0x005B4324
 //#%s定義に不正があります。 : %s
@@ -2071,7 +2072,7 @@ The object name is invalid. : %s
 //Bytes=32,Offset=0x005B4714
 //配列数に不正があります。 : %s
 配列数に不正があります。 : %s
-Invalid array number. : %s
+There is an invalid array number. : %s
 
 //Bytes=8,Offset=0x005B4734
 //MACRO

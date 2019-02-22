@@ -1,0 +1,17 @@
+﻿//DIALOGEX : 204
+
+//CAPTION
+//チャットメッセージ
+$CAPTION$チャットメッセージ
+Chat Message
+
+//CONTROL 1
+//送信
+$1$送信
+Send
+
+//CONTROL 2
+//閉じる
+$2$閉じる
+Close
+

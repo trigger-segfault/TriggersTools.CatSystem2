@@ -1,0 +1,42 @@
+﻿//DIALOGEX : 209
+
+//CAPTION
+//シーンリスト
+$CAPTION$シーンリスト
+Scene List
+
+//CONTROL 1159
+//リスト更新
+$1159$リスト更新
+Update List
+
+//CONTROL -1
+//フィルタ
+$-1$フィルタ
+Filter
+
+//CONTROL -1
+//シーンリスト
+$-1$シーンリスト
+Scene List
+
+//CONTROL -1
+//リストタイプ
+$-1$リストタイプ
+List Type
+
+//CONTROL 1165
+//ファイルリスト
+$1165$ファイルリスト
+File List
+
+//CONTROL 1166
+//シーンリスト
+$1166$シーンリスト
+Scene List
+
+//CONTROL 1179
+//シーンスクリプトをコンパイル
+$1179$シーンスクリプトをコンパイル
+Compile All Scene Scripts
+

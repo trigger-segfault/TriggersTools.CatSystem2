@@ -1,0 +1,7 @@
+//DIALOGEX : 129
+
+//CONTROL 1
+//OK
+$1$OK
+$nr$
+

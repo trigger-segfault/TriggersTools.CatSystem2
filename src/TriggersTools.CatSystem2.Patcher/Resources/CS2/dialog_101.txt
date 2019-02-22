@@ -1,0 +1,22 @@
+//DIALOGEX : 101
+
+//CAPTION
+//Debug Log
+$CAPTION$Debug Log
+$nr$
+
+//CONTROL 1002
+//CLEAR
+$1002$CLEAR
+$nr$
+
+//CONTROL 1003
+//COPY
+$1003$COPY
+$nr$
+
+//CONTROL 1004
+//FILE
+$1004$FILE
+$nr$
+

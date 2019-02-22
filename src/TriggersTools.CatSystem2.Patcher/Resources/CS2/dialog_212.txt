@@ -1,0 +1,42 @@
+﻿//DIALOGEX : 212
+
+//CAPTION
+//壁紙の変更
+$CAPTION$壁紙の変更
+Change Wallpaper
+
+//CONTROL 1
+//OK
+$1$OK
+$nr$
+
+//CONTROL 1170
+//画面の中心に表示する
+$1170$画面の中心に表示する
+Display at center of the screen
+
+//CONTROL 1171
+//並べて表示する
+$1171$並べて表示する
+Display side-by-side
+
+//CONTROL 1172
+//画面サイズに合わせて縦横サイズを変える
+$1172$画面サイズに合わせて縦横サイズを変える
+Change V and H sizes according to screen size
+
+//CONTROL 1173
+//現在の表示方法を使用する（設定を変更しない）
+$1173$現在の表示方法を使用する（設定を変更しない）
+Use current display method (do not change setting)
+
+//CONTROL 1175
+//今すぐ壁紙を変更する
+$1175$今すぐ壁紙を変更する
+Change Wallpaper
+
+//CONTROL 1176
+//現在の壁紙を変更しない
+$1176$現在の壁紙を変更しない
+Do Not Change Wallpaper
+

@@ -1,0 +1,17 @@
+﻿//DIALOGEX : 211
+
+//CAPTION
+//メッセージリスト
+$CAPTION$メッセージリスト
+Message List
+
+//CONTROL -1
+//名前抽出
+$-1$名前抽出
+Name
+
+//CONTROL -1
+//文章抽出
+$-1$文章抽出
+Sentence
+

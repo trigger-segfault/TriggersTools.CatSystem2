@@ -1,0 +1,27 @@
+﻿//DIALOGEX : 210
+
+//CAPTION
+//文字列変数の設定
+$CAPTION$文字列変数の設定
+Set String Variable
+
+//CONTROL 1
+//OK
+$1$OK
+$nr$
+
+//CONTROL 2
+//キャンセル
+$2$キャンセル
+Cancel
+
+//CONTROL -1
+//変数No
+$-1$変数No
+Var #
+
+//CONTROL -1
+//値
+$-1$値
+Value
+
