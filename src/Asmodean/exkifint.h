@@ -19,11 +19,17 @@ struct KIFENTRYINFO {
 	unsigned long  length;
 };
 
-ASMODEAN_API void DecryptVCode2(
+ASMODEAN_API void EncryptVCode(
 	unsigned char* keyBuffer,
 	unsigned long  keyLength,
-	unsigned char* vcode2Buffer,
-	unsigned long  vcode2Length);
+	unsigned char* vcodeBuffer,
+	unsigned long  vcodeLength);
+
+ASMODEAN_API void DecryptVCode(
+	unsigned char* keyBuffer,
+	unsigned long  keyLength,
+	unsigned char* vcodeBuffer,
+	unsigned long  vcodeLength);
 
 ASMODEAN_API void DecryptEntry(
 	KIFENTRYINFO&  entry,

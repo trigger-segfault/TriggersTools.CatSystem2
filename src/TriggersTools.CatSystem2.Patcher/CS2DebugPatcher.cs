@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace TriggersTools.CatSystem2.Patcher {
-	class CS2DebugPatcher {
+	public class CS2DebugPatcher {
 
+
+		//public static bool Patch
 	}
 }

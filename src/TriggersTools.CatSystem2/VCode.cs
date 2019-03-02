@@ -1,113 +1,84 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using TriggersTools.CatSystem2.Exceptions;
-using TriggersTools.CatSystem2.Native;
-using TriggersTools.SharpUtils.Text;
+using Newtonsoft.Json;
+using TriggersTools.SharpUtils.Exceptions;
 
 namespace TriggersTools.CatSystem2 {
-	/// <summary>
-	///  A static class for extracting the executable or bin file's V_CODE and V_CODE2 resources.
-	/// </summary>
-	public static class VCode {
+	public struct VCode : IEquatable<VCode> {
 		#region Constants
 
-		public const string KeyCodeName = "KEY";
-		public const string KeyCodeType = "KEY_CODE";
-		public const string VCodeName = "DATA";
-		public const string VCodeType = "V_CODE";
-		public const string VCode2Name = "DATA";
-		public const string VCode2Type = "V_CODE2";
+		/// <summary>
+		///  Gets the default length for a V_CODE or V_CODE2.
+		/// </summary>
+		public const int DefaultLength = 16;
 
 		#endregion
 
-		#region FindVCode2
+		#region Fields
 
-		/// <summary>
-		///  Locates the V_CODE2 in the module file, which is used to decrypt the KIFINT archive's entry file names.
-		/// </summary>
-		/// <param name="exeFile">The file path to the executable or bin file.</param>
-		/// <returns>The decrypted V_CODE2 string resource.</returns>
-		/// 
-		/// <exception cref="ArgumentNullException">
-		///  <paramref name="exeFile"/> is null.
-		/// </exception>
-		/// <exception cref="ArgumentException">
-		///  <paramref name="exeFile"/> is an empty string or whitespace.
-		/// </exception>
-		/// <exception cref="GrisaiaLoadModuleException">
-		///  Failed to load <paramref name="exeFile"/> as a library module.
-		/// </exception>
-		/// <exception cref="GrisaiaResourceException">
-		///  An error occurred while trying to copy the KEY_CODE or V_CODE2 resource.
-		/// </exception>
-		public static string FindVCode2(string exeFile) {
-			if (exeFile == null)
-				throw new ArgumentNullException(nameof(exeFile));
-			if (string.IsNullOrWhiteSpace(exeFile))
-				throw new ArgumentException($"{nameof(exeFile)} is empty or whitespace!", nameof(exeFile));
-			IntPtr h = Win32.LoadLibraryEx(exeFile, IntPtr.Zero, Win32.LoadLibraryExFlags.LoadLibraryAsImageResource);
-			if (h == IntPtr.Zero)
-				throw new Exception(exeFile);
-			try {
+		[JsonIgnore]
+		private string code;
+		[JsonIgnore]
+		private int length;
 
-				CopyResource(h, KeyCodeName, KeyCodeType, out byte[] key, out int keyLength);
+		#endregion
 
-				for (int i = 0; i < key.Length; i++)
-					key[i] ^= 0xCD;
+		#region Constructors
 
-				CopyResource(h, VCode2Name, VCode2Type, out byte[] vcode2, out int vcode2Length);
+		public VCode(string code) : this(code, DefaultLength) { }
 
-				//Blowfish bf = new Blowfish();
-				//fixed (byte* key_buff_ptr = keyBuffer)
-				//	bf.Set_Key(key_buff_ptr, keyLength);
-				//bf.Decrypt(vcode2, (vcode2Length + 7) & ~7);
+		public VCode(string code, int length) {
+			if (length <= 0)
+				throw ArgumentOutOfRangeUtils.OutsideMin(nameof(Length), length, 0, false);
+			this.code = code ?? throw new ArgumentNullException(nameof(code));
+			this.length = length;
+		}
 
-				Asmodean.DecryptVCode2(key, keyLength, vcode2, vcode2Length);
+		#endregion
 
-				return vcode2.ToNullTerminatedString(Encoding.ASCII);
-			} finally {
-				Win32.FreeLibrary(h);
+		#region Properties
+
+		[JsonProperty("code")]
+		public string Code {
+			get => code;
+			set => code = value ?? throw new ArgumentNullException(nameof(Code));
+		}
+		[JsonProperty("length")]
+		public int Length {
+			get => length;
+			set {
+				if (value <= 0)
+					throw ArgumentOutOfRangeUtils.OutsideMin(nameof(Length), value, 0, false);
+				length = value;
 			}
 		}
 
 		#endregion
 
-		#region Private Methods
-		
-		/// <summary>
-		///  Copies the resource with the specified name and type into output buffer.
-		/// </summary>
-		/// <param name="h">The handle to the library module of the Grisaia executable.</param>
-		/// <param name="name">The name of the resource to load.</param>
-		/// <param name="type">The type of the resource to load.</param>
-		/// <param name="buffer">The output data for the resource.</param>
-		/// <param name="length">The output length of the resource data.</param>
-		/// 
-		/// <exception cref="GrisaiaResourceException">
-		///  An error occurred while trying to copy the resource.
-		/// </exception>
-		private static void CopyResource(IntPtr h, string name, string type, out byte[] buffer, out int length) {
-			IntPtr r = Win32.FindResource(h, name, type);
-			if (r == IntPtr.Zero)
-				throw new ModuleResourceException(name, type, "find");
+		#region Object Overrides
 
-			IntPtr g = Win32.LoadResource(h, r);
-			if (g == IntPtr.Zero)
-				throw new ModuleResourceException(name, type, "load");
+		public override string ToString() => $"\"{code}\" Length={length}";
 
-			length = Win32.SizeofResource(h, r);
-			buffer = new byte[(length + 7) & ~7];
+		public override int GetHashCode() => (code?.GetHashCode() ?? 0) ^ length;
 
-			IntPtr lockPtr = Win32.LockResource(g);
-			if (lockPtr == IntPtr.Zero)
-				throw new ModuleResourceException(name, type, "lock");
-
-			Marshal.Copy(lockPtr, buffer, 0, length);
+		public override bool Equals(object obj) {
+			return (obj is VCode vcode && Equals(vcode));
 		}
+		public bool Equals(VCode other) {
+			return code == other.Code && length == other.Length;
+		}
+
+		#endregion
+
+		#region Operators
+
+		public static bool operator ==(VCode a, VCode b) => a.Equals(b);
+		public static bool operator !=(VCode a, VCode b) => !a.Equals(b);
+
+		#endregion
+
+		#region Casting
+
+		public static implicit operator string(VCode vcode) => vcode.code;
 
 		#endregion
 	}

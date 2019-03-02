@@ -1,0 +1,385 @@
+﻿//Bytes=24,Offset=0x00211DD4
+//拡大・縮小率が不正です
+拡大・縮小率が不正です
+Invalid expn/redc ratio
+
+//Bytes=36,Offset=0x00211E54
+//%s は未対応の画像フォーマットです
+%s は未対応の画像フォーマットです
+%s is an unsupported image format
+
+//Bytes=24,Offset=0x00211E78
+//%s の展開に失敗しました
+%s の展開に失敗しました
+Expansion of %s failed
+
+//Bytes=4,Offset=0x00211E90
+//=
+=
+$nr$
+
+//Bytes=4,Offset=0x00211E94
+//src
+src
+$nr$
+
+//Bytes=4,Offset=0x00211E98
+//&
+&
+$nr$
+
+//Bytes=24,Offset=0x00211E9C
+//ファイル保存に失敗 : %s
+ファイル保存に失敗 : %s
+File save failed : %s
+
+//Bytes=20,Offset=0x00211EB4
+//データ結合に失敗
+データ結合に失敗
+Failed to join data
+
+//Bytes=8,Offset=0x00211EC8
+//%s_%04d
+%s_%04d
+$nr$
+
+//Bytes=12,Offset=0x00211ED8
+//_no_clip_
+_no_clip_
+$nr$
+
+//Bytes=8,Offset=0x00211EE4
+//_clip_
+_clip_
+$nr$
+
+//Bytes=8,Offset=0x00211EEC
+//_base_
+_base_
+$nr$
+
+//Bytes=32,Offset=0x00211EF4
+//ファイル名(ID)に不正があります
+ファイル名(ID)に不正があります
+Invalid file name (ID)
+
+//Bytes=8,Offset=0x00211F14
+//@%s(%s
+@%s(%s
+$nr$
+
+//Bytes=4,Offset=0x00211F1C
+//$
+$
+$nr$
+
+//Bytes=8,Offset=0x00211F20
+//%s(%d)
+%s(%d)
+$nr$
+
+//Bytes=16,Offset=0x00211F28
+//%s が開けません
+%s が開けません
+Cannot open %s
+
+//Bytes=32,Offset=0x00211F44
+//実行フォルダを選択してください
+実行フォルダを選択してください
+Please select an execute folder
+
+//Bytes=12,Offset=0x00211F64
+//WGCConf.ini
+WGCConf.ini
+$nr$
+
+//Bytes=32,Offset=0x00211F70
+//ファイル %s が見つかりません
+ファイル %s が見つかりません
+File %s not found
+
+//Bytes=24,Offset=0x00211F90
+//最近使ったリスト(&L)
+最近使ったリスト(&L)
+Recently Used &List
+
+//Bytes=12,Offset=0x00212078
+//多重登録
+多重登録
+Multiregstr
+
+//Bytes=28,Offset=0x00212084
+//%s はすでに登録されています
+%s はすでに登録されています
+%s is already registered
+
+//Bytes=56,Offset=0x002120A0
+//選択されたファイルをリストから削除してよろしいですか？
+選択されたファイルをリストから削除してよろしいですか？
+Delete the selected file from the list?
+
+//Bytes=8,Offset=0x002120D8
+//削除
+削除
+Delete
+
+//Bytes=16,Offset=0x002120E0
+//リストを保存
+リストを保存
+Save List
+
+//Bytes=16,Offset=0x002120F0
+//リストを開く
+リストを開く
+Open List
+
+//Bytes=24,Offset=0x00212100
+//リストファイル(*.WGL)
+リストファイル(*.WGL)
+List File (*.WGL)
+
+//Bytes=4,Offset=0x00212118
+//WGL
+WGL
+$nr$
+
+//Bytes=16,Offset=0x0021211C
+//全てのファイル
+全てのファイル
+All Files
+
+//Bytes=4,Offset=0x0021212C
+//.*
+.*
+$nr$
+
+//Bytes=4,Offset=0x00212134
+//WGL
+WGL
+$nr$
+
+//Bytes=48,Offset=0x00212154
+//ピクセルイメージ用バッファの確保に失敗しました
+ピクセルイメージ用バッファの確保に失敗しました
+Failed to allocate image pixel buffer
+
+//Bytes=16,Offset=0x00212184
+//不正な bpp です
+不正な bpp です
+Illegal bpp
+
+//Bytes=8,Offset=0x00212304
+//HG-2
+HG-2
+$nr$
+
+//Bytes=40,Offset=0x0021230C
+//HG2(%d) : 対応するIDが見つかりません
+HG2(%d) : 対応するIDが見つかりません
+HG2(%d) : Corresponding ID not found
+
+//Bytes=32,Offset=0x00212334
+//HG2 : 未対応のバージョンです
+HG2 : 未対応のバージョンです
+HG2 : Unsupported version
+
+//Bytes=44,Offset=0x00212354
+//kcImageHg2 : ビット領域のサイズが異常です
+kcImageHg2 : ビット領域のサイズが異常です
+kcImageHg2 : The bit area size is abnormal
+
+//Bytes=44,Offset=0x00212380
+//kcImageHg2 : バイト領域のサイズが異常です
+kcImageHg2 : バイト領域のサイズが異常です
+kcImageHg2 : The byte area size is abnormal
+
+//Bytes=24,Offset=0x002123AC
+//HG2 : ヘッダが違います
+HG2 : ヘッダが違います
+HG2 : Header is invalid
+
+//Bytes=28,Offset=0x002123D8
+//イメージのタイプが違います
+イメージのタイプが違います
+Image type is different
+
+//Bytes=28,Offset=0x0021C300
+//削ｵｰ>Unknown %s code %d
+削ｵｰ>Unknown %s code %d
+$nr$
+
+//Bytes=60,Offset=0x0025BAF8
+//kcProtect : データサイズは8バイト単位である必要があります
+kcProtect : データサイズは8バイト単位である必要があります
+$nr$
+
+//Bytes=60,Offset=0x0025BB34
+//kcProtect : データサイズは8バイト単位である必要があります
+kcProtect : データサイズは8バイト単位である必要があります
+$nr$
+
+//Bytes=8,Offset=0x0025BB70
+//%c:\\
+%c:\\
+$nr$
+
+//Bytes=8,Offset=0x0025BB78
+//%c:\\
+%c:\\
+$nr$
+
+//Bytes=16,Offset=0x0025BB80
+//bad allocation
+bad allocation
+$nr$
+
+//Bytes=44,Offset=0x0025BB90
+//%s(%d) : no release [adr=0x%08x  size=%d]
+%s(%d) : no release [adr=0x%08x  size=%d]
+$nr$
+
+//Bytes=16,Offset=0x0025BBBC
+//leak count = %d
+leak count = %d
+$nr$
+
+//Bytes=16,Offset=0x0025BBCC
+//__debug__.log
+__debug__.log
+$nr$
+
+//Bytes=20,Offset=0x0025BBE0
+//Assert message...
+Assert message...
+$nr$
+
+//Bytes=8,Offset=0x0025BBF4
+//エラー
+エラー
+$nr$
+
+//Bytes=40,Offset=0x0025BBFC
+//既に違うファイルがオープンされています
+既に違うファイルがオープンされています
+$nr$
+
+//Bytes=52,Offset=0x0025BC24
+//KCFILE_READ 又は KCFILE_WRITE を指定してください
+KCFILE_READ 又は KCFILE_WRITE を指定してください
+$nr$
+
+//Bytes=36,Offset=0x0025BC58
+//KCFILE_READ ではアクセス出来ません
+KCFILE_READ ではアクセス出来ません
+$nr$
+
+//Bytes=28,Offset=0x0025BC7C
+//kcFile : ハンドルが無効です
+kcFile : ハンドルが無効です
+$nr$
+
+//Bytes=44,Offset=0x0025BC98
+//読み込みモードでオープンされていません : %s
+読み込みモードでオープンされていません : %s
+$nr$
+
+//Bytes=24,Offset=0x0025BCC4
+//Read file failed : %d
+Read file failed : %d
+$nr$
+
+//Bytes=44,Offset=0x0025BCDC
+//書き込みモードでオープンされていません : %s
+書き込みモードでオープンされていません : %s
+$nr$
+
+//Bytes=24,Offset=0x0025BD08
+//Write file failed : %d
+Write file failed : %d
+$nr$
+
+//Bytes=48,Offset=0x0025BD60
+//kcMemFile : ファイルがオープンされていません
+kcMemFile : ファイルがオープンされていません
+$nr$
+
+//Bytes=36,Offset=0x0025BDD0
+//kcFileServer は複数作成出来ません
+kcFileServer は複数作成出来ません
+$nr$
+
+//Bytes=60,Offset=0x0025BE90
+//同時にオープンできるファイル数を超えています (MAX:%d) : %s
+同時にオープンできるファイル数を超えています (MAX:%d) : %s
+$nr$
+
+//Bytes=40,Offset=0x0025BECC
+//読み込み先バッファが指定されていません
+読み込み先バッファが指定されていません
+$nr$
+
+//Bytes=24,Offset=0x0025BEF4
+//読み込みに失敗 (%s:%d)
+読み込みに失敗 (%s:%d)
+$nr$
+
+//Bytes=28,Offset=0x0025BF0C
+//暗号化解除エラー (%s:%d)
+暗号化解除エラー (%s:%d)
+$nr$
+
+//Bytes=40,Offset=0x0025BF28
+//統合ファイルがオープンされていません
+統合ファイルがオープンされていません
+$nr$
+
+//Bytes=20,Offset=0x0025BF50
+//vector<T> too long
+vector<T> too long
+$nr$
+
+//Bytes=52,Offset=0x0025BF64
+//kcBigFile : 統合ファイルがオープンされていません
+kcBigFile : 統合ファイルがオープンされていません
+$nr$
+
+//Bytes=40,Offset=0x0025BF98
+//kcBigFile : ファイルハンドルが無効です
+kcBigFile : ファイルハンドルが無効です
+$nr$
+
+//Bytes=32,Offset=0x0025C00C
+//ヒープ領域の作成に失敗しました
+ヒープ領域の作成に失敗しました
+$nr$
+
+//Bytes=52,Offset=0x0025C02C
+//ヒープを作成しました。 size = %d (0x%x) byte (%fMB)
+ヒープを作成しました。 size = %d (0x%x) byte (%fMB)
+$nr$
+
+//Bytes=24,Offset=0x0025C060
+//ヒープを破棄しました。
+ヒープを破棄しました。
+$nr$
+
+//Bytes=56,Offset=0x0025C078
+//メモリが確保出来ませんでした  id = %d  size = %d(0x%x)
+メモリが確保出来ませんでした  id = %d  size = %d(0x%x)
+$nr$
+
+//Bytes=28,Offset=0x0025C0B0
+//サポートしていないBPPです
+サポートしていないBPPです
+$nr$
+
+//Bytes=40,Offset=0x0025C0CC
+//[%d to %d] この形式のコピーは未対応です
+[%d to %d] この形式のコピーは未対応です
+$nr$
+
+//Bytes=36,Offset=0x0025C0F4
+//拡大縮小コピーは対応していません
+拡大縮小コピーは対応していません
+$nr$
+

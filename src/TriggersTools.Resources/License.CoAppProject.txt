@@ -1,0 +1,18 @@
+﻿//-----------------------------------------------------------------------
+// <copyright company="CoApp Project">
+//     Copyright (c) 2010-2013 Garrett Serack and CoApp Contributors. 
+//     Contributors can be discovered using the 'git log' command.
+//     All rights reserved.
+// </copyright>
+// <license>
+//     The software is licensed under the Apache 2.0 License (the "License")
+//     You may not use the software except in compliance with the License. 
+// </license>
+//-----------------------------------------------------------------------
+
+trigger_death's Changes:
+* Structures were given their original names
+* Added MS documentation to Kernel32, structures, and a few enumerations.
+* It's still half-modified, but not too much of it is needed.
+* Kernel32.cs is based off what I was originally creating in Win32.cs.
+* A few methods were merged from CoApps Kernel32.cs.

@@ -45,7 +45,7 @@ namespace TriggersTools.CatSystem2 {
 			byte[] compressed = reader.ReadBytes(hdr.CompressedSize);
 			byte[] decompressed = new byte[hdr.DecompressedSize];
 			int decompressedLength = hdr.DecompressedSize;
-			ZLib1.Uncompress(decompressed, ref decompressedLength, compressed, hdr.CompressedSize);
+			Zlib.Uncompress(decompressed, ref decompressedLength, compressed, hdr.CompressedSize);
 
 			SCENELINE[] strings;
 

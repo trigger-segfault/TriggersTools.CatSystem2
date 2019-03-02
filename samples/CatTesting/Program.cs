@@ -3,19 +3,290 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
+using TriggersTools.CatSystem2.Native;
 using TriggersTools.CatSystem2.Patcher;
 using TriggersTools.CatSystem2.Patcher.Patches;
+using TriggersTools.SharpUtils.IO;
+using Ionic.Zlib;
+using System.Diagnostics;
+using TriggersTools.Resources.Dialog;
+using TriggersTools.Resources.Menu;
+using TriggersTools.Resources;
+using Newtonsoft.Json;
+using TriggersTools.CatSystem2.Patcher.Programs.CS2;
 
 namespace TriggersTools.CatSystem2.Testing {
 	class Program {
 		static void Main(string[] args) {
+			string grisaiaInstallDir = @"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)";
+			string grisaiaExe = Path.Combine(grisaiaInstallDir, "Grisaia2.bin.bak");
+			string grisaiaConfigInt = Path.Combine(grisaiaInstallDir, "config.int");
+			//VCodes grisaiaVCodes = VCodes.Load(grisaiaExe);
+			//KifintLookup lookup = Kifint.DecryptLookup(KifintType.Config, grisaiaInstallDir, grisaiaVCodes.VCode2);
+			//lookup["startup.xml"].ExtractToFile("startup2.xml");
+			File.Copy("startup2.xml", "startup.xml", true);
+			var patcher = new ResolveXmlCommentErrorsPatch("startup.xml");
+			var patcher2 = new CS2XmlDebugPatch("startup.xml", true, "TriggersTools.CatSystem2.Patcher.Resources.CS2");
+			patcher.Patch();
+			patcher2.Patch();
+			Console.WriteLine("FINISHED");
+			Console.ReadLine();
+			for (int i = 0; i < 10; i++) {
+				Stopwatch swatch = Stopwatch.StartNew();
+				//var vcodes = VCodes.Load(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)\Grisaia2.bin");
+				string exeFile = CatUtils.FindCatExecutable(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)");
+				Console.WriteLine(swatch.ElapsedMilliseconds);
+				Console.WriteLine(exeFile ?? string.Empty);
+			}
+			Console.ReadLine();
+			//vcodes.Save(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)\Grisaia2.bin");
+			//File.WriteAllText("vcodes.json", JsonConvert.SerializeObject(vcodes, Formatting.Indented));
+			//vcodes.KeyCode = vcodes.KeyCode;
+			//vcodes.KeyCode = new byte[4] { 0x1, 0x1, 0x1, 0x1 };
+			Console.Beep();
+			Console.ReadLine();
+			using (var ms = new MemoryStream()) {
+				BinaryReader reader = new BinaryReader(ms);
+				BinaryWriter writer = new BinaryWriter(ms);
+				writer.Write(1);
+				ms.Position = 0;
+				byte[] buffer = reader.ReadBytes(4);
+				int[] ints = new int[1];
+				Buffer.BlockCopy(buffer, 0, ints, 0, 4);
+				Console.WriteLine(ints[0]);
+			}
+				//ushort us = 1;
+			byte[] bs = { 1, 0 };
+			byte[] decompressedA;
+			byte[] decompressedB;
+			for (int i = 0; i < 3; i++) {
+				Stopwatch watch = new Stopwatch();
+				using (FileStream fs = File.OpenRead("asa.zt")) {
+					BinaryReader reader = new BinaryReader(fs);
+					int nextEntry = 0;
+					long startPosition = fs.Position;
+					//do {
+					fs.Position = startPosition + nextEntry;
+					startPosition = fs.Position;
+					nextEntry = reader.ReadInt32();
+					reader.ReadInt32();
+					int offsetToData = reader.ReadInt32();
+					reader.ReadInt32();
+					string fileName = reader.ReadFixedString(256, '\0');
+					int reserved = reader.ReadInt32();
+					int compressedLength = reader.ReadInt32();
+					int decompressedLength = reader.ReadInt32();
+					byte[] compressed = reader.ReadBytes(compressedLength);
+					watch.Restart();
+					byte[] decompressed = new byte[decompressedLength];
+					ZLib.Uncompress(decompressed, ref decompressedLength, compressed, compressedLength);
+					decompressedA = decompressed;
+					Console.WriteLine(watch.ElapsedMilliseconds);
+					/*Console.WriteLine(offsetToData);
+					Console.WriteLine($"{fs:Position:X8}");
+					Console.WriteLine(decompressedLength);
+
+					Console.WriteLine(decompressedLength);*/
+
+					//File.WriteAllBytes(Path.Combine("ztout/2", fileName), decompressed);
+
+					//} while (nextEntry != 0);
+				}
+				using (FileStream fs = File.OpenRead("asa.zt")) {
+					BinaryReader reader = new BinaryReader(fs);
+					int nextEntry = 0;
+					long startPosition = fs.Position;
+					//do {
+					fs.Position = startPosition + nextEntry;
+					startPosition = fs.Position;
+					nextEntry = reader.ReadInt32();
+					reader.ReadInt32();
+					int offsetToData = reader.ReadInt32();
+					reader.ReadInt32();
+					string fileName = reader.ReadFixedString(256, '\0');
+					int reserved = reader.ReadInt32();
+					int compressedLength = reader.ReadInt32();
+					int decompressedLength = reader.ReadInt32();
+					byte[] compressed = reader.ReadBytes(compressedLength);
+					watch.Restart();
+					decompressedB = ZlibStream.UncompressBuffer(compressed);
+					Console.WriteLine(watch.ElapsedMilliseconds);
+					/*using (var ms = new MemoryStream())
+					using (ZlibStream zs = new ZlibStream(ms, CompressionMode.Decompress)) {
+						//byte[] decompressed = new byte[decompressedLength];
+						zs.Read(compressed, 0, compressedLength);
+						decompressedB = ms.ToArray();
+					}*/
+					//byte[] decompressed = new byte[decompressedLength];
+					/*Console.WriteLine(offsetToData);
+					Console.WriteLine($"{fs:Position:X8}");
+					Console.WriteLine(decompressedLength);
+
+					//ZLib.Uncompress(decompressed, ref decompressedLength, compressed, compressedLength);
+					Console.WriteLine(decompressedLength);
+
+					File.WriteAllBytes(Path.Combine("ztout/2", fileName), decompressed);*/
+
+					//} while (nextEntry != 0);
+				}
+			}
+			//344AC
+			//@"C:\Programs\Tools\CatSystem2_v401\psds\BA01_1.hg2"
+			Directory.CreateDirectory("hg3");
+			Hg3Image.Extract(@"C:\Programs\Tools\CatSystem2_v401\tool\img_test2.hg3");
+			Hg3Image.Extract(@"C:\Programs\Tools\CatSystem2_v401\psds\sys_confirm.hg2");
+			var hg3Img = Hg3Image.ExtractImages(@"C:\Programs\Tools\CatSystem2_v401\psds\BA01_1.hg3",
+				"hg3", false);
+			hg3Img.SaveJsonToDirectory("hg3");
+			Console.OutputEncoding = CatUtils.ShiftJIS;
+			ZTPatcher zt2 = new ZTPatcher {
+				InstallDir = ".",
+			};
+			zt2.Patch();
+			WGCPatcher wgc2 = new WGCPatcher {
+				InstallDir = ".",
+			};
+			wgc2.Patch();
+			Console.ReadLine();
+			string[] lines = File.ReadAllLines("strings/wgc/binary.txt");
+			StringsScraper.BinaryValidate(lines);
+			Console.ReadLine();
+			lines = File.ReadAllLines("strings/zt/binary.txt");
+			StringsScraper.BinaryValidate(lines);
+			Console.ReadLine();
+			StringsScraper.BinarySearch("WGC.exe", "img_jpg");//256C28, 256C8C
+			Console.ReadLine();
+			BinaryRange[] rangess = {
+				new BinaryRange(0x211DD4, 0x211DEC),
+				new BinaryRange(0x211E54, 0x211FA8),
+				new BinaryRange(0x212078, 0x212138),
+				new BinaryRange(0x212154, 0x2121A0),
+				new BinaryRange(0x2122F0, 0x212204),
+				new BinaryRange(0x212304, 0x2123C4),
+				new BinaryRange(0x2123D8, 0x2123F4),
+				new BinaryRange(0x21C300, 0x21C31C),
+
+				new BinaryRange(0x25BAF8, 0x25BD20),
+				new BinaryRange(0x25BD60, 0x25BD90),
+				new BinaryRange(0x25BDD0, 0x25BDF4),
+				new BinaryRange(0x25BE90, 0x25BFC0),
+				new BinaryRange(0x25C00C, 0x25C118),
+			};
+			StringsScraper.BinaryScrape("WGC.exe", "strings/wgc", rangess); //2120A0
+
+			Console.ReadLine();
+			StringsScraper.BinaryScrape("ztpack.exe", "strings/zt", 0x344AC, 0x345F8);
+			Console.ReadLine();
+			/*var resInfo = new ResourceInfo("cs2_open_en.exe");
+			File.Copy("cs2_open_en.exe", "cs2_open_en2.exe", true);
+			Thread.Sleep(400);
+			resInfo.Save("cs2_open_en2.exe");
+			var menuRes = new MenuResource("cs2_open.exe", 105, 1041);
+			var dialogRes = new DialogResource("cs2_open.exe", 201, 1041);
+			var menu = (MenuTemplate) menuRes.Template;
+			var dialog = (DialogExTemplate) dialogRes.Template;
+			dialog.Caption = "Hello World!";
+			dialog.Controls[0].CaptionId = "OK WORLD!";
+			dialog.Controls[1].HelpId = 25;
+			menu.MenuItems[0].MenuString = "Hello World!";
+			menu.MenuItems.Add(new MenuTemplateItemPopup {
+				MenuString = "Popup",
+				MenuItems = {
+					new MenuTemplateItemCommand {
+						IsSeparator = true,
+					},
+					new MenuTemplateItemCommand {
+						MenuString = "Do Nothing",
+						MenuId = 2555,
+					},
+				},
+			});
+			//IntPtr ptr = Marshal.StringToHGlobalUni(null);
+			//File.Copy("cs2_open.exe", "cs2_open2.exe", true);
+			Thread.Sleep(400);
+			Resource.SaveTo("cs2_open_en2.exe", new Resource[] { menuRes, dialogRes });*/
+
+			CS2Patcher cs2Patcher = new CS2Patcher {
+				InstallDir = ".",
+			};
+			Console.WriteLine(cs2Patcher.Patch());
+			Console.WriteLine("FINISHED");
+			WGCPatcher wgc = new WGCPatcher {
+				InstallDir = ".",
+			};
+			Console.WriteLine(wgc.Patch());
+			Console.WriteLine("FINISHED");
+			Console.ReadLine();
+			//ResourceInfo reInfo = new ResourceInfo();
+			//reInfo.Load(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)\Grisaia2.bin.bak");
+			//Console.Write("");
+			/*PsDotNet
+			/*using (var s = File.OpenRead(@"C:\Programs\Tools\CatSystem2_v401\psds\CS2用_キャラクター立ち絵2.psd")) {
+				BinaryReverseReader2 reader = new BinaryReverseReader2(s);
+				while (!s.IsEndOfStream()) {
+					int sh = reader.ReadInt32();
+					if (sh == 930)
+						Console.WriteLine($"{s.Position:X8}");
+				}
+			}*/
+
+			/*	Console.OutputEncoding = CatUtils.ShiftJIS;
+			Document psd = new Document(@"C:\Programs\Tools\CatSystem2_v401\psds\CS2用_キャラクター立ち絵.psd");
+			psd.SaveXml("psd.xml", false);
+			foreach (var layer in psd.Layers) {
+				Console.WriteLine(layer.Name);
+			}*/
+			//Document psd2 = new Document(@"C:\Programs\Tools\CatSystem2_v401\tool\img_test.psd");
+			//psd2.SaveXml("psd.xml", false);
+			//Document psd2 = new Document(@"C:\Programs\Tools\CatSystem2_v401\tool\img_test.psd");
+			//StringsScraper.BinarySearch("WGC.exe", "選択されたファイルをリストから");
+			//StringsScraper.BinaryScrape("WGC.exe", "strings/wgc", 0x211000, 0x212F00);
+			//StringsScraper.BinaryScrape("WGC.exe", "strings/wgc", 0x256000, 0x1000000);
+			//StringsScraper.BinarySearch("WGC.exe", "mode");//21220C
+			//212298
+			string vcode = VCodes.FindVCode(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)\Grisaia2.bin.bak");
+			string vcode2 = VCodes.FindVCode2(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)\Grisaia2.bin.bak");
+			var hg = Hg3Image.ExtractImages(@"C:\Programs\Tools\CatSystem2_v401\tool\img_test2.hg3", ".", false);
+			hg = Hg3Image.Extract(@"C:\Programs\Tools\CatSystem2_v401\system\image\sys_confirm.hg3");
+			//int iiii = int.Parse("FFFFFFFF", NumberStyles.HexNumber);
+			hg = Hg3Image.Extract(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)\image\Tmic1cs_6.hg3");
+			byte[] zt = File.ReadAllBytes("zt.zt");
+			/*using (var ms = new MemoryStream()) {
+				BinaryWriter writer = new BinaryWriter(ms);
+				writer.Write(zt.Take(0x110).ToArray());
+				writer.Write(zt.Skip(0x110).Take(0x194 - 0x110).ToArray());
+				ms.Position = 0;
+				writer.Write(405);
+				writer.Write(0);
+				writer.Write()
+				ms.Position = 404;
+				writer.Write((byte) 0);
+				writer.Write(zt.Skip(404).ToArray());
+				//ms.Position = 0x110;
+				//writer.Write(123233);
+				zt = ms.ToArray();
+			}*/
+			//File.WriteAllBytes("zt2.zt", zt);
+			var ztpackage = ZtPackage.ExtractAndSaveFiles("zt.zt", "ztout");
+			Environment.Exit(0);
+			/*using (FileStream fs = File.Create("out.zt")) {
+				long offset = 0x100000194;
+				BinaryWriter writer = new BinaryWriter(fs);
+				writer.Write(zt.Take(0x194).ToArray());
+				fs.Position = offset;
+				writer.Write(zt.Skip(0x194).ToArray());
+			}*/
 			//StringsScraper.BinaryValidate(File.ReadAllLines("strings/cs2/binary_5.txt"));
-			CS2Patcher cs2 = new CS2Patcher();
+			CS2Patcher cs2 = new CS2Patcher {
+				InstallDir = ".",
+			};
 			//Console.WriteLine(cs2.Patch("cs2_open.exe", "cs2_open_en.exe"));
-			Console.WriteLine(cs2.Patch("Grisaia2.bin", "Grisaia2_en.bin"));
+			Console.WriteLine(cs2.Patch());
 			Console.WriteLine("FINISHED");
 			Console.ReadLine();
 			/*using (StreamWriter writer = File.CreateText("ranges_out.txt")) {
@@ -59,8 +330,10 @@ namespace TriggersTools.CatSystem2.Testing {
 			}
 			Console.WriteLine("FINISHED");
 			Console.ReadLine();
-			CS2Patcher cs2 = new CS2Patcher();
-			Console.WriteLine(cs2.Patch("cs2_open.exe", "cs2_open_en.exe"));
+			CS2Patcher cs2 = new CS2Patcher {
+				Executable = "cs2_open.exe",
+			};
+			Console.WriteLine(cs2.Patch());
 			Console.WriteLine("FINISHED");
 			Console.ReadLine();*/
 			var ranges = new BinaryRange[] {
@@ -217,18 +490,26 @@ namespace TriggersTools.CatSystem2.Testing {
 			//StringsScraper.BinaryScrape("fes.exe", "strings/fes", 0x3D828, 0x3DC68);
 			//Console.Beep();
 			//Console.ReadLine();
-			ACPatcher ac = new ACPatcher();
-			Console.WriteLine(ac.Patch("ac.exe", "ac_en.exe"));
+			ACPatcher ac = new ACPatcher {
+				InstallDir = ".",
+			};
+			Console.WriteLine(ac.Patch());
 			//Console.ReadLine();
 			//Console.Clear();
-			MCPatcher mc = new MCPatcher();
-			Console.WriteLine(mc.Patch("mc.exe", "mc_en.exe"));
+			MCPatcher mc = new MCPatcher {
+				InstallDir = ".",
+			};
+			Console.WriteLine(mc.Patch());
 			//Console.ReadLine();
 			//Console.Clear();
-			FESPatcher fes = new FESPatcher();
-			Console.WriteLine(fes.Patch("fes.exe", "fes_en.exe"));
-			WGCPatcher wgc = new WGCPatcher();
-			Console.WriteLine(wgc.Patch("WGC.exe", "WGC_en.exe"));
+			FESPatcher fes = new FESPatcher {
+				InstallDir = ".",
+			};
+			Console.WriteLine(fes.Patch());
+			//WGCPatcher wgc = new WGCPatcher {
+			//	InstallDir = ".",
+			//};
+			//Console.WriteLine(wgc.Patch());
 			Console.ReadLine();
 		}
 	}

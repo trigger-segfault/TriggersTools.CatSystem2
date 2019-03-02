@@ -248,7 +248,7 @@ namespace TriggersTools.SharpUtils.IO {
 		/// <summary>
 		///  Writes 0 bytes to the stream and advances the position to conform to a padding amount.
 		/// </summary>
-		/// <param name="stream">The stream to advance.</param>
+		/// <param name="writer">The <see cref="BinaryWriter"/> to write with.</param>
 		/// <param name="padding">The padding to conform to.</param>
 		/// <returns>The amount of bytes written.</returns>
 		/// 
@@ -276,7 +276,7 @@ namespace TriggersTools.SharpUtils.IO {
 		///  Writes 0 bytes to the stream and advances the position conform to a padding amount with the supplied
 		///  additional offset.
 		/// </summary>
-		/// <param name="stream">The stream to advance.</param>
+		/// <param name="writer">The <see cref="BinaryWriter"/> to write with.</param>
 		/// <param name="padding">The padding to conform to.</param>
 		/// <param name="offset">The additional offset before the padding is calculated.</param>
 		/// <returns>The amount of bytes written.</returns>
@@ -307,6 +307,40 @@ namespace TriggersTools.SharpUtils.IO {
 			byte[] bytes = new byte[(int) MathUtils.Padding(writer.BaseStream.Position, padding, offset)];
 			writer.Write(bytes);
 			return bytes.Length;
+		}
+
+		#endregion
+
+		#region WriteZeroBytes
+
+		/// <summary>
+		///  Writes <paramref name="count"/> zero-bytes to the stream and advances the position by
+		///  <paramref name="count"/>.
+		/// </summary>
+		/// <param name="writer">The <see cref="BinaryWriter"/> to write with.</param>
+		/// <param name="count">The number of zero-bytes to write.</param>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="writer"/> is null.
+		/// </exception>
+		/// <exception cref="ArgumentOutOfRangeException">
+		///  <paramref name="count"/> is less than zero.
+		/// </exception>
+		/// <exception cref="IOException">
+		///  An I/O error occurred.
+		/// </exception>
+		/// <exception cref="NotSupportedException">
+		///  The stream does not support seeking or reading.
+		/// </exception>
+		/// <exception cref="ObjectDisposedException">
+		///  The stream is closed.
+		/// </exception>
+		public static void WriteZeroBytes(this BinaryWriter writer, int count) {
+			if (writer == null)
+				throw new ArgumentNullException(nameof(writer));
+			if (count < 0)
+				throw ArgumentOutOfRangeUtils.OutsideMin(nameof(count), count, 0, true);
+			writer.Write(new byte[count]);
 		}
 
 		#endregion

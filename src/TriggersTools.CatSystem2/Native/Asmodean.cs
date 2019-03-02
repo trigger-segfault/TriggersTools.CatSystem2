@@ -21,14 +21,20 @@ namespace TriggersTools.CatSystem2.Native {
 			byte[] buffer,
 			int length,
 			uint fileKey);
-		
+
 		[DllImport("asmodean.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-		[return: MarshalAs(UnmanagedType.LPStr)]
-		public extern static void DecryptVCode2(
+		public extern static void EncryptVCode(
 			byte[] keyBuffer,
 			int keyLength,
-			byte[] vcode2Buffer,
-			int vcode2Length);
+			byte[] vcodeBuffer,
+			int vcodeLength);
+
+		[DllImport("asmodean.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+		public extern static void DecryptVCode(
+			byte[] keyBuffer,
+			int keyLength,
+			byte[] vcodeBuffer,
+			int vcodeLength);
 
 		[DllImport("asmodean.dll", EntryPoint = "ProcessImage", CallingConvention = CallingConvention.Cdecl)]
 		public extern static void ProcessImageNative(

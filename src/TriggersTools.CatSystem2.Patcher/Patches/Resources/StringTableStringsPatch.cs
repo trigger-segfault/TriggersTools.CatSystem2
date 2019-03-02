@@ -3,29 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ClrPlus.Windows.PeBinary.ResourceLib;
+using TriggersTools.Resources;
+using TriggersTools.Resources.StringTable;
 
 namespace TriggersTools.CatSystem2.Patcher.Patches {
 	public class StringTableStringsPatch : ResourcePatch<StringResource> {
 
 		public IReadOnlyDictionary<string, string> Translation { get; }
-
-		public StringTableStringsPatch(string[] lines, string name) : base(name) {
-			Translation = StringsScraper.BuildTranslation(lines);
-		}
-		public StringTableStringsPatch(string[] lines, ushort name) : base(name) {
-			Translation = StringsScraper.BuildTranslation(lines);
+		
+		public StringTableStringsPatch(IReadOnlyDictionary<string, string> translations, ResourceId name) : base(name) {
+			Translation = translations;
 		}
 
 		public override bool Patch(StringResource stringTable) {
-			var table = stringTable.Strings.ToArray();
-			foreach (var str in table) {
-				ushort key = str.Key;
-				string value = str.Value;
-				if (StringsScraper.IsNormalString(value)) {
-					string id = StringsScraper.GetResId(str);
+			var table = stringTable.ToArray();
+			foreach (var entry in stringTable) {
+				ushort stringId = entry.Id;
+				string s = entry.String;
+				if (StringsScraper.IsNormalString(s)) {
+					string id = StringsScraper.GetResId(entry);
 					if (Translation.TryGetValue(id, out string translation))
-						stringTable[key] = translation;
+						stringTable[stringId] = translation;
 				}
 			}
 			return true;

@@ -24,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -52,6 +54,10 @@
     <Compile Include="Exceptions\ArgumentOutOfRangeUtils.MinMax.object.cs" />
     <Compile Include="Exceptions\ArgumentOutOfRangeUtils.Range.object.cs" />
     <Compile Include="Exceptions\UnexpectedFileTypeException.cs" />
+    <Compile Include="IO\BinaryReaderExtensions.BigEndian.Arrays.cs" />
+    <Compile Include="IO\BinaryReaderExtensions.BigEndian.cs" />
+    <Compile Include="IO\BinaryWriterExtensions.BigEndian.Arrays.cs" />
+    <Compile Include="IO\BinaryWriterExtensions.BigEndian.cs" />
     <Compile Include="Mathematics\MathUtils.Padding.cs" />
     <Compile Include="Mathematics\MathUtils.cs" />
     <Compile Include="IO\BinaryWriterExtensions.Strings.cs" />

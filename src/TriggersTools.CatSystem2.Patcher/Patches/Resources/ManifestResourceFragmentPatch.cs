@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using ClrPlus.Windows.PeBinary.ResourceLib;
 
 namespace TriggersTools.CatSystem2.Patcher.Patches {
 	public class ManifestResourceFragmentPatch : ManifestResourcePatch {
@@ -24,11 +23,14 @@ namespace TriggersTools.CatSystem2.Patcher.Patches {
 
 		protected override bool Patch(XmlDocument doc, XmlNamespaceManager ns, XmlElement assembly) {
 			XmlDocumentFragment frag = doc.CreateDocumentFragment();
-			//frag.InnerXml = XmlFragment;
+			frag.InnerXml = XmlFragment;
 
-			assembly.InnerXml += XmlFragment;
-			/*foreach (XmlNode node in frag.ChildNodes)
-				assembly.AppendChild(node);*/
+			for (int i = 0; i < frag.ChildNodes.Count; i++) {
+				XmlNode node = frag.ChildNodes[i];
+				if (node is XmlWhitespace)
+					continue;
+				assembly.AppendChild(node);
+			}
 
 			return true;
 		}

@@ -324,6 +324,56 @@ namespace TriggersTools.CatSystem2 {
 
 		#endregion
 
+		#region IsCatExecutable
+
+		/// <summary>
+		///  Checks if <paramref name="exeFile"/> is a CatSystem2 executable file with V_CODEs.
+		/// </summary>
+		/// <param name="exeFile">The executable file to check.</param>
+		/// <returns>True if <paramref name="exeFile"/> has V_CODEs.</returns>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="exeFile"/> is null.
+		/// </exception>
+		public static bool IsCatExecutable(string exeFile) {
+			if (exeFile == null)
+				throw new ArgumentNullException(nameof(exeFile));
+			try {
+				VCodes.Load(exeFile);
+				return true;
+			} catch { return false; }
+		}
+		/// <summary>
+		///  Attempts to locate the first executable with V_CODEs in the CatSytem2 game install directory.
+		/// </summary>
+		/// <param name="installDir">The installation directory to check the files of.</param>
+		/// <returns>The file path of an executable that contains V_CODEs, or null if none was found.</returns>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="installDir"/> is null.
+		/// </exception>
+		public static string FindCatExecutable(string installDir) {
+			return FindCatExecutables(installDir).FirstOrDefault();
+		}
+		/// <summary>
+		///  Attempts to locate all executables with V_CODEs in the CatSytem2 game install directory.
+		/// </summary>
+		/// <param name="installDir">The installation directory to check the files of.</param>
+		/// <returns>A collection of executable paths that contain V_CODEs.</returns>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="installDir"/> is null.
+		/// </exception>
+		public static IEnumerable<string> FindCatExecutables(string installDir) {
+			foreach (string file in Directory.EnumerateFiles(installDir)) {
+				string ext = Path.GetExtension(file).ToLower();
+				if (ext != ".bak" && IsCatExecutable(file))
+					yield return installDir;
+			}
+		}
+
+		#endregion
+
 		/*public static int ParseInt(string s) {
 			NumberStyles style = NumberStyles.Integer;
 			if (s.StartsWith("$")) {

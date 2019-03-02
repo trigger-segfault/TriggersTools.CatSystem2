@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ClrPlus.Windows.PeBinary.ResourceLib;
+using TriggersTools.Resources;
+using TriggersTools.Resources.Dialog;
 
 namespace TriggersTools.CatSystem2.Patcher.Patches {
 	public abstract class DialogResourcePatch : ResourcePatch<DialogResource> {
@@ -12,8 +13,7 @@ namespace TriggersTools.CatSystem2.Patcher.Patches {
 		public bool AllowExtended { get; protected set; } = true;
 
 		public DialogResourcePatch() { }
-		public DialogResourcePatch(string name) : base(name) { }
-		public DialogResourcePatch(ushort name) : base(name) { }
+		public DialogResourcePatch(ResourceId name) : base(name) { }
 
 		public override bool IsPatchable(Resource resource) {
 			if (!base.IsPatchable(resource))

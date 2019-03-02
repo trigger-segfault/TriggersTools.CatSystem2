@@ -374,5 +374,17 @@ namespace TriggersTools.SharpUtils.IO {
 		}
 
 		#endregion
+
+		#region SwapBytes
+		
+		public static unsafe void SwapBytes(byte* ptr, int length) {
+			for (int i = 0; i < length / 2; ++i) {
+				byte b = *(ptr + i);
+				*(ptr + i) = *(ptr + length - i - 1);
+				*(ptr + length - i - 1) = b;
+			}
+		}
+
+		#endregion
 	}
 }

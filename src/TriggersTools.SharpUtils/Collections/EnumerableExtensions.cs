@@ -15,5 +15,13 @@ namespace TriggersTools.SharpUtils.Collections {
 			}
 			return -1;
 		}
+		public static int IndexOf<T>(this IEnumerable<T> source, Predicate<T> match) {
+			int index = 0;
+			foreach (T item in source) {
+				if (match(item)) return index;
+				index++;
+			}
+			return -1;
+		}
 	}
 }

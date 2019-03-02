@@ -42,7 +42,7 @@ namespace TriggersTools.SharpUtils.IO {
 			string fullString = new string(reader.ReadChars(length));
 			int paddingIndex = fullString.IndexOf(padding);
 			if (paddingIndex != -1)
-				return fullString.Substring(paddingIndex);
+				return fullString.Substring(0, paddingIndex);
 			return fullString;
 		}
 

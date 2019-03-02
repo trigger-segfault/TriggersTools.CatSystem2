@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using ClrPlus.Windows.PeBinary.ResourceLib;
 
 namespace TriggersTools.CatSystem2.Patcher.Patches {
 	public class PatchSignaturePatch : ManifestResourcePatch {
@@ -21,7 +20,8 @@ namespace TriggersTools.CatSystem2.Patcher.Patches {
 				if (node is XmlComment comment && comment.InnerText.Trim() == Signature)
 					return false; // We're already patched, not allowed
 			}
-			assembly.InnerXml += $"{Environment.NewLine}  <!-- {Signature} -->";
+			assembly.AppendChild(doc.CreateComment($" {Signature} "));
+			//assembly.InnerXml += $"{Environment.NewLine}  <!-- {Signature} -->";
 			//assembly.AppendChild(doc.CreateComment($" {Signature} "));
 			return true;
 		}

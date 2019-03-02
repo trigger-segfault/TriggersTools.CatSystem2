@@ -1,43 +1,70 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
-
 using TriggersTools.SharpUtils.IO;
 using TriggersTools.SharpUtils.Mathematics;
 using TriggersTools.SharpUtils.Text;
 
 namespace TriggersTools.CatSystem2.Patcher.Patches {
-	public struct BinaryRange {
-		public long Start { get; }
-		public long End { get; }
-
-		public BinaryRange(long start) : this(start, 0) { }
-		public BinaryRange(long start, long end) {
-			Start = start;
-			End = end;
-		}
-	}
+	/// <summary>
+	///  A patch that replaces null-terminated strings in a binary file.
+	/// </summary>
 	public class BinaryStringsPatch {
-		
+		#region Fields
+
+		/// <summary>
+		///  The translations to replace the located strings with.
+		/// </summary>
 		public IReadOnlyDictionary<string, string> Translations { get; }
-		
+		/// <summary>
+		///  The ranges to look in, in the binary file.
+		/// </summary>
 		public IReadOnlyList<BinaryRange> Ranges { get; }
 
-		public BinaryStringsPatch(string[] lines, long start = 0, long end = 0)
-			: this(lines, new BinaryRange(start, end))
+		#endregion
+
+		#region Constructors
+
+		/// <summary>
+		///  Constructs the binary strings patch with a full range.
+		/// </summary>
+		/// <param name="translations">The translations to replace the located strings with.</param>
+		public BinaryStringsPatch(IReadOnlyDictionary<string, string> translations)
+			: this(translations, new BinaryRange(0, 0)) {
+		}
+		/// <summary>
+		///  Constructs the binary strings patch with the specified range.
+		/// </summary>
+		/// <param name="translations">The translations to replace the located strings with.</param>
+		/// <param name="start">The start position.</param>
+		/// <param name="end">The end position.</param>
+		public BinaryStringsPatch(IReadOnlyDictionary<string, string> translations, long start, long end)
+			: this(translations, new BinaryRange(start, end))
 		{
 		}
-		public BinaryStringsPatch(string[] lines, params BinaryRange[] ranges) {
+		/// <summary>
+		///  Constructs the binary strings patch with the specified ranges.
+		/// </summary>
+		/// <param name="translations">The translations to replace the located strings with.</param>
+		/// <param name="ranges">The range positions.</param>
+		public BinaryStringsPatch(IReadOnlyDictionary<string, string> translations, params BinaryRange[] ranges) {
 			if (ranges.Length == 0)
 				Ranges = Array.AsReadOnly(new BinaryRange[1]);
 			else
 				Ranges = Array.AsReadOnly(ranges);
-			Translations = StringsScraper.BuildTranslation(lines);
+			Translations = translations;
 		}
 
+		#endregion
+
+		#region Patch
+
+		/// <summary>
+		///  Patches the file by reading the input stream, and writing to the output stream.
+		/// </summary>
+		/// <param name="inStream">The input stream to read the translations from.</param>
+		/// <param name="outStream">The output stream to write the translations to.</param>
+		/// <returns>True if the patch was successful.</returns>
 		public bool Patch(Stream inStream, Stream outStream) {
 			BinaryReader reader = new BinaryReader(inStream, Constants.ShiftJIS);
 			BinaryWriter writer = new BinaryWriter(outStream, Constants.ShiftJIS);
@@ -68,7 +95,7 @@ namespace TriggersTools.CatSystem2.Patcher.Patches {
 							outStream.Position = position;
 							writer.WriteTerminated(translation);
 							if (required != reserved)
-								writer.Write(new byte[reserved - required]);
+								writer.WriteZeroBytes(reserved - required);
 							Console.WriteLine($"0x{position:X5} = {TextUtils.EscapeNormal(translation, false)}");
 							count++;
 						}
@@ -81,5 +108,7 @@ namespace TriggersTools.CatSystem2.Patcher.Patches {
 			Console.WriteLine(count);
 			return true;
 		}
+
+		#endregion
 	}
 }

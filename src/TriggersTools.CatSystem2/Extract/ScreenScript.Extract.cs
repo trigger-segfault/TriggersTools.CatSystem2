@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TriggersTools.CatSystem2.Native;
+using TriggersTools.CatSystem2.Structs;
 using TriggersTools.SharpUtils.Exceptions;
 using TriggersTools.SharpUtils.IO;
 
@@ -47,7 +48,7 @@ namespace TriggersTools.CatSystem2 {
 			byte[] compressed = reader.ReadBytes(hdr.CompressedSize);
 			byte[] decompressed = new byte[hdr.DecompressedSize];
 			int decompressedLength = hdr.DecompressedSize;
-			ZLib1.Uncompress(decompressed, ref decompressedLength, compressed, hdr.CompressedSize);
+			Zlib.Uncompress(decompressed, ref decompressedLength, compressed, hdr.CompressedSize);
 			
 			string[] lines;
 			using (MemoryStream memoryStream = new MemoryStream(decompressed, 0, decompressedLength))

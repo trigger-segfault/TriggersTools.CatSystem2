@@ -4,8 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TriggersTools.CatSystem2.Patcher.Patches;
-using ClrPlus.Windows.PeBinary.ResourceLib;
-using TriggersTools.SharpUtils.IO;
+using TriggersTools.Resources.Dialog;
 
 namespace TriggersTools.CatSystem2.Patcher.Programs.CS2 {
 	internal sealed class CS2ChangeWallpaperDialogPatch : DialogResourcePatch {
@@ -16,13 +15,13 @@ namespace TriggersTools.CatSystem2.Patcher.Programs.CS2 {
 		public override bool Patch(DialogExTemplate dialogEx) {
 			var controls = dialogEx.Controls;
 
-			dialogEx.cx += 23;
+			dialogEx.Width += 23;
 
 			for (int i = 0; i < controls.Count; i++) {
 				var control = controls[i];
 				if (control is DialogExTemplateControl controlEx && controlEx.Id == 1)
 					continue;
-				control.cx = 175;
+				control.Width = 175;
 			}
 
 			/*var control = controls.Find(c => {

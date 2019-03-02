@@ -104,6 +104,114 @@ namespace TriggersTools.SharpUtils.IO {
 
 		#endregion
 
+		#region ReadIntPtr
+		
+		/// <summary>
+		///  Reads a 4-byte signed integer pointer from the current stream and advances the current position of the
+		///  stream by four bytes.
+		/// </summary>
+		/// <param name="reader">The <see cref="BinaryReader"/> to read with.</param>
+		/// <returns>A 4-byte signed integer pointer read from the current stream.</returns>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="reader"/> is null.
+		/// </exception>
+		/// <exception cref="EndOfStreamException">
+		///  The end of the stream is reached.
+		/// </exception>
+		/// <exception cref="IOException">
+		///  An I/O error occurred.
+		/// </exception>
+		/// <exception cref="ObjectDisposedException">
+		///  The stream is closed.
+		/// </exception>
+		public static IntPtr ReadInt32Ptr(this BinaryReader reader) {
+			if (reader == null)
+				throw new ArgumentNullException(nameof(reader));
+			return new IntPtr(reader.ReadInt32());
+		}
+		/// <summary>
+		///  Reads a 4-byte unsigned integer pointer from the current stream and advances the current position of the
+		///  stream by four bytes.
+		/// </summary>
+		/// <param name="reader">The <see cref="BinaryReader"/> to read with.</param>
+		/// <returns>A 4-byte unsigned integer pointer read from the current stream.</returns>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="reader"/> is null.
+		/// </exception>
+		/// <exception cref="EndOfStreamException">
+		///  The end of the stream is reached.
+		/// </exception>
+		/// <exception cref="IOException">
+		///  An I/O error occurred.
+		/// </exception>
+		/// <exception cref="ObjectDisposedException">
+		///  The stream is closed.
+		/// </exception>
+		public static UIntPtr ReadUInt32Ptr(this BinaryReader reader) {
+			if (reader == null)
+				throw new ArgumentNullException(nameof(reader));
+			return new UIntPtr(reader.ReadUInt32());
+		}
+
+		/// <summary>
+		///  Reads a 8-byte signed integer pointer from the current stream and advances the current position of the
+		///  stream by eight bytes.
+		/// </summary>
+		/// <param name="reader">The <see cref="BinaryReader"/> to read with.</param>
+		/// <returns>A 8-byte signed integer pointer read from the current stream.</returns>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="reader"/> is null.
+		/// </exception>
+		/// <exception cref="EndOfStreamException">
+		///  The end of the stream is reached.
+		/// </exception>
+		/// <exception cref="IOException">
+		///  An I/O error occurred.
+		/// </exception>
+		/// <exception cref="ObjectDisposedException">
+		///  The stream is closed.
+		/// </exception>
+		/// <exception cref="OverflowException">
+		///  On a 32-bit platform, value is too large or too small to represent as an <see cref="IntPtr"/>.
+		/// </exception>
+		public static IntPtr ReadInt64Ptr(this BinaryReader reader) {
+			if (reader == null)
+				throw new ArgumentNullException(nameof(reader));
+			return new IntPtr(reader.ReadInt64());
+		}
+		/// <summary>
+		///  Reads a 8-byte unsigned integer pointer from the current stream and advances the current position of the
+		///  stream by eight bytes.
+		/// </summary>
+		/// <param name="reader">The <see cref="BinaryReader"/> to read with.</param>
+		/// <returns>A 8-byte unsigned integer pointer read from the current stream.</returns>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="reader"/> is null.
+		/// </exception>
+		/// <exception cref="EndOfStreamException">
+		///  The end of the stream is reached.
+		/// </exception>
+		/// <exception cref="IOException">
+		///  An I/O error occurred.
+		/// </exception>
+		/// <exception cref="ObjectDisposedException">
+		///  The stream is closed.
+		/// </exception>
+		/// <exception cref="OverflowException">
+		///  On a 32-bit platform, value is too large or too small to represent as an <see cref="IntPtr"/>.
+		/// </exception>
+		public static UIntPtr ReadUInt64Ptr(this BinaryReader reader) {
+			if (reader == null)
+				throw new ArgumentNullException(nameof(reader));
+			return new UIntPtr(reader.ReadUInt64());
+		}
+
+		#endregion
+
 		#region ReadUnmanaged
 
 		/// <summary>

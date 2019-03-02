@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TriggersTools.CatSystem2.Patcher.Patches;
-using ClrPlus.Windows.PeBinary.ResourceLib;
 using TriggersTools.SharpUtils.IO;
+using TriggersTools.Resources.Dialog;
 
 namespace TriggersTools.CatSystem2.Patcher.Programs.CS2 {
 	internal sealed class CS2DebugQuizDialogPatch : DialogResourcePatch {
@@ -19,19 +19,19 @@ namespace TriggersTools.CatSystem2.Patcher.Programs.CS2 {
 			var control = controls.Find(c => {
 				return (c is DialogExTemplateControl cEx && cEx.Id == 1186);
 			});
-			control.cx = 140;
+			control.Width = 140;
 			control = controls.Find(c => {
 				return (c is DialogExTemplateControl cEx && cEx.Id == 1189);
 			});
-			control.cx = 100;
+			control.Width = 100;
 			control = controls.Find(c => {
 				return (c is DialogExTemplateControl cEx && cEx.Id == 1187);
 			});
-			control.cx = 60;
+			control.Width = 60;
 			control = controls.Find(c => {
-				return (c.x == 19 && c.cx == 24);
+				return (c.X == 19 && c.Width == 24);
 			});
-			control.cx = 39;
+			control.Width = 39;
 			
 
 			return true;

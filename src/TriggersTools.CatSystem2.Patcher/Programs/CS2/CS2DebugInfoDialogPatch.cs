@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TriggersTools.CatSystem2.Patcher.Patches;
-using ClrPlus.Windows.PeBinary.ResourceLib;
 using TriggersTools.SharpUtils.IO;
+using TriggersTools.Resources.Dialog;
 
 namespace TriggersTools.CatSystem2.Patcher.Programs.CS2 {
 	internal sealed class CS2DebugInfoDialogPatch : DialogResourcePatch {
@@ -18,19 +18,19 @@ namespace TriggersTools.CatSystem2.Patcher.Programs.CS2 {
 
 			const int increment = 7;
 
-			dialogEx.cx += increment;
+			dialogEx.Width += increment;
 
 			for (int i = 0; i < controls.Count; i++) {
 				var control = controls[i]; // Label
-				if (control.x != 7)
+				if (control.X != 7)
 					continue;
-				control.cx += increment;
+				control.Width += increment;
 				control = controls[++i]; // ":"
-				control.x += increment;
+				control.X += increment;
 				control = controls[++i]; // Value
-				control.x += increment;
+				control.X += increment;
 				control = controls[++i]; // Unit
-				control.x += increment;
+				control.X += increment;
 			}
 
 			return true;

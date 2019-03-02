@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TriggersTools.SharpUtils.Text;
 
-namespace TriggersTools.CatSystem2 {
+namespace TriggersTools.CatSystem2.Structs {
 	/// <summary>
 	///  The header structure for a FES script file.
 	/// </summary>

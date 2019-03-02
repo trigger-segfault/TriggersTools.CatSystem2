@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ClrPlus.Windows.PeBinary.ResourceLib;
+using TriggersTools.Resources.Dialog;
 
 namespace TriggersTools.CatSystem2.Patcher.Patches {
 	public class TypeFacePatch : DialogResourcePatch {

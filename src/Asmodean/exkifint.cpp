@@ -10,15 +10,26 @@
 #include "exkifint.h"
 #include "blowfish.h"
 
-void DecryptVCode2(
+void EncryptVCode(
 	unsigned char* keyBuffer,
 	unsigned long  keyLength,
-	unsigned char* vcode2Buffer,
-	unsigned long  vcode2Length)
+	unsigned char* vcodeBuffer,
+	unsigned long  vcodeLength)
 {
 	Blowfish bf;
 	bf.Set_Key(keyBuffer, keyLength);
-	bf.Decrypt(vcode2Buffer, (vcode2Length + 7) & ~7);
+	bf.Encrypt(vcodeBuffer, (vcodeLength + 7) & ~7);
+}
+
+void DecryptVCode(
+	unsigned char* keyBuffer,
+	unsigned long  keyLength,
+	unsigned char* vcodeBuffer,
+	unsigned long  vcodeLength)
+{
+	Blowfish bf;
+	bf.Set_Key(keyBuffer, keyLength);
+	bf.Decrypt(vcodeBuffer, (vcodeLength + 7) & ~7);
 }
 
 void DecryptEntry(

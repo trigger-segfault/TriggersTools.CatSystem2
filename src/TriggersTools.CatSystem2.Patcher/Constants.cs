@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using ClrPlus.Windows.PeBinary.ResourceLib;
 
 namespace TriggersTools.CatSystem2.Patcher {
 	internal static class Constants {
@@ -19,14 +18,5 @@ namespace TriggersTools.CatSystem2.Patcher {
 		///  Gets the Japanese encoding used for the CatSystem2 files.
 		/// </summary>
 		public static Encoding ShiftJIS { get; } = Encoding.GetEncoding(932);
-
-		public static readonly FieldInfo MenuExTemplateItem_header;
-		public static readonly FieldInfo MenuTemplateItem_header;
-
-		static Constants() {
-			// Fix broken shit preparations
-			MenuExTemplateItem_header = typeof(MenuExTemplateItem).GetField("_header", BindingFlags.Instance | BindingFlags.NonPublic);
-			MenuTemplateItem_header = typeof(MenuTemplateItem).GetField("_header", BindingFlags.Instance | BindingFlags.NonPublic);
-		}
 	}
 }

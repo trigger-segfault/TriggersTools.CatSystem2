@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TriggersTools.CatSystem2.Patcher.Patches;
-using ClrPlus.Windows.PeBinary.ResourceLib;
+using TriggersTools.Resources.Dialog;
 using TriggersTools.SharpUtils.IO;
 
 namespace TriggersTools.CatSystem2.Patcher.Programs.WGC {
@@ -17,15 +17,15 @@ namespace TriggersTools.CatSystem2.Patcher.Programs.WGC {
 			var controls = dialogEx.Controls;
 
 			// Rects
-			controls[6].cx = 90;
-			controls[7].x += 10;
-			controls[7].cx = 90;
+			controls[6].Width = 90;
+			controls[7].X += 10;
+			controls[7].Width = 90;
 
-			controls[19].x += 10; // slider
-			controls[20].cx += 10; // JPEG compression
-			controls[21].x += 15; // num
-			controls[21].cx = 15; // num
-			controls[22].cx += 10; // Scaling factor
+			controls[19].X += 10; // slider
+			controls[20].Width += 10; // JPEG compression
+			controls[21].X += 15; // num
+			controls[21].Width = 15; // num
+			controls[22].Width += 10; // Scaling factor
 
 			return true;
 		}

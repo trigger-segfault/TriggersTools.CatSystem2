@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using ClrPlus.Windows.PeBinary.ResourceLib;
+using TriggersTools.Resources.Manifest;
 
 namespace TriggersTools.CatSystem2.Patcher.Patches {
 	public abstract class ManifestResourcePatch : ResourcePatch<ManifestResource> {
@@ -17,17 +17,17 @@ namespace TriggersTools.CatSystem2.Patcher.Patches {
 		protected abstract bool Patch(XmlDocument doc, XmlNamespaceManager ns, XmlElement assembly);
 		
 		public override sealed bool Patch(ManifestResource manifestRes) {
-			XmlDocument doc = new XmlDocument();
+			XmlDocument doc = manifestRes.Docment;
 			XmlNamespaceManager ns = new XmlNamespaceManager(doc.NameTable);
 			ns.AddNamespace("asm", "urn:schemas-microsoft-com:asm.v1");
-			doc.LoadXml(manifestRes.ManifestText);
+			//doc.LoadXml(manifestRes.Xml);
 
 			XmlElement assembly = (XmlElement) doc.SelectSingleNode("//asm:assembly", ns);
 
 			if (!Patch(doc, ns, assembly))
 				return false;
 
-			manifestRes.Manifest = doc;
+			manifestRes.Docment = doc;
 			/*using (var stringWriter = new StringWriter())
 			using (var xmlTextWriter = XmlWriter.Create(stringWriter)) {
 				doc.WriteTo(xmlTextWriter);

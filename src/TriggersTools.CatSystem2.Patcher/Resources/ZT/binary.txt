@@ -1,0 +1,45 @@
+﻿//Bytes=48,Offset=0x000344AC
+//Z圧縮パッケージファイル(*.zt)簡易作成ツール\n
+Z圧縮パッケージファイル(*.zt)簡易作成ツール\n
+Z Compression Package (*.zt) Creation Tool\n
+
+//Bytes=84,Offset=0x000344E0
+//pack : ztpack <out file> <file> <file> ...\nunpack : ztpack /d <zt file> <out dir>
+pack : ztpack <out file> <file> <file> ...\nunpack : ztpack /d <zt file> <out dir>
+$nr$
+
+//Bytes=4,Offset=0x00034534
+///d
+/d
+$nr$
+
+//Bytes=28,Offset=0x00034538
+//展開しています  %s -> %s\n
+展開しています  %s -> %s\n
+Expanding  %s -> %s\n
+
+//Bytes=4,Offset=0x00034554
+//*.*
+*.*
+$nr$
+
+//Bytes=32,Offset=0x0003455C
+//%s の読み込みに失敗しました\n
+%s の読み込みに失敗しました\n
+Failed to load %s \n
+
+//Bytes=28,Offset=0x0003457C
+//パックしています  %s -> %s\n
+パックしています  %s -> %s\n
+Packing  %s -> %s\n
+
+//Bytes=60,Offset=0x00034598
+//error > パック対象ファイルが１つも見つかりませんでした。\n
+error > パック対象ファイルが１つも見つかりませんでした。\n
+error > No files to be packed were found.\n
+
+//Bytes=36,Offset=0x000345D4
+//error > [%s] が見つかりません。\n
+error > [%s] が見つかりません。\n
+error > [%s] not found.\n
+

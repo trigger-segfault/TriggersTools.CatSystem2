@@ -4,11 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using ClrPlus.Windows.Api.Enumerations;
-using ClrPlus.Windows.Api.Structures;
-using ClrPlus.Windows.PeBinary.ResourceLib;
-using MenuTemplate = ClrPlus.Windows.PeBinary.ResourceLib.MenuTemplate;
-using MenuExTemplate = ClrPlus.Windows.PeBinary.ResourceLib.MenuExTemplate;
+using TriggersTools.Resources;
+using TriggersTools.Resources.Menu;
 
 namespace TriggersTools.CatSystem2.Patcher.Patches {
 	public abstract class MenuResourcePatch : ResourcePatch<MenuResource> {
@@ -26,30 +23,29 @@ namespace TriggersTools.CatSystem2.Patcher.Patches {
 		public bool AllowExtended { get; protected set; } = true;
 
 		public MenuResourcePatch() { }
-		public MenuResourcePatch(string name) : base(name) { }
-		public MenuResourcePatch(ushort name) : base(name) { }
+		public MenuResourcePatch(ResourceId name) : base(name) { }
 
 		public override bool IsPatchable(Resource resource) {
 			if (!base.IsPatchable(resource))
 				return false;
 			MenuResource menuRes = (MenuResource) resource;
-			switch (menuRes.Menu) {
+			switch (menuRes.Template) {
 			case MenuTemplate menu: return AllowNormal;
 			case MenuExTemplate menuEx: return AllowExtended;
 			}
 			return false;
 		}
 		public override bool Patch(MenuResource menuRes) {
-			switch (menuRes.Menu) {
+			switch (menuRes.Template) {
 			case MenuTemplate menu:
 				if (Patch(menu)) {
-					FixClrPlusMenuItems(menu.MenuItems);
+					//FixClrPlusMenuItems(menu.MenuItems);
 					return true;
 				}
 				break;
 			case MenuExTemplate menuEx:
 				if (Patch(menuEx)) {
-					FixClrPlusMenuItems(menuEx.MenuItems);
+					//FixClrPlusMenuItems(menuEx.MenuItems);
 					return true;
 				}
 				break;
@@ -59,9 +55,9 @@ namespace TriggersTools.CatSystem2.Patcher.Patches {
 		public virtual bool Patch(MenuTemplate menu) => true;
 		public virtual bool Patch(MenuExTemplate menuEx) => true;
 
-		private static void FixClrPlusMenuItems(MenuTemplateItemCollection menuItems) {
+		/*private static void FixClrPlusMenuItems(List<IMenuTemplateItem> menuItems) {
 			for (int i = 0; i < menuItems.Count; i++) {
-				MenuTemplateItem menuItem = menuItems[i];
+				IMenuTemplateItem menuItem = menuItems[i];
 				var header = (MenuItemTemplate) Constants.MenuTemplateItem_header.GetValue(menuItem);
 				if (menuItem is MenuTemplateItemPopup)
 					header.mtOption |= unchecked((ushort) MenuFlags.MF_POPUP);
@@ -74,9 +70,9 @@ namespace TriggersTools.CatSystem2.Patcher.Patches {
 				Constants.MenuTemplateItem_header.SetValue(menuItem, header);
 			}
 		}
-		private static void FixClrPlusMenuItems(MenuExTemplateItemCollection menuItems) {
+		private static void FixClrPlusMenuItems(List<IMenuExTemplateItem> menuItems) {
 			for (int i = 0; i < menuItems.Count; i++) {
-				MenuExTemplateItem menuItem = menuItems[i];
+				IMenuExTemplateItem menuItem = menuItems[i];
 				var header = (MenuExItemTemplate) Constants.MenuExTemplateItem_header.GetValue(menuItem);
 				if (menuItem is MenuExTemplateItemPopup)
 					header.bResInfo |= unchecked((ushort) MenuResourceType.Sub);
@@ -88,6 +84,6 @@ namespace TriggersTools.CatSystem2.Patcher.Patches {
 					header.bResInfo &= unchecked((ushort) ~MenuResourceType.Last);
 				Constants.MenuExTemplateItem_header.SetValue(menuItem, header);
 			}
-		}
+		}*/
 	}
 }

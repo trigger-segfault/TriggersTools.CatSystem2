@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TriggersTools.CatSystem2.Patcher.Patches;
-using ClrPlus.Windows.PeBinary.ResourceLib;
+using TriggersTools.Resources.Menu;
 
 namespace TriggersTools.CatSystem2.Patcher.Programs.WGC {
 	internal sealed class WGCMenuPatch : MenuResourcePatch {
@@ -22,11 +22,11 @@ namespace TriggersTools.CatSystem2.Patcher.Programs.WGC {
 			});
 			if (index == -1)
 				return false;
-			MenuTemplateItem settings = menuItems[index];
+			MenuTemplateItemCommand settings = (MenuTemplateItemCommand) menuItems[index];
 			MenuTemplateItemPopup options = new MenuTemplateItemPopup {
 				MenuString = "&Options", // Placeholder, is replaced in Menu.txt strings
 			};
-			options.SubMenuItems.Add(settings);
+			options.MenuItems.Add(settings);
 			menuItems[index] = options;
 
 			return true;

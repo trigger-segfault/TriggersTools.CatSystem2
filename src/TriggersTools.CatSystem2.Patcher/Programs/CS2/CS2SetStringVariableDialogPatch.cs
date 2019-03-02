@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TriggersTools.CatSystem2.Patcher.Patches;
-using ClrPlus.Windows.PeBinary.ResourceLib;
 using TriggersTools.SharpUtils.IO;
+using TriggersTools.Resources.Dialog;
 
 namespace TriggersTools.CatSystem2.Patcher.Programs.CS2 {
 	internal sealed class CS2SetStringVariableDialogPatch : DialogResourcePatch {
@@ -17,9 +17,9 @@ namespace TriggersTools.CatSystem2.Patcher.Programs.CS2 {
 			var controls = dialogEx.Controls;
 			
 			var control = controls.Find(c => {
-				return (c.y == 34 && c.cx == 9);
+				return (c.Y == 34 && c.Width == 9);
 			});
-			control.cx = 26;
+			control.Width = 26;
 
 			return true;
 		}

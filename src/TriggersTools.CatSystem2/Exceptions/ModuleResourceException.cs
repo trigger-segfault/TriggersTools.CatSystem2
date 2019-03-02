@@ -10,6 +10,10 @@ namespace TriggersTools.CatSystem2.Exceptions {
 	/// </summary>
 	public class ModuleResourceException : Exception {
 		/// <summary>
+		///  Gets the module that failed to load.
+		/// </summary>
+		public string Module { get; }
+		/// <summary>
 		///  Gets the name of the resource.
 		/// </summary>
 		public string Name { get; }
@@ -19,7 +23,17 @@ namespace TriggersTools.CatSystem2.Exceptions {
 		public string Type { get; }
 
 		/// <summary>
-		///  Constructs the exception and creates a message based on the parameters.
+		///  Constructs the exception and creates a message based on the module parameters.
+		/// </summary>
+		/// <param name="module">The The module that failed to load.</param>
+		internal ModuleResourceException(string module)
+			: base($"Failed to load module '{module}'!")
+		{
+			Module = module;
+		}
+
+		/// <summary>
+		///  Constructs the exception and creates a message based on the resource parameters.
 		/// </summary>
 		/// <param name="name">The name of the resource being looked for.</param>
 		/// <param name="type">The type of the resource being looked for.</param>

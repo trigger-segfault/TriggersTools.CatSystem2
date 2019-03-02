@@ -1,0 +1,171 @@
+﻿  <key32 type="DEBUG">
+      <name>Scene List</name>
+      <keyboard1>83</keyboard1>
+      <keyboard2>0</keyboard2>
+      <mouse1>0</mouse1>
+      <mouse2>0</mouse2>
+      <joypad1>0</joypad1>
+      <joypad2>0</joypad2>
+      <rep_keyboard1>0</rep_keyboard1>
+      <rep_keyboard2>0</rep_keyboard2>
+      <rep_mouse1>0</rep_mouse1>
+      <rep_mouse2>0</rep_mouse2>
+      <rep_joypad1>0</rep_joypad1>
+      <rep_joypad2>0</rep_joypad2>
+      <rep_touch1>0</rep_touch1>
+      <rep_touch2>0</rep_touch2>
+    </key32>
+    <key33 type="DEBUG">
+      <name>Text Copy</name>
+      <keyboard1>67</keyboard1>
+      <keyboard2>0</keyboard2>
+      <mouse1>0</mouse1>
+      <mouse2>0</mouse2>
+      <joypad1>0</joypad1>
+      <joypad2>0</joypad2>
+      <rep_keyboard1>0</rep_keyboard1>
+      <rep_keyboard2>0</rep_keyboard2>
+      <rep_mouse1>0</rep_mouse1>
+      <rep_mouse2>0</rep_mouse2>
+      <rep_joypad1>0</rep_joypad1>
+      <rep_joypad2>0</rep_joypad2>
+      <rep_touch1>0</rep_touch1>
+      <rep_touch2>0</rep_touch2>
+    </key33>
+    <key34 type="DEBUG">
+      <name>Scene Debug Dialog</name>
+      <keyboard1>68</keyboard1>
+      <keyboard2>0</keyboard2>
+      <mouse1>0</mouse1>
+      <mouse2>0</mouse2>
+      <joypad1>0</joypad1>
+      <joypad2>0</joypad2>
+      <rep_keyboard1>0</rep_keyboard1>
+      <rep_keyboard2>0</rep_keyboard2>
+      <rep_mouse1>0</rep_mouse1>
+      <rep_mouse2>0</rep_mouse2>
+      <rep_joypad1>0</rep_joypad1>
+      <rep_joypad2>0</rep_joypad2>
+      <rep_touch1>0</rep_touch1>
+      <rep_touch2>0</rep_touch2>
+    </key34>
+    <key35 type="DEBUG">
+      <name>Show/Hide Debug Plane</name>
+      <keyboard1>80</keyboard1>
+      <keyboard2>0</keyboard2>
+      <mouse1>0</mouse1>
+      <mouse2>0</mouse2>
+      <joypad1>0</joypad1>
+      <joypad2>0</joypad2>
+      <rep_keyboard1>0</rep_keyboard1>
+      <rep_keyboard2>0</rep_keyboard2>
+      <rep_mouse1>0</rep_mouse1>
+      <rep_mouse2>0</rep_mouse2>
+      <rep_joypad1>0</rep_joypad1>
+      <rep_joypad2>0</rep_joypad2>
+      <rep_touch1>0</rep_touch1>
+      <rep_touch2>0</rep_touch2>
+    </key35>
+    <key36 type="DEBUG">
+      <name>Pause</name>
+      <keyboard1>81</keyboard1>
+      <keyboard2>0</keyboard2>
+      <mouse1>0</mouse1>
+      <mouse2>0</mouse2>
+      <joypad1>0</joypad1>
+      <joypad2>0</joypad2>
+      <rep_keyboard1>0</rep_keyboard1>
+      <rep_keyboard2>0</rep_keyboard2>
+      <rep_mouse1>0</rep_mouse1>
+      <rep_mouse2>0</rep_mouse2>
+      <rep_joypad1>0</rep_joypad1>
+      <rep_joypad2>0</rep_joypad2>
+      <rep_touch1>0</rep_touch1>
+      <rep_touch2>0</rep_touch2>
+    </key36>
+    <key37 type="DEBUG">
+      <name>Switch Image</name>
+      <keyboard1>66</keyboard1>
+      <keyboard2>0</keyboard2>
+      <mouse1>0</mouse1>
+      <mouse2>0</mouse2>
+      <joypad1>0</joypad1>
+      <joypad2>0</joypad2>
+      <rep_keyboard1>0</rep_keyboard1>
+      <rep_keyboard2>0</rep_keyboard2>
+      <rep_mouse1>0</rep_mouse1>
+      <rep_mouse2>0</rep_mouse2>
+      <rep_joypad1>0</rep_joypad1>
+      <rep_joypad2>0</rep_joypad2>
+      <rep_touch1>0</rep_touch1>
+      <rep_touch2>0</rep_touch2>
+    </key37>
+    <key38 type="DEBUG">
+      <name>Bank-</name>
+      <keyboard1>188</keyboard1>
+      <keyboard2>0</keyboard2>
+      <mouse1>0</mouse1>
+      <mouse2>0</mouse2>
+      <joypad1>0</joypad1>
+      <joypad2>0</joypad2>
+      <rep_keyboard1>0</rep_keyboard1>
+      <rep_keyboard2>0</rep_keyboard2>
+      <rep_mouse1>0</rep_mouse1>
+      <rep_mouse2>0</rep_mouse2>
+      <rep_joypad1>0</rep_joypad1>
+      <rep_joypad2>0</rep_joypad2>
+      <rep_touch1>0</rep_touch1>
+      <rep_touch2>0</rep_touch2>
+    </key38>
+    <key39 type="DEBUG">
+      <name>Bank+</name>
+      <keyboard1>190</keyboard1>
+      <keyboard2>0</keyboard2>
+      <mouse1>0</mouse1>
+      <mouse2>0</mouse2>
+      <joypad1>0</joypad1>
+      <joypad2>0</joypad2>
+      <rep_keyboard1>0</rep_keyboard1>
+      <rep_keyboard2>0</rep_keyboard2>
+      <rep_mouse1>0</rep_mouse1>
+      <rep_mouse2>0</rep_mouse2>
+      <rep_joypad1>0</rep_joypad1>
+      <rep_joypad2>0</rep_joypad2>
+      <rep_touch1>0</rep_touch1>
+      <rep_touch2>0</rep_touch2>
+    </key39>
+    <key40 type="DEBUG">
+      <name>Show/Hide Debug Plane 2</name>
+      <keyboard1>222</keyboard1>
+      <keyboard2>0</keyboard2>
+      <mouse1>0</mouse1>
+      <mouse2>0</mouse2>
+      <joypad1>0</joypad1>
+      <joypad2>0</joypad2>
+      <rep_keyboard1>0</rep_keyboard1>
+      <rep_keyboard2>0</rep_keyboard2>
+      <rep_mouse1>0</rep_mouse1>
+      <rep_mouse2>0</rep_mouse2>
+      <rep_joypad1>0</rep_joypad1>
+      <rep_joypad2>0</rep_joypad2>
+      <rep_touch1>0</rep_touch1>
+      <rep_touch2>0</rep_touch2>
+    </key40>
+    <key41 type="DEBUG">
+      <name>Show/Hide Base</name>
+      <keyboard1>66</keyboard1>
+      <keyboard2>0</keyboard2>
+      <mouse1>0</mouse1>
+      <mouse2>0</mouse2>
+      <joypad1>0</joypad1>
+      <joypad2>0</joypad2>
+      <rep_keyboard1>0</rep_keyboard1>
+      <rep_keyboard2>0</rep_keyboard2>
+      <rep_mouse1>0</rep_mouse1>
+      <rep_mouse2>0</rep_mouse2>
+      <rep_joypad1>0</rep_joypad1>
+      <rep_joypad2>0</rep_joypad2>
+      <rep_touch1>0</rep_touch1>
+      <rep_touch2>0</rep_touch2>
+    </key41>
+  

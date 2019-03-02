@@ -7,16 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using ClrPlus.Windows.Api.Structures;
-using ClrPlus.Windows.PeBinary.ResourceLib;
 using TriggersTools.SharpUtils.IO;
 using TriggersTools.SharpUtils.Mathematics;
 using TriggersTools.SharpUtils.Text;
-using MenuTemplate = ClrPlus.Windows.PeBinary.ResourceLib.MenuTemplate;
-using MenuExTemplate = ClrPlus.Windows.PeBinary.ResourceLib.MenuExTemplate;
-using DialogTemplate = ClrPlus.Windows.PeBinary.ResourceLib.DialogTemplate;
-using DialogExTemplate = ClrPlus.Windows.PeBinary.ResourceLib.DialogExTemplate;
 using TriggersTools.CatSystem2.Patcher.Patches;
+using TriggersTools.Resources.Dialog;
+using TriggersTools.Resources.Menu;
+using TriggersTools.Resources.StringTable;
+using TriggersTools.Resources;
 
 namespace TriggersTools.CatSystem2.Patcher {
 	public enum StringScrapeType {
@@ -50,26 +48,24 @@ namespace TriggersTools.CatSystem2.Patcher {
 		public static void ResourceScrape(string fileName, string outputDir) {
 			Directory.CreateDirectory(outputDir);
 			StringBuilder language = new StringBuilder();
-			using (ResourceInfo resourceInfo = new ResourceInfo()) {
-				resourceInfo.Load(fileName);
-				foreach (Resource resource in resourceInfo.Resources.Values.SelectMany(list => list)) {
-					StringBuilder normal = new StringBuilder();
-					string path = null;
-					switch (resource) {
-					case StringResource stringTable:
-						path = $"string";
-						ScrapeStringTable(language, normal, stringTable); break;
-					case MenuResource menu:
-						path = $"menu";
-						ScrapeMenu(language, normal, menu); break;
-					case DialogResource dialog:
-						path = $"dialog";
-						ScrapeDialog(language, normal, dialog); break;
-					}
-					if (normal.Length != 0) {
-						path = Path.Combine(outputDir, $"{path}_{resource.Name.Name}.txt");
-						File.WriteAllText(path, normal.ToString());
-					}
+			ResourceInfo resourceInfo = new ResourceInfo(fileName);
+			foreach (Resource resource in resourceInfo) {
+				StringBuilder normal = new StringBuilder();
+				string path = null;
+				switch (resource) {
+				case StringResource stringTable:
+					path = $"string";
+					ScrapeStringTable(language, normal, stringTable); break;
+				case MenuResource menu:
+					path = $"menu";
+					ScrapeMenu(language, normal, menu); break;
+				case DialogResource dialog:
+					path = $"dialog";
+					ScrapeDialog(language, normal, dialog); break;
+				}
+				if (normal.Length != 0) {
+					path = Path.Combine(outputDir, $"{path}_{resource.Name.Name}.txt");
+					File.WriteAllText(path, normal.ToString());
 				}
 			}
 			if (language.Length != 0) {
@@ -103,7 +99,7 @@ namespace TriggersTools.CatSystem2.Patcher {
 						reserved = MathUtils.Pad(reserved, 4);
 						stream.SkipPadding(4);
 
-						if (line == value) {
+						if (line.Contains(value)) {
 							Console.WriteLine($"{position:X8} = {bytes} B, \"{TextUtils.EscapeNormal(line, false)}\" Length={line.Length}");
 						}
 					}
@@ -207,9 +203,9 @@ namespace TriggersTools.CatSystem2.Patcher {
 		private static void ScrapeStringTable(StringBuilder language, StringBuilder normal, StringResource stringTable) {
 			int previousLanguageLength = language.Length;
 			
-			foreach (var str in stringTable.Strings) {
-				string id = GetResId(str);
-				AddResString($"STRING {str.Key}", language, normal, str.Value, GetResId(str));
+			foreach (var entry in stringTable) {
+				string id = GetResId(entry);
+				AddResString($"STRING {entry.Id}", language, normal, entry.String, GetResId(entry));
 			}
 
 			string headerComment = $"{Comment}STRINGTABLE : {stringTable.Name}{Environment.NewLine}{Environment.NewLine}";
@@ -225,7 +221,7 @@ namespace TriggersTools.CatSystem2.Patcher {
 			int previousLanguageLength = language.Length;
 
 			string headerComment = Comment;
-			switch (menuRes.Menu) {
+			switch (menuRes.Template) {
 			case MenuTemplate menu:
 				ScrapeMenuItems(language, normal, menu.MenuItems, 0);
 				headerComment += "MENU";
@@ -245,7 +241,7 @@ namespace TriggersTools.CatSystem2.Patcher {
 			}
 		}
 		private static void ScrapeMenuItems(StringBuilder language, StringBuilder normal,
-			MenuTemplateItemCollection menuItems, int level)
+			List<IMenuTemplateItem> menuItems, int level)
 		{
 			foreach (var menuItem in menuItems) {
 				string commentLine = null;
@@ -262,18 +258,17 @@ namespace TriggersTools.CatSystem2.Patcher {
 				}
 				AddResString(commentLine, language, normal, menuItem.MenuString, GetResId(menuItem));
 				if (menuItem is MenuTemplateItemPopup popup)
-					ScrapeMenuItems(language, normal, popup.SubMenuItems, level + 1);
+					ScrapeMenuItems(language, normal, popup.MenuItems, level + 1);
 			}
 		}
 		private static void ScrapeMenuItems(StringBuilder language, StringBuilder normal,
-			MenuExTemplateItemCollection menuItems, int level) {
+			List<IMenuExTemplateItem> menuItems, int level) {
 			foreach (var menuItem in menuItems) {
 				string commentLine = null;
 				if (menuItem is MenuExTemplateItemCommand command) {
-					var header = (MenuExItemTemplate) Constants.MenuExTemplateItem_header.GetValue(command);
 					commentLine = "MENUITEM";
-					if (header.dwMenuId != 0)
-						commentLine += $" {header.dwMenuId}";
+					if (command.MenuId != 0)
+						commentLine += $" {command.MenuId}";
 					commentLine += $" L{level}";
 				}
 				else if (menuItem is MenuExTemplateItemPopup) {
@@ -281,7 +276,7 @@ namespace TriggersTools.CatSystem2.Patcher {
 				}
 				AddResString(commentLine, language, normal, menuItem.MenuString, GetResId(menuItem));
 				if (menuItem is MenuExTemplateItemPopup popupEx)
-					ScrapeMenuItems(language, normal, popupEx.SubMenuItems, level + 1);
+					ScrapeMenuItems(language, normal, popupEx.MenuItems, level + 1);
 			}
 		}
 
@@ -316,7 +311,7 @@ namespace TriggersTools.CatSystem2.Patcher {
 				string commentLine = "CONTROL";
 				if (control is DialogTemplateControl idControl && idControl.Id != 0)
 					commentLine += $" {idControl.Id}";
-				AddResString(commentLine, language, normal, control.CaptionId?.Name, GetResId(control));
+				AddResString(commentLine, language, normal, control.CaptionId.Name, GetResId(control));
 			}
 		}
 		private static void ScrapeDialogTemplate(StringBuilder language, StringBuilder normal, DialogExTemplate dialogEx) {
@@ -325,22 +320,25 @@ namespace TriggersTools.CatSystem2.Patcher {
 				string commentLine = "CONTROL";
 				if (control is DialogExTemplateControl idControl && idControl.Id != 0)
 					commentLine += $" {idControl.Id}";
-				AddResString(commentLine, language, normal, control.CaptionId?.Name, GetResId(control));
+				AddResString(commentLine, language, normal, control.CaptionId.Name, GetResId(control));
 			}
 		}
 
 		#endregion
 
-		public static string GetResId(KeyValuePair<ushort, string> stringEntry) {
-			return $"${stringEntry.Key}{stringEntry.Value}";
+		public static string GetResId(StringEntry stringEntry) {
+			return $"${stringEntry.Id}${stringEntry.String}";
 		}
-		public static string GetResId(DialogTemplate dialog) {
+		/*public static string GetResId(DialogTemplate dialog) {
 			return $"$CAPTION${dialog.Caption}";
 		}
 		public static string GetResId(DialogExTemplate dialogEx) {
 			return $"$CAPTION${dialogEx.Caption}";
+		}*/
+		public static string GetResId(IDialogBaseTemplate dialog) {
+			return $"$CAPTION${dialog.Caption}";
 		}
-		public static string GetResId(DialogTemplateControlBase control) {
+		public static string GetResId(IDialogBaseTemplateControl control) {
 			if (control is DialogTemplateControl normalControl) {
 				//if (normalControl.Id != 0)
 					return $"${normalControl.Id}${normalControl.CaptionId}";
@@ -353,7 +351,15 @@ namespace TriggersTools.CatSystem2.Patcher {
 			}
 			return null;
 		}
-		public static string GetResId(MenuTemplateItem menuItem) {
+		public static string GetResId(IMenuBaseTemplateItem menuItem) {
+			if (menuItem is IMenuBaseTemplateItemCommand command)
+				return $"${command.MenuId}${menuItem.MenuString}";
+			else if (menuItem is MenuExTemplateItemPopup popup)
+				return $"${popup.MenuId}${menuItem.MenuString}";
+			else
+				return $"$POPUP${menuItem.MenuString}";
+		}
+		/*public static string GetResId(IMenuTemplateItem menuItem) {
 			if (menuItem is MenuTemplateItemCommand command) {
 				//if (command.MenuId != 0)
 					return $"${command.MenuId}${menuItem.MenuString}";
@@ -363,17 +369,17 @@ namespace TriggersTools.CatSystem2.Patcher {
 				return $"$POPUP${menuItem.MenuString}";
 			}
 		}
-		public static string GetResId(MenuExTemplateItem menuItem) {
+		public static string GetResId(IMenuExTemplateItem menuItem) {
 			if (menuItem is MenuExTemplateItemCommand command) {
-				var header = (MenuExItemTemplate) Constants.MenuExTemplateItem_header.GetValue(command);
+				//var header = (MenuExItemTemplate) Constants.MenuExTemplateItem_header.GetValue(command);
 				//if (header.dwMenuId != 0)
-					return $"${header.dwMenuId}${menuItem.MenuString}";
+					return $"${command.MenuId}${menuItem.MenuString}";
 				//return menuItem.MenuString;
 			}
 			else {
 				return $"$POPUP${menuItem.MenuString}";
 			}
-		}
+		}*/
 
 		private static bool AddResString(string commentLine, StringBuilder language, StringBuilder normal, string s,
 			string resId)

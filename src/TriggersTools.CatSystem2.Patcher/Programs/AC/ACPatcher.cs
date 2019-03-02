@@ -8,18 +8,9 @@ using TriggersTools.SharpUtils.IO;
 
 namespace TriggersTools.CatSystem2.Patcher {
 	public sealed class ACPatcher : ProgramPatcher {
-		
-		internal static readonly string[] BinaryStrings = ReadStrings("binary.txt");
-
-		internal static string[] ReadStrings(string fileName) {
-			string path = Embedded.Combine(Constants.ResourcesPath, "AC", fileName);
-			return Embedded.ReadAllLines(path);
+		public ACPatcher() : base("AC", "ac.exe") {
+			//AddBinaryStringsPatch(0x504EC, 0x50D3C);
+			AddBinaryStringsPatch();
 		}
-
-		public ACPatcher() {
-			//Add(new BinaryStringsPatch(BinaryStrings, 0x504EC, 0x50D3C));
-			Add(new BinaryStringsPatch(BinaryStrings));
-		}
-
 	}
 }

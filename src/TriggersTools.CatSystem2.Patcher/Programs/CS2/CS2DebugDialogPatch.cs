@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TriggersTools.CatSystem2.Patcher.Patches;
-using ClrPlus.Windows.PeBinary.ResourceLib;
+using TriggersTools.Resources.Dialog;
 using TriggersTools.SharpUtils.IO;
 
 namespace TriggersTools.CatSystem2.Patcher.Programs.CS2 {
@@ -19,13 +19,13 @@ namespace TriggersTools.CatSystem2.Patcher.Programs.CS2 {
 			var control = controls.Find(c => {
 				return (c is DialogExTemplateControl cEx && cEx.Id == 1179);
 			});
-			control.cx = 32;
-			control.y++;
-			control.cy -= 2;
+			control.Width = 32;
+			control.Y++;
+			control.Height -= 2;
 			control = controls.Find(c => {
-				return (c.x == 246 && c.y == 53 && c.cx == 17);
+				return (c.X == 246 && c.Y == 53 && c.Width == 17);
 			});
-			control.cx = 30;
+			control.Width = 30;
 			
 
 			return true;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.ExceptionServices;
 using System.Text;
 
 namespace TriggersTools.SharpUtils.Exceptions {
@@ -101,6 +102,24 @@ namespace TriggersTools.SharpUtils.Exceptions {
 				index++;
 			}
 			return builder.ToString();
+		}
+
+		#endregion
+
+		#region Rethrow
+
+		/// <summary>
+		///  Rethrows the exception and retains all stack trace information.
+		/// </summary>
+		/// <param name="ex">The exception to rethrow.</param>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="ex"/> is null.
+		/// </exception>
+		public static void Rethrow(this Exception ex) {
+			if (ex == null)
+				throw new ArgumentNullException(nameof(ex));
+			ExceptionDispatchInfo.Capture(ex).Throw();
 		}
 
 		#endregion
