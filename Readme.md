@@ -18,6 +18,7 @@ A library for extracting resources from, decompiling scripts from, and working w
 
 ## Other Projects/Tools of Note & Special Thanks
 
+* **[Japanese Command Prompt](https://github.com/trigger-death/jpcmd)**
 * **[marcussacana's CatSceneEditor](https://github.com/marcussacana/CatSceneEditor)**
 * **[FuckGalEngine/CatSystem2](https://github.com/Inori/FuckGalEngine/tree/master/CatSystem2)**
 * **[Doddler's Kamikaze Tools](http://www.doddlercon.com/main/?p=120)**
