@@ -5,27 +5,37 @@ using System.Text;
 using System.Threading.Tasks;
 using TriggersTools.CatSystem2.Scenes.Script;
 
-namespace TriggersTools.CatSystem2.Scenes.Commands {
+namespace TriggersTools.CatSystem2.Scenes.Commands.Abstract {
 	/// <summary>
 	///  The immutable class for a CatScene <see cref="SceneLineType.Command"/>.
 	/// </summary>
-	public class SceneCommand : ISceneCommand {
-		#region Fields
+	public abstract class SceneCommand : SceneCommandBase, ISceneCommand {
+		#region Constants
 
-		/// <summary>
+		private static readonly IReadOnlyList<string> NoParameters = Array.AsReadOnly(new string[0]);
+
+		#endregion
+
+		#region Fields
+		
+		/*/// <summary>
 		///  The cat string entry for this scene command.
 		/// </summary>
-		private SceneLine catString;
+		private SceneLine catString;*/
 		/// <summary>
-		///  Gets the parameters for the command, including the comamnd name..
+		///  Gets the parameters for the command, including the comamnd name.
 		/// </summary>
 		public IReadOnlyList<string> Parameters { get; private set; }
+
+		private readonly string[] commandNames;
+
+		private string content;
 
 		#endregion
 
 		#region Properties
 
-		/// <summary>
+		/*/// <summary>
 		///  Gets the cat string entry for this scene command.
 		/// </summary>
 		public SceneLine CatString {
@@ -38,25 +48,55 @@ namespace TriggersTools.CatSystem2.Scenes.Commands {
 				catString = value;
 				Parameters = Array.AsReadOnly(value.Content.Split(' '));
 			}
-		}
+		}*/
 		/// <summary>
 		///  Gets the unparsed content of the string command.
 		/// </summary>
-		public string Content => CatString.Content;
+		public override string Content {
+			get => content;
+			set {
+				content = value ?? throw new ArgumentNullException(nameof(content));
+				if (content.Length == 0)
+					Parameters = NoParameters;
+				else
+					Parameters = Array.AsReadOnly(content.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+			}
+		}
 		/// <summary>
 		///  Gets the name of the command. Returns <see cref="string.Empty"/> when there is no command.
 		/// </summary>
-		public string Command => (Parameters.Count != 0 ? Parameters[0] : string.Empty);
+		public string CommandName => (Parameters.Count != 0 ? Parameters[0] : string.Empty);
 		/// <summary>
 		///  Gets the number of parameters in the command.
 		/// </summary>
 		public int Count => Parameters.Count;
-
+		
 		#endregion
 
 		#region Constructor
-		
+
 		/// <summary>
+		///  Constructs the CatScene command from an existing string.
+		/// </summary>
+		/// <param name="content">The content command.</param>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="content"/> is null.
+		/// </exception>
+		public SceneCommand(string[] commandNames) : this(string.Empty, commandNames) { }
+		/// <summary>
+		///  Constructs the CatScene command from an existing string.
+		/// </summary>
+		/// <param name="content">The content command.</param>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="content"/> is null.
+		/// </exception>
+		public SceneCommand(string content, string[] commandNames) {
+			this.commandNames = commandNames;
+			Content = content;
+		}
+		/*/// <summary>
 		///  Constructs the CatScene command from an existing cat string entry.
 		/// </summary>
 		/// <param name="catString">The CatScene string entry to construct the command from.</param>
@@ -67,16 +107,18 @@ namespace TriggersTools.CatSystem2.Scenes.Commands {
 		public SceneCommand(SceneLine catString) {
 			if (catString.Type != SceneLineType.Command)
 				throw new ArgumentException($"{nameof(catString)} is not of type {nameof(SceneLineType.Command)}!");
+			Content = CatString.Content;
 			CatString = catString;
 			Parameters = Array.AsReadOnly(catString.Content.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
-		}
+		}*/
 
 		#endregion
 
-		#region Execute
+		#region IsCommand
 
-		public void Execute(SceneInstance scene) {
-
+		public virtual int IsCommandPriority => 0;
+		public virtual bool IsCommand(string name, string content, string[] parameters) {
+			return Array.IndexOf(commandNames, name) != -1;
 		}
 
 		#endregion

@@ -42,13 +42,14 @@
       <Name>asmodean</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <OutputItemType>Content</OutputItemType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <!--<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>-->
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <Private>True</Private>
     </ProjectReference>
-    <ContentWithTargetPath Include="..\..\libs\zlib\bin\zlib1.dll">
+    <!--<ContentWithTargetPath Include="..\..\libs\zlib\bin\zlib1.dll">
       <TargetPath>zlib1.dll</TargetPath>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </ContentWithTargetPath>
+    </ContentWithTargetPath>-->
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -77,16 +78,33 @@
     <Compile Include="Hg3Frame.cs" />
     <Compile Include="Hg3Image.cs" />
     <Compile Include="Json\JsonColorConverter.cs" />
+    <Compile Include="Scenes\ScenePage.cs" />
+    <Compile Include="Scenes\SceneLineType.cs" />
     <Compile Include="SceneScript.cs" />
     <Compile Include="Decompile\SceneScript.Decompile.cs" />
     <Compile Include="Extract\SceneScript.Extract.cs" />
     <None Include="VCode.cs" />
     <None Include="VCodes - Copy.cs" />
+    <Compile Include="SceneScriptBuilder.cs" />
+    <Compile Include="Scenes\Commands\Abstract\SceneCommandBase.cs" />
+    <Compile Include="Scenes\Commands\GenericCommand.cs" />
+    <Compile Include="Scenes\Commands\Abstract\SoundCommand.cs" />
+    <Compile Include="Scenes\Commands\Sounds\SoundReplayCommand.cs" />
+    <Compile Include="Scenes\Commands\Sounds\SoundPauseCommand.cs" />
+    <Compile Include="Scenes\Commands\Sounds\SoundLoopCommand.cs" />
+    <Compile Include="Scenes\Commands\Sounds\SoundMoveCommand.cs" />
+    <Compile Include="Scenes\Commands\Sounds\SoundInitCommand.cs" />
+    <Compile Include="Scenes\Commands\Sounds\SoundType.cs" />
+    <Compile Include="Scenes\EvaluateToken.cs" />
+    <Compile Include="Scenes\ISceneLine.cs" />
+    <Compile Include="Scenes\SceneInput.cs" />
+    <Compile Include="Scenes\SceneName.cs" />
+    <Compile Include="Scenes\SceneMessage.cs" />
+    <Compile Include="Scenes\StringToken.cs" />
     <Compile Include="VCodes.Find.cs" />
     <Compile Include="VCodes.cs" />
     <Compile Include="ZtEntry.cs" />
     <Compile Include="ZtPackage.cs" />
-    <Compile Include="SceneLine.cs" />
     <None Include="Exceptions\ModuleResourceException.cs" />
     <None Include="Hg3Old.cs" />
     <None Include="Extract\Hg3Old.Extract.cs" />
@@ -103,15 +121,15 @@
     <Compile Include="KifintStream.cs" />
     <Compile Include="Attributes\KifintTypeAttributes.cs" />
     <Compile Include="KifintType.cs" />
-    <Compile Include="Scenes\Commands\SceneCommand.cs" />
-    <Compile Include="Scenes\Commands\SceneCommandInfo.cs" />
-    <Compile Include="Scenes\Commands\SceneCommands.cs" />
+    <Compile Include="Scenes\Commands\Abstract\SceneCommand.cs" />
+    <None Include="Scenes\Commands\SceneCommandInfo.cs" />
+    <Compile Include="Scenes\SceneUtils.cs" />
     <Compile Include="Scenes\Commands\ConditionCommand.cs" />
     <Compile Include="Scenes\Commands\ISceneCommand.cs" />
     <Compile Include="Scenes\Commands\SceneTitleCommand.cs" />
     <Compile Include="Scenes\Commands\StringCommand.cs" />
-    <Compile Include="Scenes\Commands\VariableCommand.cs" />
-    <Compile Include="Scenes\Commands\VoiceCommand.cs" />
+    <None Include="Scenes\Commands\VariableCommand.cs" />
+    <Compile Include="Scenes\Commands\Sounds\SoundPlayCommand.cs" />
     <Compile Include="Scenes\Script\SceneInstance.cs" />
     <Compile Include="Scenes\Text\IScriptRun.cs" />
     <Compile Include="Decompile\ScreenScript.Decompile.cs" />
@@ -124,7 +142,7 @@
     <Compile Include="Extract\Structs\ScreenScript.Structs.cs" />
     <Compile Include="Utils\MersenneTwister.cs" />
     <Compile Include="Native\Asmodean.cs" />
-    <None Include="Native\Win32.cs" />
+    <None Include="Native\Kernel32.cs" />
     <Compile Include="Native\Zlib.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="VCodeOld.cs" />
@@ -147,5 +165,24 @@
       <Name>TriggersTools.SharpUtils</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Scenes\Commands\Sounds\Abstract\" />
+  </ItemGroup>
+  <!-- https://gist.github.com/thoemmi/3724333 -->
+  <Target Name="EmbedReferencedAssemblies" AfterTargets="ResolveAssemblyReferences">
+    <ItemGroup>
+      <!-- Get list of assemblies to copy -->
+      <AssembliesToEmbed Include="..\..\libs\zlib\bin\zlib1.dll" />
+      <AssembliesToEmbed Include="..\Asmodean\bin\Release\asmodean.dll" />
+      <!--<AssembliesToEmbed Include="@(ReferenceCopyLocalPaths)" Condition="'%(Filename)%(Extension)' == 'zlib1.dll'" />-->
+      <!-- Add these assemblies to the list of embedded resources -->
+      <EmbeddedResource Include="@(AssembliesToEmbed)">
+        <LogicalName>%(Filename)%(Extension)</LogicalName>
+      </EmbeddedResource>
+      <!-- No need to copy the assmblies locally anymore -->
+      <ReferenceCopyLocalPaths Remove="@(AssembliesToEmbed)" />
+    </ItemGroup>
+    <Message Importance="high" Text="Embedding: @(AssembliesToEmbed->'%(Filename)%(Extension)', ', ')" />
+  </Target>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace TriggersTools.SharpUtils.IO {
@@ -648,6 +650,43 @@ namespace TriggersTools.SharpUtils.IO {
 		public static void SaveToStream(Type type, string name, Stream stream) {
 			using (Stream inStream = Open(type, name))
 				inStream.CopyTo(stream);
+		}
+
+		#endregion
+
+		#region LoadDll
+
+		public static void LoadNativeDll(string path, string dllFile) {
+			LoadNativeDll(Assembly.GetCallingAssembly(), path, dllFile);
+		}
+		public static void LoadNativeDll(Assembly assembly, string path, string dllFile) {
+			if (assembly == null)
+				throw new ArgumentNullException(nameof(assembly));
+			if (path == null)
+				throw new ArgumentNullException(nameof(path));
+			if (dllFile == null)
+				throw new ArgumentNullException(nameof(dllFile));
+			if (File.Exists(dllFile)) {
+				// Calculate the MD5 of both files to see if they need to be updated
+				using (MD5 md5 = MD5.Create()) {
+					byte[] dllMd5, resMd5;
+					using (Stream dllStream = File.OpenRead(dllFile))
+						dllMd5 = md5.ComputeHash(dllStream);
+
+					using (Stream resStream = Open(assembly, path)) {
+						resMd5 = md5.ComputeHash(resStream);
+						if (!dllMd5.SequenceEqual(resMd5)) {
+							// MD5 doesn't match, overwrite the dll file
+							using (Stream dllStream = File.Create(dllFile))
+								resStream.CopyTo(dllStream);
+						}
+					}
+				}
+			}
+			else {
+				SaveToFile(assembly, path, dllFile);
+			}
+			NativeLibrary.Load(dllFile);
 		}
 
 		#endregion

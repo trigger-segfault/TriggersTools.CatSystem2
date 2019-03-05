@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using TriggersTools.SharpUtils;
 using TriggersTools.SharpUtils.IO;
 
 namespace TriggersTools.CatSystem2 {
@@ -24,7 +25,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <summary>
 		///  Gets the temporary directory for TriggersTools.CatSystem2 file operations.
 		/// </summary>
-		public static string TempDir { get; } = Path.Combine(Path.GetTempPath(), "TriggersToolsGames", "CatSystem2");
+		public static string TempDir { get; } = TriggerTemp.Combine("CatSystem2");
 
 		/// <summary>
 		///  The list of escapes that should be removed from <see cref="SceneLineType.Message"/> commands.

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TriggersTools.CatSystem2.Scenes;
 
 namespace TriggersTools.CatSystem2 {
 	partial class SceneScript {
@@ -143,7 +144,7 @@ namespace TriggersTools.CatSystem2 {
 			writer.WriteLine();
 
 			for (int i = 0; i < Count; i++) {
-				SceneLine line = Lines[i];
+				ISceneLine line = Lines[i];
 				switch (line.Type) {
 				case SceneLineType.Command:
 					writer.WriteLine($"\t{line.Content}");
@@ -170,6 +171,12 @@ namespace TriggersTools.CatSystem2 {
 					break;
 				case SceneLineType.Input:
 					// Input is specified by an empty line, whitespace is allowed
+					writer.WriteLine();
+					break;
+				case SceneLineType.Page:
+					// Page break in novel view, denoted with \p
+					writer.WriteLine();
+					writer.WriteLine("\t\\p");
 					writer.WriteLine();
 					break;
 				}

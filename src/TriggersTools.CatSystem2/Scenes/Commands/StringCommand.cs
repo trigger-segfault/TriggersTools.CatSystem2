@@ -3,12 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TriggersTools.CatSystem2.Scenes.Commands.Abstract;
 
 namespace TriggersTools.CatSystem2.Scenes.Commands {
 	/// <summary>
 	///  A CatScene command that sets the indexed string of the scene.
 	/// </summary>
 	public sealed class StringCommand : SceneCommand {
+		#region Constants
+
+		private static readonly string[] commandNames = { "str" };
+
+		#endregion
+
 		#region Fields
 
 		/// <summary>
@@ -23,8 +30,9 @@ namespace TriggersTools.CatSystem2.Scenes.Commands {
 		#endregion
 
 		#region Constructors
-		
-		public StringCommand(SceneLine catString) : base(catString) { }
+
+		public StringCommand() : base(commandNames) { }
+		public StringCommand(string content) : base(content, commandNames) { }
 
 		#endregion
 	}

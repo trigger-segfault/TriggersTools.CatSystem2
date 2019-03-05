@@ -62,10 +62,9 @@ namespace TriggersTools.CatSystem2.Structs {
 		public int ScriptLength;
 
 		/// <summary>
-		///  Bytecode? String map? Anyway, is the count of the first part of the script after the header... 
-		///  every single entry 2 uint... in other words 1 entry = 8 bytes
+		///  The number of <see cref="SCRIPTINPUT"/> structures directly following the header.
 		/// </summary>
-		public int UnkCount;
+		public int InputCount;
 
 		public int OffsetTable;
 		public int StringTable;
@@ -78,8 +77,33 @@ namespace TriggersTools.CatSystem2.Structs {
 
 		#endregion
 	}
+	/// <summary>
+	///  A structure whose value is only important in-game to speed up skipping.<para/>
+	///  Each input specifies the next script line index after an input.
+	/// </summary>
+	[StructLayout(LayoutKind.Sequential, Pack = 1, Size = 8)]
+	internal struct SCRIPTINPUT {
+		#region Fields
+
+		/// <summary>
+		///  The offset to the next scene line after an input when added to <see cref="Index"/>.
+		/// </summary>
+		public int OffsetNext;
+		/// <summary>
+		///  The index of the beginning of the script, the first line after an input, or the end of the script.
+		/// </summary>
+		public int Index;
+
+		#endregion
+
+		#region ToString Override
+
+		public override string ToString() => $"Index={Index} Offset={OffsetNext}";
+
+		#endregion
+	}
 	[StructLayout(LayoutKind.Sequential)]
-	internal struct SCENELINE {
+	internal struct SCRIPTLINE {
 		#region Fields
 
 		public ushort Type;
@@ -89,7 +113,7 @@ namespace TriggersTools.CatSystem2.Structs {
 
 		#region ToString Override
 
-		public override string ToString() => $"{Type} \"{Content}\"";
+		public override string ToString() => $"0x{Type:X4} \"{Content}\"";
 
 		#endregion
 	}

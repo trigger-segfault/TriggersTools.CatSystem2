@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using TriggersTools.CatSystem2.Scenes;
 
 namespace TriggersTools.CatSystem2 {
 	partial class SceneScript {
@@ -190,7 +191,7 @@ namespace TriggersTools.CatSystem2 {
 			}
 
 			for (int i = 0; i < Count; i++) {
-				SceneLine line = Lines[i];
+				ISceneLine line = Lines[i];
 				switch (line.Type) {
 				case SceneLineType.Command:
 					Match match;
@@ -211,6 +212,11 @@ namespace TriggersTools.CatSystem2 {
 					break;
 				case SceneLineType.Input:
 					FlushText();
+					break;
+				case SceneLineType.Page:
+					FlushText();
+					writer.WriteLine();
+					writer.WriteLine();
 					break;
 				}
 			}

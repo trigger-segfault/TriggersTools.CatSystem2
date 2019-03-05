@@ -45,6 +45,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TempDirectory.cs" />
+    <Compile Include="TriggerTemp.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="TriggersTools.Build.CopyrightYear">

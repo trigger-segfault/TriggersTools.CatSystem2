@@ -19,10 +19,47 @@ using TriggersTools.Resources.Menu;
 using TriggersTools.Resources;
 using Newtonsoft.Json;
 using TriggersTools.CatSystem2.Patcher.Programs.CS2;
+using TriggersTools.CatSystem2.Scenes;
+using TriggersTools.CatSystem2.Scenes.Commands;
 
 namespace TriggersTools.CatSystem2.Testing {
 	class Program {
+		[DllImport("kernel32", SetLastError = true, CharSet = CharSet.Unicode)]
+		public static extern IntPtr LoadLibrary(string lpFileName);
 		static void Main(string[] args) {
+			//foreach (string file in Directory.GetFiles(@"C:\Programs\Tools\CatSystem2_v401\system\scene", "*.cst")) {
+			foreach (string file in Directory.GetFiles(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)\scene", "*.cst")) {
+				SceneScript scene2 = SceneScript.Extract(file);
+				foreach (ISceneLine line in scene2) {
+					if (line.Type == SceneLineType.Page) {
+						Console.WriteLine(file);
+					}
+				}
+			}
+			Console.Write("FINISHED");
+			Console.ReadLine();
+			using (FileStream fp = File.OpenRead("mc.exe")) {
+				BinaryReader reader = new BinaryReader(fp);
+				while (!fp.IsEndOfStream()) {
+					ushort type = reader.ReadUInt16();
+					if (type == 0x0301) {
+						Console.WriteLine($"{fp.Position:X8}");
+					}
+				}
+			}
+			//byte[] data = File.ReadAllBytes("mc.exe");
+			//for (int i = 0; i <)
+			StringsScraper.BinarySearch("mc.exe", "page");
+			SceneScript scene = SceneScript.Extract(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)\scene\ama_006.cst");
+
+			foreach (ISceneLine line in scene) {
+				if (line.Type == SceneLineType.Command) {
+					var command = (ISceneCommand) line;
+				}
+			}
+			//var h = LoadLibrary(@"C:\Users\Onii-chan\AppData\Local\Temp\TriggersToolsGames\CatSystem2\asmodean.dll");
+			//Embedded
+			var hg3 = Hg3Image.ExtractImages(@"C:\Programs\Tools\CatSystem2_v401\system\image\sys_confirm.hg3", ".", false);
 			string grisaiaInstallDir = @"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)";
 			string grisaiaExe = Path.Combine(grisaiaInstallDir, "Grisaia2.bin.bak");
 			string grisaiaConfigInt = Path.Combine(grisaiaInstallDir, "config.int");

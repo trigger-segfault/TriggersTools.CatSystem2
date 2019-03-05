@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using TriggersTools.CatSystem2.Native;
 using TriggersTools.CatSystem2.Structs;
@@ -47,12 +48,12 @@ namespace TriggersTools.CatSystem2 {
 			int decompressedLength = hdr.DecompressedSize;
 			Zlib.Uncompress(decompressed, ref decompressedLength, compressed, hdr.CompressedSize);
 
-			SCENELINE[] strings;
+			SCRIPTLINE[] lines;
 
-			using (MemoryStream decompressedStream = new MemoryStream(decompressed))
-				strings = ReadScript(decompressedStream, decompressedLength);
+			using (MemoryStream decompressedStream = new MemoryStream(decompressed, 0, decompressedLength))
+				lines = ReadScript(decompressedStream/*, decompressedLength*/);
 
-			return new SceneScript(fileName, strings);
+			return new SceneScript(fileName, lines);
 		}
 
 		#endregion
@@ -60,32 +61,62 @@ namespace TriggersTools.CatSystem2 {
 		#region ReadScript
 
 		/// <summary>
-		///  Reads the string entries in the script.
+		///  Reads the scene line entries in the script.
 		/// </summary>
 		/// <param name="stream">The stream to read the script from.</param>
 		/// <param name="length">The actual length of the script file.</param>
-		/// <returns>The cat string entries.</returns>
-		private static SCENELINE[] ReadScript(Stream stream, int length) {
+		/// <returns>The scene line entries.</returns>
+		private static SCRIPTLINE[] ReadScript(Stream stream/*, int length*/) {
 			BinaryReader reader = new BinaryReader(stream, CatUtils.ShiftJIS);
 			SCRIPTHDR hdr = reader.ReadUnmanaged<SCRIPTHDR>();
 
-			if (hdr.ScriptLength + SCRIPTHDR.CbSize != length)
+			if (hdr.ScriptLength + SCRIPTHDR.CbSize != stream.Length)
 				throw new Exception("Corrupted Script!");
 			
 			int entryCount = hdr.EntryCount;
+			
+			// These values are only needed at runtime to speed things up.
+			// They can be calulcated protgrammatically.
+			//SCRIPTINPUT[] inputs = reader.ReadUnmanagedArray<SCRIPTINPUT>(hdr.InputCount);
 
+			// We technically should already be at this position
 			stream.Position = hdr.OffsetTable + SCRIPTHDR.CbSize;
 
 			int[] offsets = reader.ReadInt32s(entryCount);
-			SCENELINE[] entries = new SCENELINE[entryCount];
+			SCRIPTLINE[] entries = new SCRIPTLINE[entryCount];
 
 			for (int i = 0; i < entryCount; i++) {
 				stream.Position = offsets[i] + hdr.StringTable + SCRIPTHDR.CbSize;
-				entries[i] = new SCENELINE {
+				entries[i] = new SCRIPTLINE {
 					Type = reader.ReadUInt16(),
 					Content = reader.ReadTerminatedString(),
 				};
 			}
+
+			// Validation to make sure I understand the SCRIPTINPUT structures correctly
+			// The goal is to be able to programmatically generate these files
+			/*if ((entries[entryCount - 1].Type & 0x200) != 0) {
+				if (entries.Where(e => (e.Type & 0x200) != 0).Count() != hdr.InputCount)
+					throw new Exception();
+			}
+			else if (entries.Where(e => (e.Type & 0x200) != 0).Count() + 1 != hdr.InputCount)
+				throw new Exception();
+
+			SCRIPTINPUT input = inputs[0];
+			if (input.Index != 0)
+				throw new Exception();
+			for (int i = 1; i < hdr.InputCount; i++) {
+				input.Index += input.OffsetNext;
+				SCRIPTINPUT nextInput = inputs[i];
+				if ((entries[input.Index - 1].Type & 0x200) == 0)
+					throw new Exception();
+				if (nextInput.Index != input.Index)
+					throw new Exception();
+				input = nextInput;
+			}
+			input.Index += input.OffsetNext;
+			if (input.Index != entryCount)
+				throw new Exception();*/
 
 			return entries;
 		}
