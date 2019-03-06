@@ -12,14 +12,14 @@
 
 
 Blowfish::Blowfish() {
-	PArray = new DWORD[18];
-	SBoxes = new DWORD[4][256];
+	/*PArray = new DWORD[18];
+	SBoxes = new DWORD[4][256];*/
 }
 
-Blowfish::~Blowfish() {
+/*Blowfish::~Blowfish() {
 	delete PArray;
 	delete[] SBoxes;
-}
+}*/
 
 // the low level (private) encryption function
 void Blowfish::Blowfish_encipher(DWORD *xl, DWORD *xr) {
@@ -218,8 +218,10 @@ void Blowfish::Set_Key(BYTE key[], int keybytes) {
 }
 
 DWORD Blowfish::Encrypt(BYTE * pInput, DWORD lSize) {
-	if (lSize != GetOutputLength(lSize))
+	if (lSize != GetOutputLength(lSize)) {
 		printf("%s", "Input len != Output len");
+		return 0;
+	}
 
 	BYTE *pOutput = new BYTE[lSize];
 	DWORD ret = Encode(pInput, pOutput, lSize);
@@ -231,8 +233,10 @@ DWORD Blowfish::Encrypt(BYTE * pInput, DWORD lSize) {
 }
 
 void Blowfish::Decrypt(BYTE * pInput, DWORD lSize) {
-	if (lSize != GetOutputLength(lSize))
+	if (lSize != GetOutputLength(lSize)) {
 		printf("%s", "Input len != Output len");
+		return;
+	}
 
 	BYTE *pOutput = new BYTE[lSize];
 	Decode(pInput, pOutput, lSize);

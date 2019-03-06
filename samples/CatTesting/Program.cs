@@ -12,7 +12,7 @@ using TriggersTools.CatSystem2.Native;
 using TriggersTools.CatSystem2.Patcher;
 using TriggersTools.CatSystem2.Patcher.Patches;
 using TriggersTools.SharpUtils.IO;
-using Ionic.Zlib;
+//using Ionic.Zlib;
 using System.Diagnostics;
 using TriggersTools.Resources.Dialog;
 using TriggersTools.Resources.Menu;
@@ -27,6 +27,39 @@ namespace TriggersTools.CatSystem2.Testing {
 		[DllImport("kernel32", SetLastError = true, CharSet = CharSet.Unicode)]
 		public static extern IntPtr LoadLibrary(string lpFileName);
 		static void Main(string[] args) {
+			/*string vcode22 = VCodes.FindVCode2(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)\Grisaia2.bin.bak");
+			Kifint.DecryptLookup(KifintType.Image, @"C:\Programs\Games\Frontwing\Labyrinth of Grisaia", vcode22);
+			Kifint.DecryptLookup(KifintType.Image, @"C:\Programs\Games\Frontwing\Labyrinth of Grisaia", vcode22, csBlowfish: true);
+			var ll = Kifint.DecryptLookup(KifintType.Image, @"C:\Programs\Games\Frontwing\Labyrinth of Grisaia", vcode22);
+			var lll = Kifint.DecryptLookup(KifintType.Image, @"C:\Programs\Games\Frontwing\Labyrinth of Grisaia", vcode22, csBlowfish: true);
+			for (int i = 0; i < ll.Count; i++) {
+
+			}*/
+			Directory.CreateDirectory("img");
+			var hg3Files = Directory.EnumerateFiles(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)\image", "*.hg3");
+			//hg3Files = hg3Files.Take(100);
+			int take = int.MaxValue;
+			try {
+				foreach (string hg3File in hg3Files.Take(10))
+					Hg3Image.ExtractImages(hg3File, "img", false);
+				Stopwatch hg3Watch = Stopwatch.StartNew();
+				foreach (string hg3File in hg3Files.Take(take))
+					Hg3Image.ExtractImages(hg3File, "img", false);
+				Console.WriteLine(hg3Watch.ElapsedMilliseconds); hg3Watch.Restart();
+				foreach (string hg3File in hg3Files.Take(take))
+					Hg3Image.ExtractImages(hg3File, "img", false);
+				Console.WriteLine(hg3Watch.ElapsedMilliseconds); hg3Watch.Restart();
+			}
+			catch (Exception ex) {
+				Console.ForegroundColor = ConsoleColor.Red;
+				Console.WriteLine(ex);
+			}
+			Console.ReadLine();
+			Environment.Exit(0);
+			Hg3Image.ExtractImages(@"C:\Programs\Tools\CatSystem2_v401\tool\img_test2.hg3", ".", false);
+			StringsScraper.BinaryScrape("cs2_open.exe", "strings/null/cs2", 0x5B6458, 0x5B7558);
+			Console.ReadLine();
+			StringsScraper.BinarySearch("cs2_open.exe", "page");
 			//foreach (string file in Directory.GetFiles(@"C:\Programs\Tools\CatSystem2_v401\system\scene", "*.cst")) {
 			foreach (string file in Directory.GetFiles(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)\scene", "*.cst")) {
 				SceneScript scene2 = SceneScript.Extract(file);
@@ -100,7 +133,7 @@ namespace TriggersTools.CatSystem2.Testing {
 				//ushort us = 1;
 			byte[] bs = { 1, 0 };
 			byte[] decompressedA;
-			byte[] decompressedB;
+			//byte[] decompressedB;
 			for (int i = 0; i < 3; i++) {
 				Stopwatch watch = new Stopwatch();
 				using (FileStream fs = File.OpenRead("asa.zt")) {
@@ -151,7 +184,7 @@ namespace TriggersTools.CatSystem2.Testing {
 					int decompressedLength = reader.ReadInt32();
 					byte[] compressed = reader.ReadBytes(compressedLength);
 					watch.Restart();
-					decompressedB = ZlibStream.UncompressBuffer(compressed);
+					//decompressedB = null;// ZlibStream.UncompressBuffer(compressed);
 					Console.WriteLine(watch.ElapsedMilliseconds);
 					/*using (var ms = new MemoryStream())
 					using (ZlibStream zs = new ZlibStream(ms, CompressionMode.Decompress)) {
@@ -286,7 +319,7 @@ namespace TriggersTools.CatSystem2.Testing {
 			//StringsScraper.BinaryScrape("WGC.exe", "strings/wgc", 0x256000, 0x1000000);
 			//StringsScraper.BinarySearch("WGC.exe", "mode");//21220C
 			//212298
-			string vcode = VCodes.FindVCode(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)\Grisaia2.bin.bak");
+			//string vcode = VCodes.FindVCode(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)\Grisaia2.bin.bak");
 			string vcode2 = VCodes.FindVCode2(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)\Grisaia2.bin.bak");
 			var hg = Hg3Image.ExtractImages(@"C:\Programs\Tools\CatSystem2_v401\tool\img_test2.hg3", ".", false);
 			hg = Hg3Image.Extract(@"C:\Programs\Tools\CatSystem2_v401\system\image\sys_confirm.hg3");

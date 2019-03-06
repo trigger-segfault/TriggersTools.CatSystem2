@@ -21,17 +21,21 @@ namespace TriggersTools.CatSystem2.Native {
 			int unused = 0;
 			Zlib.Compress(new byte[0], ref unused, new byte[0], 0);
 
+			string arch = (Environment.Is64BitProcess ? "x64" : "x86");
+			string path = Path.Combine(CatUtils.TempDir, arch);
+			Directory.CreateDirectory(path);
+
 			// Load the embedded asmodean dll
-			string dllName = "asmodean.dll";
-			string dllPath = Path.Combine(CatUtils.TempDir, dllName);
-			Embedded.LoadNativeDll(dllName, dllPath);
+			string ResPath = $"asmodean.{arch}.dll";
+			string dllPath = Path.Combine(path, "asmodean.dll");
+			Embedded.LoadNativeDll(ResPath, dllPath);
 		}
 
 		#endregion
 
 		[DllImport("asmodean.dll", CallingConvention = CallingConvention.Cdecl)]
 		public extern static void DecryptEntry(
-			ref KIFENTRYINFO entry,
+			ref ulong entryInfo,
 			uint fileKey);
 
 		[DllImport("asmodean.dll", CallingConvention = CallingConvention.Cdecl)]
@@ -57,10 +61,10 @@ namespace TriggersTools.CatSystem2.Native {
 		[DllImport("asmodean.dll", EntryPoint = "ProcessImage", CallingConvention = CallingConvention.Cdecl)]
 		public extern static void ProcessImageNative(
 			byte[] bufferTmp,
-			int length,
+			//int length,
 			int origLength,
 			byte[] cmdBufferTmp,
-			int cmdLength,
+			//int cmdLength,
 			int origCmdLength,
 			out IntPtr pRgbaBuffer,
 			out int rgbaLength,

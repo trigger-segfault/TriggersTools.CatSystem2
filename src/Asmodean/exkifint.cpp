@@ -18,7 +18,7 @@ void EncryptVCode(
 {
 	Blowfish bf;
 	bf.Set_Key(keyBuffer, keyLength);
-	bf.Encrypt(vcodeBuffer, (vcodeLength + 7) & ~7);
+	bf.Encrypt(vcodeBuffer, vcodeLength);
 }
 
 void DecryptVCode(
@@ -29,7 +29,7 @@ void DecryptVCode(
 {
 	Blowfish bf;
 	bf.Set_Key(keyBuffer, keyLength);
-	bf.Decrypt(vcodeBuffer, (vcodeLength + 7) & ~7);
+	bf.Decrypt(vcodeBuffer, vcodeLength);
 }
 
 void DecryptEntry(

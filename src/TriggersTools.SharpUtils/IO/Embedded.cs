@@ -675,7 +675,8 @@ namespace TriggersTools.SharpUtils.IO {
 
 					using (Stream resStream = Open(assembly, path)) {
 						resMd5 = md5.ComputeHash(resStream);
-						if (!dllMd5.SequenceEqual(resMd5)) {
+						if (resMd5.Length != dllMd5.Length || !resMd5.SequenceEqual(dllMd5)) {
+							resStream.Position = 0;
 							// MD5 doesn't match, overwrite the dll file
 							using (Stream dllStream = File.Create(dllFile))
 								resStream.CopyTo(dllStream);

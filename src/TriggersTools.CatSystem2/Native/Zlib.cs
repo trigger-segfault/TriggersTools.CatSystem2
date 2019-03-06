@@ -15,10 +15,14 @@ namespace TriggersTools.CatSystem2.Native {
 		#region Static Constructors
 		
 		static Zlib() {
+			string arch = (Environment.Is64BitProcess ? "x64" : "x86");
+			string path = Path.Combine(CatUtils.TempDir, arch);
+			Directory.CreateDirectory(path);
+
 			// Load the embedded zlib1 dll
-			string dllName = "zlib1.dll";
-			string dllPath = Path.Combine(CatUtils.TempDir, dllName);
-			Embedded.LoadNativeDll(dllName, dllPath);
+			string ResPath = $"zlib1.{arch}.dll";
+			string dllPath = Path.Combine(path, "zlib1.dll");
+			Embedded.LoadNativeDll(ResPath, dllPath);
 		}
 
 		#endregion

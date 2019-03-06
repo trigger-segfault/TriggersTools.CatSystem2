@@ -12,15 +12,16 @@
 #ifndef HGX2BMP_H
 #define HGX2BMP_H
 
+#include <Windows.h>
 #include "asmodean.h"
 
 /* Make sure to free returned rgbaBuffer! */
 ASMODEAN_API void ProcessImage(
 	unsigned char*  bufferTmp,
-	unsigned long   length,
+	//unsigned long   length,
 	unsigned long   origLength,
 	unsigned char*  cmdBufferTmp,
-	unsigned long   cmdLength,
+	//unsigned long   cmdLength,
 	unsigned long   origCmdLength,
 	unsigned char*& rgbaBuffer,
 	unsigned long&  rgbaLength,

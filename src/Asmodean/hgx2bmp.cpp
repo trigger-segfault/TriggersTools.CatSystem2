@@ -11,7 +11,7 @@
 #include <string.h>
 #include <Windows.h>
 #include <stdio.h>
-#include "zlib.h"
+//#include "zlib.h"
 
 class bitbuff_t {
 public:
@@ -158,11 +158,11 @@ void undeltafilter(
 }
 
 void ProcessImage(
-	unsigned char*  bufferTmp,
-	unsigned long   length,
+	unsigned char*  buffer/*Tmp*/,
+	//unsigned long   length,
 	unsigned long   origLength,
-	unsigned char*  cmdBufferTmp,
-	unsigned long   cmdLength,
+	unsigned char*  cmdBuffer/*Tmp*/,
+	//unsigned long   cmdLength,
 	unsigned long   origCmdLength,
 	unsigned char*& rgbaBuffer,
 	unsigned long&  rgbaLength,
@@ -170,11 +170,11 @@ void ProcessImage(
 	unsigned long   height,
 	unsigned long   depthBytes)
 {
-	unsigned char* buffer = new unsigned char[origLength];
-	uncompress(buffer, &origLength, bufferTmp, length);
+	//unsigned char* buffer = new unsigned char[origLength];
+	//uncompress(buffer, &origLength, bufferTmp, length);
 
-	unsigned char* cmdBuffer = new unsigned char[origCmdLength];
-	uncompress(cmdBuffer, &origCmdLength, cmdBufferTmp, cmdLength);
+	//unsigned char* cmdBuffer = new unsigned char[origCmdLength];
+	//uncompress(cmdBuffer, &origCmdLength, cmdBufferTmp, cmdLength);
 
 	unsigned long  outLength = 0;
 	unsigned char* outBuffer = nullptr;
@@ -191,6 +191,6 @@ void ProcessImage(
 	undeltafilter(outBuffer, outLength, rgbaBuffer, width, height, depthBytes);
 
 	delete[] outBuffer;
-	delete[] cmdBuffer;
-	delete[] buffer;
+	//delete[] cmdBuffer;
+	//delete[] buffer;
 }

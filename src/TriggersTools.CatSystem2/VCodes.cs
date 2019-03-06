@@ -2,6 +2,7 @@
 using System.Text;
 using Newtonsoft.Json;
 using TriggersTools.CatSystem2.Native;
+using TriggersTools.CatSystem2.Utils;
 using TriggersTools.Resources;
 using TriggersTools.Resources.Enumerations;
 using TriggersTools.SharpUtils.Text;
@@ -37,6 +38,10 @@ namespace TriggersTools.CatSystem2 {
 		private readonly GenericResource vcodeRes;
 		[JsonIgnore]
 		private readonly GenericResource vcode2Res;
+#if !NATIVE_BLOWFISH
+		[JsonIgnore]
+		private Blowfish blowfish;
+#endif
 
 		#endregion
 
@@ -51,6 +56,8 @@ namespace TriggersTools.CatSystem2 {
 			keyCodeRes.Data = Cs2KeyCode;
 			vcodeRes.Data = Cs2VCodes;
 			vcode2Res.Data = Cs2VCodes;
+
+			//InitializeBlowfish();
 		}
 		private VCodes(string exeFile) {
 			using (resInfo = new ResourceInfo(exeFile, false)) {
@@ -60,6 +67,8 @@ namespace TriggersTools.CatSystem2 {
 				resInfo.Add(vcodeRes = new GenericResource(hModule, VCodeType, VCodeName, language));
 				resInfo.Add(vcode2Res = new GenericResource(hModule, VCode2Type, VCode2Name, language));
 			}
+
+			//InitializeBlowfish();
 		}
 
 		#endregion
@@ -89,6 +98,10 @@ namespace TriggersTools.CatSystem2 {
 				byte[] newKey = new byte[value.Length];
 				Array.Copy(value, newKey, value.Length);
 				keyCodeRes.Data = newKey;
+
+				// Update the blowfish cipher with the new key
+				InitializeBlowfish();
+
 				// Update VCodes to match new key
 				VCode = vcodeBackup;
 				VCode2 = vcode2Backup;
@@ -157,18 +170,33 @@ namespace TriggersTools.CatSystem2 {
 				key[i] ^= 0xCD;
 			return key;
 		}
+		private void InitializeBlowfish() {
+#if !NATIVE_BLOWFISH
+			/*byte[] key = new byte[keyCodeRes.Length];
+			Array.Copy(keyCodeRes.Data, key, key.Length);
+			for (int i = 0; i < key.Length; i++)
+				key[i] ^= 0xCD;*/
+			blowfish = new Blowfish(GetKey());
+#endif
+		}
 		private byte[] Encrypt(string vcode) {
 			// Get the encipher key
-			byte[] key = GetKey();
 			// Get the byte length of the V_CODE string
 			int byteLength = CatUtils.ShiftJIS.GetByteCount(vcode);
 			// Create a V_CODE buffer with a length that is a multiple of 8
-			byte[] vcodeData = new byte[(byteLength + 7) & ~7];
+			byte[] vcodeBuffer = new byte[(byteLength + 7) & ~7];
 			// Copy the code to the buffer
-			CatUtils.ShiftJIS.GetBytes(vcode, 0, vcode.Length, vcodeData, 0);
+			CatUtils.ShiftJIS.GetBytes(vcode, 0, vcode.Length, vcodeBuffer, 0);
 			// Encrypt the V_CODE buffer
+#if !NATIVE_BLOWFISH
+			if (blowfish == null)
+				InitializeBlowfish();
+			blowfish.Encrypt(vcodeBuffer);
+#else
+			byte[] key = GetKey();
 			Asmodean.EncryptVCode(key, key.Length, vcodeData, vcodeData.Length);
-			return vcodeData;
+#endif
+			return vcodeBuffer;
 
 			//byte[] vcodeBytes = CatUtils.ShiftJIS.GetBytes(vcode.Code);
 			//if (vcodeBytes.Length >= vcode.Length)
@@ -192,7 +220,14 @@ namespace TriggersTools.CatSystem2 {
 			// Copy the V_CODE to the new buffer, so we don't override the original resource
 			Array.Copy(vcodeData, vcodeBuffer, vcodeData.Length);
 			// Decrypt the V_CODE buffer
-			Asmodean.DecryptVCode(key, key.Length, vcodeBuffer, vcodeData.Length);
+#if !NATIVE_BLOWFISH
+			if (blowfish == null)
+				InitializeBlowfish();
+			blowfish.Decrypt(vcodeBuffer);
+#else
+			byte[] key = GetKey();
+			Asmodean.DecryptVCode(key, key.Length, vcodeBuffer, vcodeBuffer.Length);
+#endif
 			// Null-terminate the V_CODE character string
 			return vcodeBuffer.ToNullTerminatedString(CatUtils.ShiftJIS);
 		}

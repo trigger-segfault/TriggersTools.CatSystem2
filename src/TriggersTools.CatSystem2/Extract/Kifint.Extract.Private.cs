@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Text;
 using TriggersTools.CatSystem2.Native;
 using TriggersTools.CatSystem2.Structs;
 using TriggersTools.CatSystem2.Utils;
@@ -51,46 +51,50 @@ namespace TriggersTools.CatSystem2 {
 			uint tocSeed = GenTocSeed(vcode2);
 			uint fileKey = 0;
 			bool decrypt = false;
+			Blowfish blowfish = null;
+			int keyIndex = -1;
 
 			// Obtain the decryption file key if one exists
 			for (int i = 0; i < hdr.EntryCount; i++) {
 				if (entries[i].FileName == KeyFileName) {
 					fileKey = MersenneTwister.GenRand(entries[i].Length);
 					decrypt = true;
+					blowfish = new Blowfish(fileKey);
+					keyIndex = i;
 					break;
 				}
 			}
-
+			
 			const int ProgressThreshold = 500;
-
+			
 			// Decrypt the KIFINT entries using the file key
 			if (decrypt) {
-				for (uint i = 0; i < hdr.EntryCount; i++) {
-					if (entries[i].FileName == KeyFileName) {
-						progress.EntryIndex++;
+				for (uint i = 0; i < hdr.EntryCount; i++, progress.EntryIndex++) {
+					if (unchecked((int) i) == keyIndex)
 						continue;
-					}
 
 					// Give the entry the correct name
 					UnobfuscateFileName(entries[i].FileNameRaw, unchecked(tocSeed + i));
 					// Apply the extra offset to be decrypted
 					entries[i].Offset += i;
 					// Decrypt the entry's length and offset
-					Asmodean.DecryptEntry(ref entries[i].Info, fileKey);
+#if !NATIVE_BLOWFISH
+					blowfish.Decrypt(ref entries[i].Info);
+#else
+					Asmodean.DecryptEntry(ref entry.Info, fileKey);
+#endif
 
 					progress.EntryName = entries[i].FileName;
 					if (i % ProgressThreshold == 0 || i + 1 == hdr.EntryCount)
 						callback?.Invoke(progress);
-					progress.EntryIndex++;
 				}
 			}
 
-			return new Kifint(kifintPath, entries, decrypt, fileKey, type);
+			return new Kifint(kifintPath, entries, decrypt, fileKey, type, blowfish);
 		}
 
 		#endregion
-
-
+		
 		#region Private DecryptLookup
 		
 		private static bool DecryptArchive(Stream inStream, string kifintPath, string kifintBackup, string vcode2, bool isBackup,
@@ -137,12 +141,16 @@ namespace TriggersTools.CatSystem2 {
 			uint tocSeed = GenTocSeed(vcode2);
 			uint fileKey = 0;
 			bool decrypt = false;
+			Blowfish blowfish = null;
+			int keyIndex = -1;
 
 			// Obtain the decryption file key if one exists
 			for (int i = 0; i < hdr.EntryCount; i++) {
 				if (entries[i].FileName == KeyFileName) {
 					fileKey = MersenneTwister.GenRand(entries[i].Length);
 					decrypt = true;
+					blowfish = new Blowfish(fileKey);
+					keyIndex = i;
 					break;
 				}
 			}
@@ -153,7 +161,8 @@ namespace TriggersTools.CatSystem2 {
 			
 			if (isBackup) {
 				using (Stream outStream = File.Create(kifintPath))
-					DecryptArchiveSave(hdr, entries, tocSeed, fileKey, inStream, outStream, progress, callback);
+					DecryptArchiveSave(hdr, entries, tocSeed, fileKey, blowfish, keyIndex, inStream, outStream,
+						progress, callback);
 			}
 			else {
 				if (File.Exists(kifintBackup)) {
@@ -163,14 +172,16 @@ namespace TriggersTools.CatSystem2 {
 				File.Move(kifintPath, kifintBackup);
 				using (inStream = File.OpenRead(kifintBackup))
 				using (Stream outStream = File.Create(kifintPath))
-					DecryptArchiveSave(hdr, entries, tocSeed, fileKey, inStream, outStream, progress, callback);
+					DecryptArchiveSave(hdr, entries, tocSeed, fileKey, blowfish, keyIndex, inStream, outStream,
+						progress, callback);
 			}
 			
 			return true;
 		}
 
 		private static void DecryptArchiveSave(KIFHDR hdr, List<KIFENTRY> entries, uint tocSeed, uint fileKey,
-			Stream inStream, Stream outStream, KifintProgressArgs progress, KifintProgressCallback callback)
+			Blowfish blowfish, int keyIndex, Stream inStream, Stream outStream, KifintProgressArgs progress,
+			KifintProgressCallback callback)
 		{
 			BinaryReader reader = new BinaryReader(inStream);
 			BinaryWriter writer = new BinaryWriter(outStream);
@@ -180,44 +191,45 @@ namespace TriggersTools.CatSystem2 {
 			progress.EntryName = null;
 			progress.EntryIndex = 0;
 			progress.EntryCount = entries.Count;
-
-			int keyIndex = 0;
-
+			
 			// Decrypt the KIFINT entries using the file key
-			for (uint i = 0; i < hdr.EntryCount; i++) {
-				int si = unchecked((int) i); // signed i
-				if (entries[si].FileName == KeyFileName) {
-					keyIndex = si;
-					progress.EntryIndex++;
+			for (uint i = 0; i < hdr.EntryCount; i++, progress.EntryIndex++) {
+				if (unchecked((int) i) == keyIndex)
 					continue;
-				}
-				
-				KIFENTRY entry = entries[si];
 
+				KIFENTRY entry = entries[unchecked((int) i)];
+				
 				// Give the entry the correct name
 				UnobfuscateFileName(entry.FileNameRaw, unchecked(tocSeed + i));
 				// Apply the extra offset to be decrypted
 				entry.Offset += i;
 				// Decrypt the entry's length and offset
+#if !NATIVE_BLOWFISH
+				blowfish.Decrypt(ref entry.Info);
+#else
 				Asmodean.DecryptEntry(ref entry.Info, fileKey);
+#endif
 
 				progress.EntryName = entry.FileName;
 				if (i % ProgressThreshold == 0 || i + 1 == hdr.EntryCount)
 					callback?.Invoke(progress);
-				progress.EntryIndex++;
 
 				// Goto the entry's decrypted offset, read the buffer, then decrypt it
 				inStream.Position = entry.Offset;
 				byte[] buffer = reader.ReadBytes(entry.Length);
+#if !NATIVE_BLOWFISH
+				blowfish.Decrypt(buffer, (entry.Length / 8) * 8);
+#else
 				Asmodean.DecryptData(buffer, entry.Length, fileKey);
+#endif
 
 				// Move to the entry's offset in the output stream and write the buffer
 				outStream.Position = entry.Offset;
 				writer.Write(buffer);
 
 				// Make sure to reassign the entry to the list, because
-				// it's an array and does not return struct references.
-				entries[si] = entry;
+				// it's not an array and does not return struct references.
+				entries[unchecked((int) i)] = entry;
 			}
 
 			entries.RemoveAt(keyIndex);
@@ -236,7 +248,10 @@ namespace TriggersTools.CatSystem2 {
 		///  Unobfuscates the <see cref="KIFENTRY.FileNameRaw"/> field using the specified seed.
 		/// </summary>
 		/// <param name="fileName">The raw file name in bytes.</param>
-		/// <param name="seed">The seed used to generate the unobfuscation key.</param>
+		/// <param name="seed">
+		///  The seed used to generate the unobfuscation key.
+		///  This is the value generated by <see cref="GenTocSeed"/> + entryIndex.
+		/// </param>
 		private static void UnobfuscateFileName(byte[] fileName, uint seed) {
 			const int Length = 52;
 			const string FWD = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";

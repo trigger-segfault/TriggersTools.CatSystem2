@@ -18,9 +18,7 @@ namespace TriggersTools.CatSystem2 {
 			bool expand)
 		{
 			Stream stream = reader.BaseStream;
-
-			//int backtrack = Marshal.SizeOf<HG3TAG>() - 1;
-			//List<KeyValuePair<HG3STDINFO, List<long>>> imageOffsets = new List<KeyValuePair<HG3STDINFO, List<long>>>();
+			
 			List<Hg3FrameInfo> frameInfos = new List<Hg3FrameInfo>();
 			Hg3FrameInfo frameInfo = null;
 			HG3FRAMEHDR frameHdr;
@@ -89,7 +87,8 @@ namespace TriggersTools.CatSystem2 {
 			if (outputDir != null) {
 				for (int imgIndex = 0; imgIndex < frameInfos.Count; imgIndex++) {
 					frameInfo = frameInfos[imgIndex];
-					string pngFile = $"{Path.GetFileNameWithoutExtension(fileName)}_{frameInfo.Header.Id:D4}.png";
+					string name = $"{Path.GetFileNameWithoutExtension(fileName)}+{frameInfo.Header.Id:D4}.png";
+					string pngFile = Path.Combine(outputDir, name);
 					switch (frameInfo.Type) {
 					case Hg3ImageType.Image:
 						ExtractImage(reader, frameInfo, expand, pngFile);
@@ -121,25 +120,46 @@ namespace TriggersTools.CatSystem2 {
 			int stride = (width * depthBytes + 3) / 4 * 4;
 			byte[] bufferTmp = reader.ReadBytes(data.DataLength);
 			byte[] cmdBufferTmp = reader.ReadBytes(data.CmdLength);
+			byte[] buffer = new byte[data.OriginalDataLength];
+			byte[] cmdBuffer = new byte[data.OriginalCmdLength];
+			Zlib.Uncompress(buffer, ref data.OriginalDataLength, bufferTmp, data.DataLength);
+			Zlib.Uncompress(cmdBuffer, ref data.OriginalCmdLength, cmdBufferTmp, data.CmdLength);
 
-			byte[] bufferTmp2 = new byte[data.OriginalDataLength];
-			byte[] cmdBufferTmp2 = new byte[data.OriginalCmdLength];
-
+#if !NATIVE_UNDELTAFILTER
 			// Perform heavy processing that's faster in native code
 			Asmodean.ProcessImageNative(
-				bufferTmp,
-				data.DataLength,
+				buffer/*Tmp*/,
+				//data.DataLength,
 				data.OriginalDataLength,
-				cmdBufferTmp,
-				data.CmdLength,
+				cmdBuffer/*Tmp*/,
+				//data.CmdLength,
 				data.OriginalCmdLength,
 				out IntPtr pRgbaBuffer,
 				out int rgbaLength,
 				width,
 				height,
 				depthBytes);
+			
+			//Marshal.FreeHGlobal(pRgbaBuffer);
+			//return new byte[0];
+			return FlipBufferAndDispose(pRgbaBuffer, stride, height);
+#else
+			byte[] rgbaBuffer = ProcessImageInternal(
+				buffer/*Tmp*/,
+				//data.DataLength,
+				//data.OriginalDataLength,
+				cmdBuffer/*Tmp*/,
+				//data.CmdLength,
+				//data.OriginalCmdLength,
+				//out byte[] rgbaBuffer,
+				//out int rgbaLength,
+				width,
+				height,
+				depthBytes);
 
-			return FlipBufferAndDispose(pRgbaBuffer, rgbaLength, stride, height);
+			//return new byte[0];
+			return FlipBufferAndDispose(rgbaBuffer, stride, height);
+#endif
 		}
 
 		/// <summary>
@@ -154,33 +174,7 @@ namespace TriggersTools.CatSystem2 {
 			HG3STDINFO std = atomInfo.StdInfo;
 			HG3IMG img = atomInfo.Img.Atom;
 			reader.BaseStream.Position = atomInfo.Img.Offset;
-
-			/*int depthBytes = (std.DepthBits + 7) / 8;
-			int stride = (std.Width * depthBytes + 3) / 4 * 4;
-
-			byte[] bufferTmp = reader.ReadBytes(img.DataLength);
-			byte[] cmdBufferTmp = reader.ReadBytes(img.CmdLength);
-			byte[] pixelBuffer;
 			
-			byte[] bufferTmp2 = new byte[img.OriginalDataLength];
-			byte[] cmdBufferTmp2 = new byte[img.OriginalCmdLength];
-
-			// Perform heavy processing that's faster in native code
-			Asmodean.ProcessImageNative(
-				bufferTmp,
-				img.DataLength,
-				img.OriginalDataLength,
-				cmdBufferTmp,
-				img.CmdLength,
-				img.OriginalCmdLength,
-				out IntPtr pRgbaBuffer,
-				out int rgbaLength,
-				std.Width,
-				std.Height,
-				depthBytes);
-				
-			pixelBuffer = FlipBufferAndDispose(pRgbaBuffer, rgbaLength, stride, std.Height);*/
-
 			byte[] pixelBuffer = ExtractImagePixelBuffer(reader, std.Width, std.Height, std.DepthBits, img.Data);
 			
 			WritePng(pixelBuffer, std, expand, pngFile);
@@ -248,7 +242,7 @@ namespace TriggersTools.CatSystem2 {
 			
 			WriteJpegAlphaMaskToPng(buffer, decompressed, std, expand, pngFile);
 		}
-		private static byte[] FlipBufferAndDispose(IntPtr pRgbaBuffer, int rgbaLength, int stride, int height) {
+		private static byte[] FlipBufferAndDispose(IntPtr pRgbaBuffer, int stride, int height) {
 			try {
 				// Vertically flip the buffer so its in the correct setup to load into Bitmap
 				byte[] pixelBuffer = new byte[stride * height];
@@ -261,6 +255,16 @@ namespace TriggersTools.CatSystem2 {
 			} finally {
 				Marshal.FreeHGlobal(pRgbaBuffer);
 			}
+		}
+		private static byte[] FlipBufferAndDispose(byte[] rgbaBuffer, int stride, int height) {
+			// Vertically flip the buffer so its in the correct setup to load into Bitmap
+			byte[] pixelBuffer = new byte[stride * height];
+			for (int y = 0; y < height; y++) {
+				int src = y * stride;
+				int dst = (height - (y + 1)) * stride;
+				Buffer.BlockCopy(rgbaBuffer, src, pixelBuffer, dst, stride);
+			}
+			return pixelBuffer;
 		}
 		/// <summary>
 		///  Writes the bitmap buffer to <paramref name="pngFile"/> and optional performs expansion if
@@ -298,8 +302,8 @@ namespace TriggersTools.CatSystem2 {
 
 			} finally {
 				// Thing to note that gave me headaches earlier:
-				// Once this handle is freed, the bitmap loaded from
-				// scan0 will be invalidated after garbage collection.
+				//  Once this handle is freed, the bitmap loaded from
+				//  scan0 will be invalidated after garbage collection.
 				handle.Free();
 			}
 		}

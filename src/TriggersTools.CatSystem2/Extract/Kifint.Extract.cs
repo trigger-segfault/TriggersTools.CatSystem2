@@ -401,7 +401,12 @@ namespace TriggersTools.CatSystem2 {
 			byte[] buffer = reader.ReadBytes(entry.Length);
 
 			if (kifint.IsEncrypted) {
+				kifint.blowfish = kifint.blowfish ?? new Blowfish(kifint.FileKey);
+#if !NATIVE_BLOWFISH
+				kifint.blowfish.Decrypt(buffer, (entry.Length / 8) * 8);
+#else
 				Asmodean.DecryptData(buffer, entry.Length, kifint.FileKey);
+#endif
 			}
 			return buffer;
 		}

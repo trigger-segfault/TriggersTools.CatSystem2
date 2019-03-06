@@ -26,6 +26,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -34,22 +35,33 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <!-- Native References -->
-    <ProjectReference Include="..\Asmodean\asmodean.vcxproj">
+    <!--<ProjectReference Include="..\Asmodean\asmodean.vcxproj">
       <Project>{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}</Project>
-      <Name>asmodean</Name>
+      <Name>asmodean-x86</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <OutputItemType>Content</OutputItemType>
-      <!--<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>-->
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <Private>True</Private>
+      <SetPlatform>Platform=Win32</SetPlatform>
     </ProjectReference>
+    <ProjectReference Include="..\Asmodean\asmodean.vcxproj">
+      <Project>{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}</Project>
+      <Name>asmodean-x64</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <OutputItemType>Content</OutputItemType>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <Private>True</Private>
+      <SetPlatform>x64</SetPlatform>
+    </ProjectReference>-->
     <!--<ContentWithTargetPath Include="..\..\libs\zlib\bin\zlib1.dll">
       <TargetPath>zlib1.dll</TargetPath>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </ContentWithTargetPath>-->
+    <Folder Include="Scenes\Commands\Sounds\Abstract\" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -69,6 +81,7 @@
     <Compile Include="Extract\Hg2Image.Extract.Private.cs" />
     <Compile Include="Extract\Hg3Image.Extract.cs" />
     <Compile Include="Extract\Hg3Image.Extract.Private.cs" />
+    <Compile Include="Extract\Hg3Image.ProcessImageInternal.cs" />
     <Compile Include="Extract\Structs\Hg2Image.Classes.cs" />
     <Compile Include="Extract\Structs\Hg2Image.Structs.cs" />
     <Compile Include="Extract\Structs\Hg3Image.Classes.cs" />
@@ -101,6 +114,8 @@
     <Compile Include="Scenes\SceneName.cs" />
     <Compile Include="Scenes\SceneMessage.cs" />
     <Compile Include="Scenes\StringToken.cs" />
+    <Compile Include="Utils\Blowfish.cs" />
+    <Compile Include="Utils\Blowfish.SBlocks.cs" />
     <Compile Include="VCodes.Find.cs" />
     <Compile Include="VCodes.cs" />
     <Compile Include="ZtEntry.cs" />
@@ -165,24 +180,33 @@
       <Name>TriggersTools.SharpUtils</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Scenes\Commands\Sounds\Abstract\" />
-  </ItemGroup>
+  <ItemGroup />
+  <!--<Target Name="BuildAsmodean" AfterTargets="ResolveAssemblyReferences">
+    <MSBuild Projects="..\Asmodean\asmodean.vcxproj" Properties="Platform=Win32;OutputPath=..\Asmodean\bin\Release\x86" Targets="Build" />
+    <MSBuild Projects="..\Asmodean\asmodean.vcxproj" Properties="Platform=x64;OutputPath=..\Asmodean\bin\Release\x64" Targets="Build" />
+  </Target>-->
   <!-- https://gist.github.com/thoemmi/3724333 -->
   <Target Name="EmbedReferencedAssemblies" AfterTargets="ResolveAssemblyReferences">
     <ItemGroup>
       <!-- Get list of assemblies to copy -->
-      <AssembliesToEmbed Include="..\..\libs\zlib\bin\zlib1.dll" />
-      <AssembliesToEmbed Include="..\Asmodean\bin\Release\asmodean.dll" />
+      <x86AssembliesToEmbed Include="..\..\libs\zlib\bin\x86\zlib1.dll" />
+      <x64AssembliesToEmbed Include="..\..\libs\zlib\bin\x64\zlib1.dll" />
+      <x86AssembliesToEmbed Include="..\Asmodean\bin\Release\x86\asmodean.dll" />
+      <x64AssembliesToEmbed Include="..\Asmodean\bin\Release\x64\asmodean.dll" />
       <!--<AssembliesToEmbed Include="@(ReferenceCopyLocalPaths)" Condition="'%(Filename)%(Extension)' == 'zlib1.dll'" />-->
       <!-- Add these assemblies to the list of embedded resources -->
-      <EmbeddedResource Include="@(AssembliesToEmbed)">
-        <LogicalName>%(Filename)%(Extension)</LogicalName>
+      <EmbeddedResource Include="@(x86AssembliesToEmbed)">
+        <LogicalName>%(Filename).x86%(Extension)</LogicalName>
+      </EmbeddedResource>
+      <EmbeddedResource Include="@(x64AssembliesToEmbed)">
+        <LogicalName>%(Filename).x64%(Extension)</LogicalName>
       </EmbeddedResource>
       <!-- No need to copy the assmblies locally anymore -->
-      <ReferenceCopyLocalPaths Remove="@(AssembliesToEmbed)" />
+      <ReferenceCopyLocalPaths Remove="@(x86AssembliesToEmbed)" />
+      <ReferenceCopyLocalPaths Remove="@(x64AssembliesToEmbed)" />
     </ItemGroup>
-    <Message Importance="high" Text="Embedding: @(AssembliesToEmbed->'%(Filename)%(Extension)', ', ')" />
+    <Message Importance="high" Text="Embedding: @(x86AssembliesToEmbed->'%(Filename)%(Extension)', ', ')" />
+    <Message Importance="high" Text="Embedding: @(x64AssembliesToEmbed->'%(Filename)%(Extension)', ', ')" />
   </Target>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

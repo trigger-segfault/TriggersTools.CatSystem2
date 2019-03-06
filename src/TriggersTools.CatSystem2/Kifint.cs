@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using TriggersTools.CatSystem2.Structs;
 using Newtonsoft.Json;
+using TriggersTools.CatSystem2.Utils;
 
 namespace TriggersTools.CatSystem2 {
 	/// <summary>
@@ -34,6 +35,10 @@ namespace TriggersTools.CatSystem2 {
 		///  Gets the type associated with this archive.
 		/// </summary>
 		public KifintType ArchiveType { get; private set; }
+		/// <summary>
+		///  The blowfish cipher seeded with the file key.
+		/// </summary>
+		private Blowfish blowfish;
 
 		#endregion
 
@@ -67,7 +72,9 @@ namespace TriggersTools.CatSystem2 {
 		/// <param name="kifEntries">The array of unobfuscated KIFENTRIES inside the KIFINT.</param>
 		/// <param name="decrypt">True if the file key is required.</param>
 		/// <param name="fileKey">The file key when <paramref name="decrypt"/> is true.</param>
-		private Kifint(string kifintPath, KIFENTRY[] kifEntries, bool decrypt, uint fileKey, KifintType type) {
+		private Kifint(string kifintPath, KIFENTRY[] kifEntries, bool decrypt, uint fileKey, KifintType type,
+			Blowfish blowfish)
+		{
 			FilePath = kifintPath;
 			IsEncrypted = decrypt;
 			if (IsEncrypted)
@@ -81,6 +88,7 @@ namespace TriggersTools.CatSystem2 {
 				}
 			}
 			Entries = new ReadOnlyDictionary<string, KifintEntry>(entries);
+			this.blowfish = blowfish;
 		}
 
 		#endregion

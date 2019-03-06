@@ -55,10 +55,14 @@ namespace TriggersTools.CatSystem2.Structs {
 		public byte[] FileNameRaw;
 		/// <summary>
 		///  We don't need to pass the <see cref="FileNameRaw"/> during P/Invoke, so we have this info structure,
-		///  which is the same as accessing <see cref="Offset"/> and <see cref="Length"/> directly.
+		///  which is the same as accessing <see cref="Offset"/> and <see cref="Length"/> directly.<para/>
+		///  
+		///  With the new C# blowfish, this is now a single ulong that shares the same space as <see cref="Offset"/>
+		///  and <see cref="Length"/>. Pass this value as a reference for decrypting.
 		/// </summary>
 		[FieldOffset(64)]
-		public KIFENTRYINFO Info;
+		public ulong Info;
+		//public KIFENTRYINFO Info;
 		/// <summary>
 		///  The file offset to the entry's data.
 		/// </summary>
@@ -80,8 +84,14 @@ namespace TriggersTools.CatSystem2.Structs {
 		public string FileName => FileNameRaw.ToNullTerminatedString(CatUtils.ShiftJIS);
 
 		#endregion
+
+		#region ToString Override
+
+		public override string ToString() => $"\"{FileName}\" Offset={Offset} Length={Length}";
+
+		#endregion
 	}
-	/// <summary>
+	/*/// <summary>
 	///  We don't need to pass the <see cref="KIFENTRY.FileNameRaw"/> during P/Invoke, so we have this info
 	///  structure.
 	/// </summary>
@@ -95,5 +105,5 @@ namespace TriggersTools.CatSystem2.Structs {
 		///  The file length to the entry's data.
 		/// </summary>
 		public int Length;
-	}
+	}*/
 }
