@@ -263,7 +263,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <param name="fileName">The base filename of the <see cref="Hg3"/>.</param>
 		/// <returns>The file name of the JSON HG-X information.</returns>
 		public static string GetJsonFileName(string fileName) {
-			return Path.ChangeExtension(Path.GetFileNameWithoutExtension(fileName) + "+hg3", ".json");
+			return Path.ChangeExtension(Path.GetFileNameWithoutExtension(fileName) + "+hgx", ".json");
 		}
 		/// <summary>
 		///  Gets the file path for the JSON HG-X information.
