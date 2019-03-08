@@ -9,7 +9,7 @@ A library for extracting resources from, decompiling scripts from, and working w
 
 * Patches for translating CatSystem2 tools into English.
 * Decrypting and extracting from KIF int archive files.
-* Extracting images from HG-3 format. (Improved over asmodean's code)
+* Extracting images from HG-2 and HG-3 format. (Improved over asmodean's code)
 * Decompiling cst, fes, and anm scripts into a modifiable and compileable state.
 
 ### This is a Work in Progress.
