@@ -2,7 +2,7 @@
 
 namespace TriggersTools.CatSystem2.Utils {
 	/// <summary>
-	///  A random number generation method used by <see cref="Kifint"/>.
+	///  A random number generation method used by <see cref="KifintArchive"/>.
 	/// </summary>
 	internal sealed class MersenneTwister {
 		#region Constants

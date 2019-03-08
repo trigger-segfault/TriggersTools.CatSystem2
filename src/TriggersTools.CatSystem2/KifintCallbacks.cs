@@ -52,7 +52,7 @@ namespace TriggersTools.CatSystem2 {
 		public bool IsDone => ArchiveIndex == ArchiveCount;
 	}
 	/// <summary>
-	///  A callback for progress made during <see cref="Kifint.DecryptLookup"/>.
+	///  A callback for progress made during <see cref="KifintArchive.DecryptLookup"/>.
 	/// </summary>
 	/// <param name="e">The progress callback args.</param>
 	public delegate void KifintProgressCallback(KifintProgressArgs e);

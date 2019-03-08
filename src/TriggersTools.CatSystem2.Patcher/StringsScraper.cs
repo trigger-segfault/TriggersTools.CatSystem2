@@ -15,6 +15,7 @@ using TriggersTools.Resources.Dialog;
 using TriggersTools.Resources.Menu;
 using TriggersTools.Resources.StringTable;
 using TriggersTools.Resources;
+using System.Collections.Immutable;
 
 namespace TriggersTools.CatSystem2.Patcher {
 	public enum StringScrapeType {
@@ -464,7 +465,7 @@ namespace TriggersTools.CatSystem2.Patcher {
 					break;
 				}
 			}
-			return new ReadOnlyDictionary<string, string>(translations);
+			return translations.ToImmutableDictionary();
 		}
 	}
 }

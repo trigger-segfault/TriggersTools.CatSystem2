@@ -9,69 +9,73 @@ using TriggersTools.SharpUtils.Exceptions;
 using TriggersTools.SharpUtils.IO;
 
 namespace TriggersTools.CatSystem2 {
-	partial class Hg3Image {
+	partial class HgxImage {
 		#region ExtractHg2
 
-		public static Hg3Image ExtractInternal(Stream stream, string fileName, string outputDir, bool expand) {
-			BinaryReader reader = new BinaryReader(stream);
-			HGXHDR hdr = reader.ReadUnmanaged<HGXHDR>();
-
-			if (hdr.Signature == HGXHDR.ExpectedHg3Signature)
-				return ExtractHg3Internal(hdr, reader, fileName, outputDir, expand);
-			if (hdr.Signature == HGXHDR.ExpectedHg2Signature)
-				return ExtractHg2Internal(hdr, reader, fileName, outputDir, expand);
-			throw new UnexpectedFileTypeException($"{HGXHDR.ExpectedHg2Signature} or {HGXHDR.ExpectedHg3Signature}");
-		}
-
-		private static Hg3Image ExtractHg2Internal(HGXHDR hdr, BinaryReader reader, string fileName, string outputDir,
-			bool expand)
+		private static HgxImage ExtractHg2Internal(HGXHDR hdr, BinaryReader reader, string fileName, string outputDir,
+			HgxOptions options)
 		{
 			Stream stream = reader.BaseStream;
-			//int backtrack = Marshal.SizeOf<HG3TAG>() - 1;
-			//List<KeyValuePair<HG3STDINFO, List<long>>> imageOffsets = new List<KeyValuePair<HG3STDINFO, List<long>>>();
 			List<Hg2FrameInfo> frameInfos = new List<Hg2FrameInfo>();
 			Hg2FrameInfo frameInfo = null;
-			//HG3FRAMEHDR frameHdr;
 
-			bool ex = hdr.Type == 0x25;
+			bool hasBase = hdr.Type == 0x25;
 
 			HG2IMG img;
+			HG2IMG_BASE? imgBase;
 
 			do {
 				long startPosition = stream.Position;
 				img = reader.ReadUnmanaged<HG2IMG>();
-				frameInfo = new Hg2FrameInfo(img);
-				if (ex)
-					frameInfo.ImgEx = reader.ReadUnmanaged<HG2IMG_EX>();
-				frameInfos.Add(frameInfo);
-				//stream.Skip(img.Data.DataLength);
-				//stream.Skip(img.Data.CmdLength);
+				if (hasBase)
+					imgBase = reader.ReadUnmanaged<HG2IMG_BASE>();
+				else
+					imgBase = null;
+
+				frameInfos.Add(new Hg2FrameInfo(stream, img, imgBase));
+
 				stream.Position = startPosition + img.OffsetNext;
 			} while (img.OffsetNext != 0);
 
-			/*Hg3Image hg3Image = new Hg3Image(Path.GetFileName(fileName), hdr, frameInfos.ToArray(), expand);
+			HgxImage hg2Image = new HgxImage(Path.GetFileName(fileName), hdr, frameInfos.ToArray(), options);
 			if (outputDir != null) {
 				for (int imgIndex = 0; imgIndex < frameInfos.Count; imgIndex++) {
 					frameInfo = frameInfos[imgIndex];
-					string pngFile = $"{Path.GetFileNameWithoutExtension(fileName)}_{frameInfo.Header.Id:D4}.png";
-					switch (frameInfo.Type) {
-					case Hg3ImageType.Image:
-						ExtractImage(reader, frameInfo, expand, pngFile);
-						break;
-					case Hg3ImageType.Jpeg:
-						ExtractImageJpeg(reader, frameInfo, expand, pngFile);
-						break;
-					case Hg3ImageType.Alpha:
-						ExtractImageAlpha(reader, frameInfo, expand, pngFile);
-						break;
-					case Hg3ImageType.JpegAlpha:
-						ExtractImageJpegAlpha(reader, frameInfo, expand, pngFile);
-						break;
-					}
+					string pngFile = hg2Image.Frames[imgIndex].GetFrameFilePath(outputDir, false);
+					ExtractHg2Image(reader, frameInfo, options, pngFile);
 				}
-			}*/
+			}
 
-			return null;
+			return hg2Image;
+		}
+
+		#endregion
+
+		#region ExtractHg2Image
+
+		/// <summary>
+		///  Extracts the <see cref="HG2IMG"/> from the HG-2 file.
+		/// </summary>
+		/// <param name="reader">The binary reader for the file.</param>
+		/// <param name="std">The HG3STDINFO containing image dimensions, etc.</param>
+		/// <param name="img">The image header used to process the image.</param>
+		/// <param name="expand">True if the image should be expanded to its full size.</param>
+		/// <param name="pngFile">The path to the PNG file to save to.</param>
+		private static void ExtractHg2Image(BinaryReader reader, Hg2FrameInfo frameInfo, HgxOptions options,
+			string pngFile)
+		{
+			HG2IMG img = frameInfo.Img;
+			reader.BaseStream.Position = frameInfo.Offset;
+			int depthBytes = (img.DepthBits + 7) / 8;
+			int stride = (img.Width * depthBytes + 3) / 4 * 4;
+
+			byte[] pixelBuffer = ProcessImage(reader, img.Width, img.Height, img.DepthBits, img.Data);
+
+			if (!CatUtils.SpeedTestHgx) {
+				// This image type is normally flipped, so reverse the option
+				options ^= HgxOptions.Flip;
+				WritePng(pixelBuffer, img, options, pngFile);
+			}
 		}
 
 		#endregion

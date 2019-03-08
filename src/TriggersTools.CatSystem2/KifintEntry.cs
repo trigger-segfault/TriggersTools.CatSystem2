@@ -12,7 +12,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <summary>
 		///  Gets the KIFINT file used to extract this entry from.
 		/// </summary>
-		public Kifint Kifint { get; private set; }
+		public KifintArchive Kifint { get; private set; }
 		/// <summary>
 		///  Gets the name of the file with the extension.
 		/// </summary>
@@ -51,11 +51,11 @@ namespace TriggersTools.CatSystem2 {
 		///  Constructs a KIFINT entry with the specified file name, entry data, parent KIFINT archive.
 		/// </summary>
 		/// <param name="fileName">
-		///  The cached name of the file. Calling <see cref="Kifint.KIFENTRY.FileName"/> is wasteful.
+		///  The cached name of the file. Calling <see cref="KifintArchive.KIFENTRY.FileName"/> is wasteful.
 		/// </param>
 		/// <param name="kifEntry">The decrypted data for the entry.</param>
 		/// <param name="kifint">The parent KIFINT arhive.</param>
-		internal KifintEntry(string fileName, KIFENTRY kifEntry, Kifint kifint) {
+		internal KifintEntry(string fileName, KIFENTRY kifEntry, KifintArchive kifint) {
 			Kifint = kifint;
 			FileName = fileName;
 			Offset = kifEntry.Offset;
@@ -82,7 +82,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <param name="version">The current version being read.</param>
 		/// <param name="kifint">The KIFINT archive containing this entry.</param>
 		/// <returns>The loaded cached KIFINT.</returns>
-		internal static KifintEntry Read(BinaryReader reader, int version, Kifint kifint) {
+		internal static KifintEntry Read(BinaryReader reader, int version, KifintArchive kifint) {
 			return new KifintEntry {
 				Kifint = kifint,
 				FileName = reader.ReadString(),
@@ -100,7 +100,7 @@ namespace TriggersTools.CatSystem2 {
 		/// </summary>
 		/// <returns>A byte array containing the data of the decrypted entry.</returns>
 		public byte[] Extract() {
-			return Kifint.Extract(this);
+			return KifintArchive.Extract(this);
 		}
 		/// <summary>
 		///  Extracts the KIFINT entry to a <see cref="byte[]"/>.
@@ -112,7 +112,7 @@ namespace TriggersTools.CatSystem2 {
 		///  <paramref name="kifintStream"/> is null.
 		/// </exception>
 		public byte[] Extract(KifintStream kifintStream) {
-			return Kifint.Extract(kifintStream, this);
+			return KifintArchive.Extract(kifintStream, this);
 		}
 		/// <summary>
 		///  Extracts the KIFINT entry to a <see cref="MemoryStream"/>.

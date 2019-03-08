@@ -2,8 +2,8 @@
 using System.IO;
 using System.Linq;
 using System.Text;
-using TriggersTools.CatSystem2.Native;
 using TriggersTools.CatSystem2.Structs;
+using TriggersTools.CatSystem2.Utils;
 using TriggersTools.SharpUtils.Exceptions;
 using TriggersTools.SharpUtils.IO;
 
@@ -43,15 +43,16 @@ namespace TriggersTools.CatSystem2 {
 
 			UnexpectedFileTypeException.ThrowIfInvalid(hdr.Signature, CATSCENEHDR.ExpectedSignature);
 
-			byte[] compressed = reader.ReadBytes(hdr.CompressedSize);
-			byte[] decompressed = new byte[hdr.DecompressedSize];
-			int decompressedLength = hdr.DecompressedSize;
-			Zlib.Uncompress(decompressed, ref decompressedLength, compressed, hdr.CompressedSize);
+			byte[] scriptData = Zlib.Decompress(reader, hdr.CompressedLength, hdr.DecompressedLength);
+			/*byte[] compressed = reader.ReadBytes(hdr.CompressedLength);
+			byte[] decompressed = new byte[hdr.DecompressedLength];
+			int decompressedLength = hdr.DecompressedLength;
+			Zlib.Uncompress(decompressed, ref decompressedLength, compressed, hdr.CompressedLength);*/
 
 			SCRIPTLINE[] lines;
 
-			using (MemoryStream decompressedStream = new MemoryStream(decompressed, 0, decompressedLength))
-				lines = ReadScript(decompressedStream/*, decompressedLength*/);
+			using (var ms = new MemoryStream(scriptData))
+				lines = ReadScript(ms);
 
 			return new SceneScript(fileName, lines);
 		}
@@ -66,7 +67,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <param name="stream">The stream to read the script from.</param>
 		/// <param name="length">The actual length of the script file.</param>
 		/// <returns>The scene line entries.</returns>
-		private static SCRIPTLINE[] ReadScript(Stream stream/*, int length*/) {
+		private static SCRIPTLINE[] ReadScript(Stream stream) {
 			BinaryReader reader = new BinaryReader(stream, CatUtils.ShiftJIS);
 			SCRIPTHDR hdr = reader.ReadUnmanaged<SCRIPTHDR>();
 

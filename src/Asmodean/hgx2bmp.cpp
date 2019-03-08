@@ -9,104 +9,123 @@
 // This code helps decompress Windmill's HG-3 (*.hg3) and HG-2 (*.hg2) images.
 #include "hgx2bmp.h"
 #include <string.h>
-#include <Windows.h>
 #include <stdio.h>
-//#include "zlib.h"
 
-class bitbuff_t {
+class BitBuffer {
+private:
+	uint32  index;
+	byte*   buffer;
+	int32   length;
+
 public:
-	bitbuff_t(unsigned char* buff, unsigned long len)
-		: buff(buff),
-		len(len),
-		index(0) {
+	BitBuffer(byte* buffer, uint32 length)
+		: buffer(buffer), length((int32) length), index(0)
+	{
 	}
 
-	bool get_bit(void) {
+	bool getBit() {
 		if (index > 7) {
-			buff++;
-			len--;
+			// Have we hit the endReached of the buffer?
+			if (--length <= 0) {
+				// Set to one so we keep hitting this condition.
+				length = 0;
+				// Return true to force Elias Gamma Value to end.
+				// Make sure index stays > 7 to keep throwing this.
+				return true;
+			}
+			buffer++;
 			index = 0;
 		}
 
-		return (*buff >> index++) & 1;
+		return (*buffer >> index++) & 1;
 	}
 
 	// Didn't expect to see this in the wild...
-	unsigned long get_elias_gamma_value(void) {
-		unsigned long value = 0;
-		unsigned long digits = 0;
+	uint32 getEliasGammaValue() {
+		uint32 value, digits = 0;
 
-		while (!get_bit()) digits++;
+		while (!getBit()) digits++;
 
 		value = 1 << digits;
 
 		while (digits--) {
-			if (get_bit()) {
+			if (getBit())
 				value |= 1 << digits;
-			}
 		}
 
-		return value;
+		if (length)
+			return value;
+		return INVALID_ELIAS_GAMMA;
 	}
-
-private:
-	unsigned long  index;
-	unsigned char* buff;
-	unsigned long  len;
 };
 
-// This encoding tries to optimize for lots of zeros. I think. :)
-unsigned char unpack_val(unsigned char c) {
-	unsigned char z = c & 1 ? 0xFF : 0;
-	return (c >> 1) ^ z;
-}
-
-void unrle(
-	unsigned char*  buffer,
-	unsigned long   length,
-	unsigned char*  cmdBuffer,
-	unsigned long   cmdLength,
-	unsigned char*& outBuffer,
-	unsigned long&  outLength)
+ReturnCode Unrle(
+	byte*    dataBuffer,
+	uint32   dataLength,
+	byte*    cmdBuffer,
+	uint32   cmdLength,
+	byte*&   unrleBuffer,
+	uint32&  unrleOutLength)
 {
-	bitbuff_t cmdBits(cmdBuffer, cmdLength);
+	BitBuffer cmdBits(cmdBuffer, cmdLength);
 
-	bool copyFlag = cmdBits.get_bit();
+	bool copyFlag = cmdBits.getBit();
 
-	outLength = cmdBits.get_elias_gamma_value();
-	outBuffer = new unsigned char[outLength];
+	unrleOutLength = cmdBits.getEliasGammaValue();
+	if (unrleOutLength == INVALID_ELIAS_GAMMA)
+		return ReturnCode::UnrleDataIsCorrupt;
 
-	unsigned long n = 0;
-	for (unsigned long i = 0; i < outLength; i += n) {
-		n = cmdBits.get_elias_gamma_value();
+	// Initialize the array to zeroed bytes all at once,
+	// this way we won't need to excessively call memset(0).
+	unrleBuffer = new byte[unrleOutLength] { 0 };
+	if (unrleBuffer == nullptr)
+		return ReturnCode::AllocationFailed;
+
+	uint32 n;
+	uint32 unrleLength = unrleOutLength;
+	uint32 unrleLeft = unrleOutLength;
+	uint32 dataLeft = dataLength;
+	for (int32 i = 0; i < unrleLength; i += n) {
+		n = cmdBits.getEliasGammaValue();
 
 		if (copyFlag) {
-			memcpy(outBuffer + i, buffer, n);
-			buffer += n;
-		}
-		else {
-			memset(outBuffer + i, 0, n);
+			// Out-of-range checks
+			if (unrleLeft < n || dataLeft < n)
+				return ReturnCode::UnrleDataIsCorrupt;
+			dataLeft -= n;
+
+			memcpy(unrleBuffer + i, dataBuffer, n);
+			dataBuffer += n;
 		}
 
+		unrleLeft -= n;
 		copyFlag = !copyFlag;
 	}
+
+	return ReturnCode::Success;
 }
 
-void undeltafilter(
-	unsigned char* buffer,
-	unsigned long  length,
-	unsigned char* outBuffer,
-	unsigned long  width,
-	unsigned long  height,
-	unsigned long  depthBytes)
-{
-	unsigned long table1[256] = { 0 };
-	unsigned long table2[256] = { 0 };
-	unsigned long table3[256] = { 0 };
-	unsigned long table4[256] = { 0 };
+/* This encoding tries to optimize for lots of zeros. I think. :) */
+byte UnpackValue(byte c) {
+	return ((c & 1) ? ((c >> 1) ^ 0xFF) : (c >> 1));
+}
 
-	for (unsigned long i = 0; i < 256; i++) {
-		unsigned long val = i & 0xC0;
+void Undeltafilter(
+	byte*   unrleBuffer,
+	uint32  unrleLength,
+	byte*   rgbaBuffer,
+	uint32  width,
+	uint32  height,
+	uint32  depthBytes,
+	uint32  stride)
+{
+	uint32 table1[TABLE_SIZE];// = { 0 };
+	uint32 table2[TABLE_SIZE];// = { 0 };
+	uint32 table3[TABLE_SIZE];// = { 0 };
+	uint32 table4[TABLE_SIZE];// = { 0 };
+
+	for (uint32 i = 0; i < TABLE_SIZE; i++) {
+		uint32 val = i & 0xC0;
 
 		val <<= 6;
 		val |= i & 0x30;
@@ -123,74 +142,85 @@ void undeltafilter(
 		table1[i] = val << 6;
 	}
 
-	unsigned long  sect_len = length / 4;
-	unsigned char* sect1 = buffer;
-	unsigned char* sect2 = sect1 + sect_len;
-	unsigned char* sect3 = sect2 + sect_len;
-	unsigned char* sect4 = sect3 + sect_len;
+	uint32 sectLength = unrleLength / 4;
+	byte*  sect1 = unrleBuffer;
+	byte*  sect2 = sect1 + sectLength;
+	byte*  sect3 = sect2 + sectLength;
+	byte*  sect4 = sect3 + sectLength;
 
-	unsigned char* outP = outBuffer;
-	unsigned char* outEnd = outBuffer + length;
+	byte*  outP   = rgbaBuffer;
+	byte*  outEnd = rgbaBuffer + unrleLength;
 
 	while (outP < outEnd) {
-		unsigned long val = table1[*sect1++] | table2[*sect2++] | table3[*sect3++] | table4[*sect4++];
+		uint32 val = table1[*sect1++] | table2[*sect2++] | table3[*sect3++] | table4[*sect4++];
 
-		*outP++ = unpack_val((unsigned char)(val >> 0));
-		*outP++ = unpack_val((unsigned char)(val >> 8));
-		*outP++ = unpack_val((unsigned char)(val >> 16));
-		*outP++ = unpack_val((unsigned char)(val >> 24));
+		*outP++ = UnpackValue((byte) (val >> 0));
+		*outP++ = UnpackValue((byte) (val >> 8));
+		*outP++ = UnpackValue((byte) (val >> 16));
+		*outP++ = UnpackValue((byte) (val >> 24));
 	}
 
-	unsigned long stride = width * depthBytes;
-
-	for (unsigned long x = depthBytes; x < stride; x++) {
-		outBuffer[x] += outBuffer[x - depthBytes];
+	for (uint32 x = depthBytes; x < stride; x++) {
+		rgbaBuffer[x] += rgbaBuffer[x - depthBytes];
 	}
 
-	for (unsigned long y = 1; y < height; y++) {
-		unsigned char* line = outBuffer + y * stride;
-		unsigned char* prev = outBuffer + (y - 1) * stride;
+	for (uint32 y = 1; y < height; y++) {
+		byte* line = rgbaBuffer + y * stride;
+		byte* prev = line - stride;
 
-		for (unsigned long x = 0; x < stride; x++) {
+		for (uint32 x = 0; x < stride; x++) {
 			line[x] += prev[x];
 		}
 	}
 }
 
-void ProcessImage(
-	unsigned char*  buffer/*Tmp*/,
-	//unsigned long   length,
-	unsigned long   origLength,
-	unsigned char*  cmdBuffer/*Tmp*/,
-	//unsigned long   cmdLength,
-	unsigned long   origCmdLength,
-	unsigned char*& rgbaBuffer,
-	unsigned long&  rgbaLength,
-	unsigned long   width,
-	unsigned long   height,
-	unsigned long   depthBytes)
+ReturnCode ProcessImage(
+	byte*   dataBuffer,
+	uint32  dataLength,
+	byte*   cmdBuffer,
+	uint32  cmdLength,
+	byte*   rgbaBuffer,
+	uint32  rgbaLength,
+	uint32  width,
+	uint32  height,
+	uint32  depthBytes,
+	uint32  stride)
 {
-	//unsigned char* buffer = new unsigned char[origLength];
-	//uncompress(buffer, &origLength, bufferTmp, length);
+	ReturnCode result = ReturnCode::Success;
 
-	//unsigned char* cmdBuffer = new unsigned char[origCmdLength];
-	//uncompress(cmdBuffer, &origCmdLength, cmdBufferTmp, cmdLength);
+	// Murphy's law safety checks
+	if (dataBuffer == nullptr)
+		return ReturnCode::DataBufferIsNull;
+	if (cmdBuffer == nullptr)
+		return ReturnCode::CmdBufferIsNull;
+	if (rgbaBuffer == nullptr)
+		return ReturnCode::RgbaBufferIsNull;
 
-	unsigned long  outLength = 0;
-	unsigned char* outBuffer = nullptr;
-	unrle(buffer, origLength, cmdBuffer, origCmdLength, outBuffer, outLength);
+	if (rgbaLength > MAX_RGBA_LENGTH)
+		return ReturnCode::DimensionsTooLarge;
+	if (width == 0 || height == 0)
+		return ReturnCode::InvalidDimensions;
+	if (depthBytes == 0 || depthBytes > 4)
+		return ReturnCode::InvalidDepthBytes;
 
-	rgbaLength = outLength;
-	rgbaBuffer = (unsigned char*)GlobalAlloc(GMEM_FIXED, rgbaLength);
-	//rgbaBuffer = new unsigned char[rgbaLength];
-	/*if (outLength == width * height * 4) {
-		undeltafilter(outBuffer, outLength, rgbaBuffer, width, height, depthBytes);
-		//printf("\n%i          ", (outLength - width * height * 4));
-		//Beep(500, 2000);
-	}*/
-	undeltafilter(outBuffer, outLength, rgbaBuffer, width, height, depthBytes);
+	uint32  unrleLength = 0;
+	byte*   unrleBuffer = nullptr;
+	result = Unrle(dataBuffer, dataLength, cmdBuffer, cmdLength, unrleBuffer, unrleLength);
+	if (result != ReturnCode::Success) {
+		// Cleanup
+		delete[] unrleBuffer;
+		return result;
+	}
+	if (rgbaLength < unrleLength) {
+		// Cleanup
+		delete[] unrleBuffer;
+		return ReturnCode::RgbaBufferTooSmall;
+	}
 
-	delete[] outBuffer;
-	//delete[] cmdBuffer;
-	//delete[] buffer;
+	Undeltafilter(unrleBuffer, unrleLength, rgbaBuffer, width, height, depthBytes, stride);
+
+	// Cleanup
+	delete[] unrleBuffer;
+
+	return ReturnCode::Success;
 }

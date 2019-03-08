@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Collections.Immutable;
 
 namespace TriggersTools.CatSystem2.Attributes {
 	/// <summary>
@@ -8,30 +10,33 @@ namespace TriggersTools.CatSystem2.Attributes {
 	[AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
 	internal class KifintWildcardAttribute : Attribute {
 		/// <summary>
-		///  Gets the wildcard string used to match the assocaited files when searching.
+		///  Gets the wildcard strings used to match the assocaited files when searching.
 		/// </summary>
-		public string Wildcard { get; }
+		public IReadOnlyList<string> Wildcards { get; }
 
 		/// <summary>
 		///  Constructs the KIFINT wildcard attribute and automatically adds a .int extension if no extrension is
 		///  present.
 		/// </summary>
-		/// <param name="wildcard">The wildcard file name to used to match the files.</param>
+		/// <param name="wildcards">The wildcard file name to used to match the files.</param>
 		/// 
 		/// <exception cref="ArgumentNullException">
-		///  <paramref name="wildcard"/> is null.
+		///  <paramref name="wildcards"/> is null.
 		/// </exception>
 		/// <exception cref="ArgumentException">
-		///  <paramref name="wildcard"/> is an empty string or whitespace.
+		///  <paramref name="wildcards"/> is an empty string or whitespace.
 		/// </exception>
-		public KifintWildcardAttribute(string wildcard) {
-			if (wildcard == null)
-				throw new ArgumentNullException(nameof(wildcard));
-			if (string.IsNullOrWhiteSpace(wildcard))
-				throw new ArgumentException($"{nameof(wildcard)} cannot be empty or whitespace!", nameof(wildcard));
-			Wildcard = wildcard;
-			if (!Path.HasExtension(Wildcard))
-				Wildcard += ".int";
+		public KifintWildcardAttribute(params string[] wildcards) {
+			if (wildcards == null)
+				throw new ArgumentNullException(nameof(wildcards));
+			for (int i = 0; i < wildcards.Length; i++) {
+				if (string.IsNullOrWhiteSpace(wildcards[i]))
+					throw new ArgumentException($"{nameof(wildcards)}[{i}] cannot be empty or whitespace!",
+						$"{nameof(wildcards)}[{i}]");
+				if (!Path.HasExtension(wildcards[i]))
+					wildcards[i] += ".int";
+			}
+			Wildcards = wildcards.ToImmutableArray();
 		}
 	}
 	/// <summary>

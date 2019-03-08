@@ -1,6 +1,6 @@
 ﻿
 using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using TriggersTools.CatSystem2.Attributes;
@@ -144,7 +144,7 @@ namespace TriggersTools.CatSystem2 {
 		[KifintWildcard("update*.int")]
 		Update,
 	}
-	public class KifintTypeInfo {
+	/*public class KifintTypeInfo {
 
 		public bool IsUpdate { get; }
 
@@ -165,8 +165,8 @@ namespace TriggersTools.CatSystem2 {
 		{
 		}
 		internal KifintTypeInfo(string[] wildcards, bool isUpdate, params string[] extensions) {
-			Wildcards = Array.AsReadOnly(wildcards.Select(w => AddExtension(w)).ToArray());
-			Extensions = Array.AsReadOnly(extensions);
+			Wildcards = wildcards.Select(w => AddExtension(w).ToImmutableArray();
+			Extensions = extensions.ToImmutableArray();
 			IsUpdate = isUpdate;
 		}
 
@@ -175,5 +175,5 @@ namespace TriggersTools.CatSystem2 {
 				return Path.ChangeExtension(wildcard, ".int");
 			return wildcard;
 		}
-	}
+	}*/
 }

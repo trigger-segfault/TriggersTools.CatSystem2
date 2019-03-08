@@ -14,12 +14,12 @@ namespace TriggersTools.CatSystem2 {
 		///  Gets the HG-3 image that contains this attribute's frame.
 		/// </summary>
 		[JsonIgnore]
-		public Hg3Image Hg3Image => Hg3Frame?.Hg3Image;
+		public HgxImage Hg3Image => Hg3Frame?.HgxImage;
 		/// <summary>
 		///  Gets the HG-3 frame that contains this attribute.
 		/// </summary>
 		[JsonIgnore]
-		public Hg3Frame Hg3Frame { get; internal set; }
+		public HgxFrame Hg3Frame { get; internal set; }
 
 		/// <summary>
 		///  Gets the numeric identifier of the attribute.
@@ -67,7 +67,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <param name="id">The identifier for the attribute.</param>
 		/// <param name="ats">The HG3ATS struct containing attribute information.</param>
 		/// <param name="hg3Frame">The HG-3 frame containing this attribute.</param>
-		internal Hg3Attribute(int id, HG3ATS ats, Hg3Frame hg3Frame) {
+		internal Hg3Attribute(int id, HG3ATS ats, HgxFrame hg3Frame) {
 			Hg3Frame = hg3Frame;
 			Id = id;
 			X = ats.X;

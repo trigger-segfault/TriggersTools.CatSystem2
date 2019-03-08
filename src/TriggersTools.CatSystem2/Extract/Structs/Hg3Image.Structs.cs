@@ -3,62 +3,7 @@ using System.Text.RegularExpressions;
 using TriggersTools.SharpUtils.Text;
 
 namespace TriggersTools.CatSystem2.Structs {
-	/// <summary>
-	///  The header for an HG-2 or HG-3 file. Which is used to identify the header size as well as the signature.
-	/// </summary>
-	[StructLayout(LayoutKind.Sequential, Pack = 1, Size = 12, CharSet = CharSet.Ansi)]
-	internal struct HGXHDR {
-		#region Constants
-
-		/// <summary>
-		///  The expected value of <see cref="Signature"/> for an HG-2 image.
-		/// </summary>
-		public const string ExpectedHg2Signature = "HG-2";
-		/// <summary>
-		///  The expected value of <see cref="Signature"/> for an HG-3 image.
-		/// </summary>
-		public const string ExpectedHg3Signature = "HG-3";
-
-		#endregion
-
-		#region Fields
-
-		/// <summary>
-		///  The raw character array for the header's signature. This should be "HG-3".
-		/// </summary>
-		[MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.U1, SizeConst = 4)]
-		public char[] SignatureRaw; // "HG-3"
-		/// <summary>
-		///  The size of the HG-3 header, including the signature. Should always be 12.
-		/// </summary>
-		public int HeaderSize;
-		/// <summary>
-		///  HG-3: 0x300.<para/>
-		///  HG-2: 0x25 = 88 bytes (full header), 0x20 = 80 bytes (truncated)
-		/// </summary>
-		public int Type;
-
-		#endregion
-
-		#region Properties
-
-		/// <summary>
-		///  Gets the header's signature from the null-terminated character array.
-		/// </summary>
-		public string Signature => SignatureRaw.ToNullTerminatedString();
-
-		#endregion
-
-		#region ToString Override
-
-		/// <summary>
-		///  Gets the string representation of the HG-3 header.
-		/// </summary>
-		/// <returns>The string representation of the HG-3 header.</returns>
-		public override string ToString() => $"HGXHDR \"{Signature}\"";
-
-		#endregion
-	}
+	
 	/// <summary>
 	///  The frame header structure for an HG-3 file. Which is used to get the additional offset for the next entry and
 	///  the identifier of the current entry.
@@ -213,26 +158,24 @@ namespace TriggersTools.CatSystem2.Structs {
 		/// <summary>
 		///  The regex used to match tag signatures of this type.
 		/// </summary>
-		private static readonly Regex SignatureRegex = new Regex(@"img(?'num'\d{4})");
+		private static readonly Regex SignatureRegex = new Regex(@"img(?'id'\d{4,})");
 
 		#endregion
 
 		#region Fields
-
-		//[FieldOffset(0)]
+		
+		/// <summary>
+		///  An unknown 4-byte value.
+		/// </summary>
 		public int Unknown;
-		//[FieldOffset(4)]
+		/// <summary>
+		///  This always seems to be the height of the image. The purpose of this field is unknown.
+		/// </summary>
 		public int Height;
-		//[FieldOffset(8)]
+		/// <summary>
+		///  The image compression data.
+		/// </summary>
 		public HGXIMGDATA Data;
-		/*[FieldOffset(8)]
-		public int DataLength;
-		[FieldOffset(12)]
-		public int OriginalDataLength;
-		[FieldOffset(16)]
-		public int CmdLength;
-		[FieldOffset(20)]
-		public int OriginalCmdLength;*/
 
 		#endregion
 
@@ -250,14 +193,14 @@ namespace TriggersTools.CatSystem2.Structs {
 		///  Gets if the tag's signature matches that if this structure.
 		/// </summary>
 		/// <param name="tagSignature">The <see cref="HG3TAG.Signature"/>.</param>
-		/// <param name="number">The output number assigned to this tag.</param>
+		/// <param name="imgId">The output number assigned to this tag.</param>
 		/// <returns>True if the signatures match.</returns>
-		public static bool HasTagSignature(string tagSignature, out int number) {
+		public static bool HasTagSignature(string tagSignature, out int imgId) {
 			Match match = SignatureRegex.Match(tagSignature);
 			if (match.Success)
-				number = int.Parse(match.Groups["num"].Value);
+				imgId = int.Parse(match.Groups["id"].Value);
 			else
-				number = 0;
+				imgId = 0;
 			return match.Success;
 		}
 
@@ -269,18 +212,7 @@ namespace TriggersTools.CatSystem2.Structs {
 		///  Gets the string representation of the standard HG-3 image.
 		/// </summary>
 		/// <returns>The string representation of the standard HG-3 image.</returns>
-		public override string ToString() => $"img#### Data={Data.DataLength} Cmd={Data.CmdLength}";
-
-		#endregion
-	}
-	[StructLayout(LayoutKind.Sequential, Pack = 1, Size = 16)]
-	internal struct HGXIMGDATA {
-		#region Fields
-
-		public int DataLength;
-		public int OriginalDataLength;
-		public int CmdLength;
-		public int OriginalCmdLength;
+		public override string ToString() => $"img#### Data={Data.CompressedDataLength} Cmd={Data.CompressedCmdLength}";
 
 		#endregion
 	}
@@ -294,11 +226,11 @@ namespace TriggersTools.CatSystem2.Structs {
 		/// <summary>
 		///  The compressed length of the alpha data.
 		/// </summary>
-		public int Length;
+		public int CompressedLength;
 		/// <summary>
 		///  The decompressed length of the alpha data.
 		/// </summary>
-		public int OriginalLength;
+		public int DecompressedLength;
 
 		#endregion
 
@@ -321,7 +253,7 @@ namespace TriggersTools.CatSystem2.Structs {
 		///  Gets the string representation of the HG-3 AL image.
 		/// </summary>
 		/// <returns>The string representation of the HG-3 AL image.</returns>
-		public override string ToString() => $"img_al Length={Length} OriginalLength={OriginalLength}";
+		public override string ToString() => $"img_al Length={CompressedLength} OriginalLength={DecompressedLength}";
 
 		#endregion
 	}
@@ -445,7 +377,7 @@ namespace TriggersTools.CatSystem2.Structs {
 		/// <summary>
 		///  The regex used to match tag signatures of this type.
 		/// </summary>
-		private static readonly Regex SignatureRegex = new Regex(@"ats(?'num'\d{4})");
+		private static readonly Regex SignatureRegex = new Regex(@"ats(?'id'\d{4,})");
 
 		#endregion
 
@@ -488,14 +420,14 @@ namespace TriggersTools.CatSystem2.Structs {
 		///  Gets if the tag's signature matches that if this structure.
 		/// </summary>
 		/// <param name="tagSignature">The <see cref="HG3TAG.Signature"/>.</param>
-		/// <param name="number">The output number assigned to this tag.</param>
+		/// <param name="atsId">The output number assigned to this tag.</param>
 		/// <returns>True if the signatures match.</returns>
-		public static bool HasTagSignature(string tagSignature, out int number) {
+		public static bool HasTagSignature(string tagSignature, out int atsId) {
 			Match match = SignatureRegex.Match(tagSignature);
 			if (match.Success)
-				number = int.Parse(match.Groups["num"].Value);
+				atsId = int.Parse(match.Groups["id"].Value);
 			else
-				number = 0;
+				atsId = 0;
 			return match.Success;
 		}
 

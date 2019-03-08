@@ -96,6 +96,18 @@ namespace TriggersTools.CatSystem2 {
 			set => CompilerInstance.FesPath = value;
 		}
 
+		/// <summary>
+		///  Gets or sets if HG-X images are processed natively or in managed code.
+		///  x86: ~43% slower, x64: ~15% slower.<para/>
+		///  Also take into account that processing images is only a fraction of the time spent exporting HG-X files.
+		/// </summary>
+		public static bool NativeHgx { get; set; }
+		/// <summary>
+		///  Gets or sets if processing HG-X images are speed tested. This disables saving of images and times a
+		///  stopwatch during image processing.
+		/// </summary>
+		public static bool SpeedTestHgx { get; set; }
+
 		#endregion
 
 		#region CompileAnimation

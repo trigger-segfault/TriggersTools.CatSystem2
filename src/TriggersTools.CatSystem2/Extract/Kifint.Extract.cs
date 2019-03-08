@@ -6,7 +6,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using TriggersTools.CatSystem2.Attributes;
-using TriggersTools.CatSystem2.Native;
 using TriggersTools.CatSystem2.Structs;
 using TriggersTools.CatSystem2.Utils;
 using TriggersTools.SharpUtils.Enums;
@@ -14,13 +13,84 @@ using TriggersTools.SharpUtils.Exceptions;
 using TriggersTools.SharpUtils.IO;
 
 namespace TriggersTools.CatSystem2 {
-	partial class Kifint {
-		#region Constants
+	partial class KifintArchive {
+		#region LoadArchive
 
 		/// <summary>
-		///  Gets the file name used as a decryption key.
+		///  Loads and decrypts the KIFINT archive entries using the V_CODE2.<para/>
+		///  Using this will initialize with <see cref="KifintType.Unknown"/>.
 		/// </summary>
-		public const string KeyFileName = "__key__.dat";
+		/// <param name="kifintPath">The path to the KIFINT archive to decrypt.</param>
+		/// <param name="vcode2">The V_CODE2 key obtained from the exe, used to decrypt the file names.</param>
+		/// <param name="callback">The optional callback for progress made during loading.</param>
+		/// <returns>The <see cref="KifintArchive"/> with all of the loaded entries.</returns>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="kifintPath"/> or <paramref name="vcode2"/> is null.
+		/// </exception>
+		public static KifintArchive LoadArchive(string kifintPath, string vcode2,
+			KifintProgressCallback callback = null)
+		{
+			if (kifintPath == null)
+				throw new ArgumentNullException(nameof(kifintPath));
+			if (vcode2 == null)
+				throw new ArgumentNullException(nameof(vcode2));
+			KifintType type = KifintType.Unknown;
+			KifintArchive archive;
+			KifintProgressArgs progress = new KifintProgressArgs {
+				ArchiveType = type,
+				ArchiveIndex = 0,
+				ArchiveCount = 1,
+			};
+			
+			progress.ArchiveName = Path.GetFileName(kifintPath);
+			using (Stream stream = File.OpenRead(kifintPath))
+				archive = LoadLookup(type, stream, kifintPath, vcode2, progress, callback);
+			progress.ArchiveIndex++;
+
+			progress.EntryName = null;
+			progress.EntryIndex = 0;
+			progress.EntryCount = 0;
+			callback?.Invoke(progress);
+			return archive;
+		}
+		/// <summary>
+		///  Loads and decrypts the KIFINT archive entries using the V_CODE2.<para/>
+		///  Using this will initialize with the specified KIFINT archive type.
+		/// </summary>
+		/// <param name="kifintPath">The path to the KIFINT archive to decrypt.</param>
+		/// <param name="type">The type of archive to create.</param>
+		/// <param name="vcode2">The V_CODE2 key obtained from the exe, used to decrypt the file names.</param>
+		/// <param name="callback">The optional callback for progress made during loading.</param>
+		/// <returns>The <see cref="KifintArchive"/> with all of the loaded entries.</returns>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="kifintPath"/> or <paramref name="vcode2"/> is null.
+		/// </exception>
+		public static KifintArchive LoadArchive(string kifintPath, KifintType type, string vcode2,
+			KifintProgressCallback callback = null) {
+			if (kifintPath == null)
+				throw new ArgumentNullException(nameof(kifintPath));
+			if (vcode2 == null)
+				throw new ArgumentNullException(nameof(vcode2));
+			KifintArchive archive;
+			KifintProgressArgs progress = new KifintProgressArgs {
+				ArchiveType = type,
+				ArchiveIndex = 0,
+				ArchiveCount = 1,
+			};
+
+			progress.ArchiveName = Path.GetFileName(kifintPath);
+			using (Stream stream = File.OpenRead(kifintPath))
+				archive = LoadLookup(type, stream, kifintPath, vcode2, progress, callback);
+			progress.ArchiveIndex++;
+
+			progress.EntryName = null;
+			progress.EntryIndex = 0;
+			progress.EntryCount = 0;
+			callback?.Invoke(progress);
+			return archive;
+		}
 
 		#endregion
 
@@ -40,7 +110,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="wildcard"/>, <paramref name="installDir"/>, or <paramref name="vcode2"/> is null.
 		/// </exception>
-		public static KifintLookup DecryptLookup(string wildcard, string installDir, string vcode2,
+		public static KifintLookup LoadLookup(string wildcard, string installDir, string vcode2,
 			KifintProgressCallback callback = null)
 		{
 			if (vcode2 == null)
@@ -56,7 +126,7 @@ namespace TriggersTools.CatSystem2 {
 			foreach (string kifintPath in files) {
 				progress.ArchiveName = Path.GetFileName(kifintPath);
 				using (Stream stream = File.OpenRead(kifintPath))
-					lookup.Merge(DecryptLookup(type, stream, kifintPath, vcode2, progress, callback));
+					lookup.Merge(LoadLookup(type, stream, kifintPath, vcode2, progress, callback));
 				progress.ArchiveIndex++;
 			}
 			progress.EntryName = null;
@@ -81,7 +151,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <exception cref="ArgumentException">
 		///  <paramref name="type"/> is <see cref="KifintType.Unknown"/>.
 		/// </exception>
-		public static KifintLookup DecryptLookup(KifintType type, string installDir, string vcode2,
+		public static KifintLookup LoadLookup(KifintType type, string installDir, string vcode2,
 			KifintProgressCallback callback = null)
 		{
 			if (vcode2 == null)
@@ -89,17 +159,22 @@ namespace TriggersTools.CatSystem2 {
 			if (type == KifintType.Unknown)
 				throw new ArgumentException($"{nameof(type)} cannot be {nameof(KifintType.Unknown)}!", nameof(type));
 			KifintLookup lookup = new KifintLookup(type);
-			string wildcard = EnumInfo.GetAttribute<KifintType, KifintWildcardAttribute>(type).Wildcard;
-			string[] files = Directory.GetFiles(installDir, wildcard);
+			var files = Enumerable.Empty<string>();
+			var wildcardAttr = EnumInfo.GetAttribute<KifintType, KifintWildcardAttribute>(type);
+			foreach (string wildcard in wildcardAttr.Wildcards) {
+				files = files.Concat(Directory.GetFiles(installDir, wildcard));
+			}
+			//string wildcard = EnumInfo.GetAttribute<KifintType, KifintWildcardAttribute>(type).Wildcard;
+			//string[] files = Directory.GetFiles(installDir, wildcard);
 			KifintProgressArgs progress = new KifintProgressArgs {
 				ArchiveType = type,
 				ArchiveIndex = 0,
-				ArchiveCount = files.Length,
+				ArchiveCount = files.Count(),
 			};
 			foreach (string kifintPath in files) {
 				progress.ArchiveName = Path.GetFileName(kifintPath);
 				using (Stream stream = File.OpenRead(kifintPath))
-					lookup.Merge(DecryptLookup(type, stream, kifintPath, vcode2, progress, callback));
+					lookup.Merge(LoadLookup(type, stream, kifintPath, vcode2, progress, callback));
 				progress.ArchiveIndex++;
 			}
 			progress.EntryName = null;
@@ -153,12 +228,17 @@ namespace TriggersTools.CatSystem2 {
 				throw new ArgumentNullException(nameof(vcode2));
 			if (type == KifintType.Unknown)
 				throw new ArgumentException($"{nameof(type)} cannot be {nameof(KifintType.Unknown)}!", nameof(type));
-			string wildcard = EnumInfo.GetAttribute<KifintType, KifintWildcardAttribute>(type).Wildcard;
-			string[] files = Directory.GetFiles(installDir, wildcard);
+			var files = Enumerable.Empty<string>();
+			var wildcardAttr = EnumInfo.GetAttribute<KifintType, KifintWildcardAttribute>(type);
+			foreach (string wildcard in wildcardAttr.Wildcards) {
+				files = files.Concat(Directory.GetFiles(installDir, wildcard));
+			}
+			//string wildcard = EnumInfo.GetAttribute<KifintType, KifintWildcardAttribute>(type).Wildcard;
+			//string[] files = Directory.GetFiles(installDir, wildcard);
 			KifintProgressArgs progress = new KifintProgressArgs {
 				ArchiveType = type,
 				ArchiveIndex = 0,
-				ArchiveCount = files.Length,
+				ArchiveCount = files.Count(),
 			};
 			foreach (string kifintPath in files) {
 				progress.ArchiveName = Path.GetFileName(kifintPath);
@@ -188,11 +268,15 @@ namespace TriggersTools.CatSystem2 {
 		public static void RestoreEncryptedArchives(KifintType type, string installDir) {
 			if (type == KifintType.Unknown)
 				throw new ArgumentException($"{nameof(type)} cannot be {nameof(KifintType.Unknown)}!", nameof(type));
-			string wildcard = EnumInfo.GetAttribute<KifintType, KifintWildcardAttribute>(type).Wildcard;
 			string backupDir = Path.Combine(installDir, "intbackup");
 			if (!Directory.Exists(backupDir))
 				return;
-			string[] files = Directory.GetFiles(backupDir, wildcard);
+			var files = Enumerable.Empty<string>();
+			var wildcardAttr = EnumInfo.GetAttribute<KifintType, KifintWildcardAttribute>(type);
+			foreach (string wildcard in wildcardAttr.Wildcards) {
+				files = files.Concat(Directory.GetFiles(installDir, wildcard));
+			}
+			//string[] files = Directory.GetFiles(backupDir, wildcard);
 			foreach (string kifintBackup in files) {
 				string kifintPath = Path.Combine(installDir, Path.GetFileName(kifintBackup));
 				if (File.Exists(kifintBackup) && File.Exists(kifintPath)) {

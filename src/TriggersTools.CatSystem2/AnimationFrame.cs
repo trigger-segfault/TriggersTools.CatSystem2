@@ -5,6 +5,7 @@ using TriggersTools.CatSystem2.Attributes;
 using TriggersTools.CatSystem2.Structs;
 using Newtonsoft.Json;
 using TriggersTools.SharpUtils.Enums;
+using System.Collections.Immutable;
 
 namespace TriggersTools.CatSystem2 {
 	/// <summary>
@@ -256,10 +257,9 @@ namespace TriggersTools.CatSystem2 {
 		internal AnimationFrame(ANMFRAME frame) {
 			Type = (AnimationFrameType) frame.Type;
 			int count = Type.GetParameterCount();
-			AnimationParameter[] parameters = frame.Parameters.Take(count)
-															  .Select(p => new AnimationParameter(p))
-															  .ToArray();
-			Parameters = Array.AsReadOnly(parameters);
+			Parameters = frame.Parameters.Take(count)
+							  .Select(p => new AnimationParameter(p))
+							  .ToImmutableArray();
 		}
 
 		#endregion

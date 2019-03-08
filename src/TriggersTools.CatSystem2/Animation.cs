@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using TriggersTools.CatSystem2.Structs;
 using Newtonsoft.Json;
+using System.Collections.Immutable;
 
 namespace TriggersTools.CatSystem2 {
 	/// <summary>
@@ -62,7 +63,10 @@ namespace TriggersTools.CatSystem2 {
 		private Animation(string fileName, ANMHDR hdr, ANMFRAME[] frames) {
 			FileName = Path.GetFileName(fileName);
 			Unknown = hdr.Unknown;
-			Frames = Array.AsReadOnly(frames.Select(f => new AnimationFrame(f)).ToArray());
+			AnimationFrame[] newFrames = new AnimationFrame[frames.Length];
+			for (int i = 0; i < frames.Length; i++)
+				newFrames[i] = new AnimationFrame(frames[i]);
+			Frames = newFrames.ToImmutableArray();
 		}
 
 		#endregion

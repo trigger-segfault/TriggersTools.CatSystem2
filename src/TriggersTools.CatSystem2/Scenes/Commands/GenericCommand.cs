@@ -36,7 +36,7 @@ namespace TriggersTools.CatSystem2.Scenes.Commands {
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="content"/> is null.
 		/// </exception>
-		public GenericCommand(string content) : base(content, commandNames) { } 
+		public GenericCommand(string content) : base(content, commandNames) { }
 		/*/// <summary>
 		///  Constructs the CatScene command from an existing cat string entry.
 		/// </summary>
@@ -50,7 +50,7 @@ namespace TriggersTools.CatSystem2.Scenes.Commands {
 				throw new ArgumentException($"{nameof(catString)} is not of type {nameof(SceneLineType.Command)}!");
 			Content = CatString.Content;
 			CatString = catString;
-			Parameters = Array.AsReadOnly(catString.Content.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+			Parameters = catString.Content.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToImmutableArray();
 		}*/
 
 		#endregion

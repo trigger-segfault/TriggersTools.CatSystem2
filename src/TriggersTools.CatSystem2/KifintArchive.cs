@@ -7,12 +7,13 @@ using System.Linq;
 using TriggersTools.CatSystem2.Structs;
 using Newtonsoft.Json;
 using TriggersTools.CatSystem2.Utils;
+using System.Collections.Immutable;
 
 namespace TriggersTools.CatSystem2 {
 	/// <summary>
 	///  A loaded and cached KIFINT archive.
 	/// </summary>
-	public sealed partial class Kifint : IReadOnlyCollection<KifintEntry> {
+	public sealed partial class KifintArchive : IReadOnlyCollection<KifintEntry> {
 		#region Fields
 
 		/// <summary>
@@ -64,7 +65,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <summary>
 		///  Constructs an unassigned KIFINT archive for use with <see cref="Read"/>.
 		/// </summary>
-		private Kifint() { }
+		private KifintArchive() { }
 		/// <summary>
 		///  Constructs a cached KIFINT archive with the specified path, entries, and file key.
 		/// </summary>
@@ -72,7 +73,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <param name="kifEntries">The array of unobfuscated KIFENTRIES inside the KIFINT.</param>
 		/// <param name="decrypt">True if the file key is required.</param>
 		/// <param name="fileKey">The file key when <paramref name="decrypt"/> is true.</param>
-		private Kifint(string kifintPath, KIFENTRY[] kifEntries, bool decrypt, uint fileKey, KifintType type,
+		private KifintArchive(string kifintPath, KIFENTRY[] kifEntries, bool decrypt, uint fileKey, KifintType type,
 			Blowfish blowfish)
 		{
 			FilePath = kifintPath;
@@ -87,7 +88,7 @@ namespace TriggersTools.CatSystem2 {
 					entries.Add(fileName, new KifintEntry(fileName, kifEntry, this));
 				}
 			}
-			Entries = new ReadOnlyDictionary<string, KifintEntry>(entries);
+			Entries = entries.ToImmutableDictionary();
 			this.blowfish = blowfish;
 		}
 
@@ -198,8 +199,8 @@ namespace TriggersTools.CatSystem2 {
 		/// <param name="version">The current version being read.</param>
 		/// <param name="installDir">The installation directory where the archive is located.</param>
 		/// <returns>The loaded cached KIFINT archive.</returns>
-		internal static Kifint Read(BinaryReader reader, int version, string installDir, KifintType type) {
-			Kifint kifint = new Kifint {
+		internal static KifintArchive Read(BinaryReader reader, int version, string installDir, KifintType type) {
+			KifintArchive kifint = new KifintArchive {
 				FilePath = Path.Combine(installDir, reader.ReadString()),
 				ArchiveType = type,
 			};
@@ -214,7 +215,7 @@ namespace TriggersTools.CatSystem2 {
 				KifintEntry entry = KifintEntry.Read(reader, version, kifint);
 				entries.Add(entry.FileName, entry);
 			}
-			kifint.Entries = new ReadOnlyDictionary<string, KifintEntry>(entries);
+			kifint.Entries = entries.ToImmutableDictionary();
 			return kifint;
 		}
 

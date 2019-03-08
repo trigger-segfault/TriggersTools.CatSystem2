@@ -38,6 +38,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.2.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
@@ -46,6 +47,7 @@
     <Compile Include="Collections\DisposableArray.cs" />
     <Compile Include="Collections\DisposableCollection.cs" />
     <Compile Include="Collections\ObservableArray.cs" />
+    <Compile Include="Enums\EnumExtensions.cs" />
     <Compile Include="Enums\EnumFieldInfo.cs" />
     <Compile Include="Enums\EnumInfo.cs" />
     <Compile Include="Enums\EnumInfo.Static.cs" />

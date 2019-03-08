@@ -5,25 +5,32 @@ using TriggersTools.CatSystem2.Structs;
 using Newtonsoft.Json;
 using System.Linq;
 using TriggersTools.SharpUtils.Collections;
+using TriggersTools.SharpUtils.Enums;
+using System.Collections.Immutable;
 
 namespace TriggersTools.CatSystem2 {
 	/// <summary>
-	///  A single frame for an HG-3 image.
+	///  A single frame for an HG-X image.
 	/// </summary>
 	[JsonObject]
-	public sealed class Hg3Frame : IEnumerable<Hg3Attribute> {
+	public sealed class HgxFrame : IEnumerable<Hg3Attribute> {
 		#region Fields
 
 		/// <summary>
-		///  Gets the HG-3 image that contains this frame.
+		///  Gets the HG-X image that contains this frame.
 		/// </summary>
 		[JsonIgnore]
-		public Hg3Image Hg3Image { get; internal set; }
+		public HgxImage HgxImage { get; internal set; }
+		/// <summary>
+		///  Gets the HG-X type of the image.
+		/// </summary>
+		[JsonIgnore]
+		public HgxType HgxType => HgxImage?.HgxType ?? HgxType.None;
 		/// <summary>
 		///  Gets the file name of the image with the .hg3 extension.
 		/// </summary>
 		[JsonIgnore]
-		public string FileName => Hg3Image.FileName;
+		public string FileName => HgxImage.FileName;
 
 		/// <summary>
 		///  Gets the numeric identifier for the frame.
@@ -170,19 +177,19 @@ namespace TriggersTools.CatSystem2 {
 		#region Constructors
 
 		/// <summary>
-		///  Constructs an unassigned HG-3 frame for use with loading via <see cref="Newtonsoft.Json"/>.
+		///  Constructs an unassigned HG-X frame for use with loading via <see cref="Newtonsoft.Json"/>.
 		/// </summary>
-		public Hg3Frame() { }
+		public HgxFrame() { }
 		/// <summary>
 		///  Constructs an HG-3 frame with the specified frame info.
 		/// </summary>
 		/// <param name="frameInfo">The frame information containing all caught HG-3 tags.</param>
 		/// <param name="hg3Image">The HG-3 image containing this frame.</param>
-		internal Hg3Frame(Hg3FrameInfo frameInfo, Hg3Image hg3Image) {
-			Hg3Image = hg3Image;
+		internal HgxFrame(Hg3FrameInfo frameInfo, HgxImage hg3Image) {
+			HgxImage = hg3Image;
 			Id = frameInfo.Header.Id;
-			var attributes = frameInfo.Ats.Select(pair => new Hg3Attribute(pair.Key, pair.Value, this));
-			Attributes = Array.AsReadOnly(attributes.ToArray());
+			Attributes = frameInfo.Ats.Select(pair => new Hg3Attribute(pair.Key, pair.Value, this))
+									  .ToImmutableArray();
 			HG3STDINFO stdInfo = frameInfo.StdInfo;
 			Width = stdInfo.Width;
 			Height = stdInfo.Height;
@@ -196,6 +203,25 @@ namespace TriggersTools.CatSystem2 {
 			BaseY = stdInfo.BaseY;
 			Type = frameInfo.CpType?.Type;
 			Mode = frameInfo.ImgMode?.Mode;
+		}
+		internal HgxFrame(Hg2FrameInfo frameInfo, HgxImage hg3Image) {
+			HgxImage = hg3Image;
+			Attributes = Array.Empty<Hg3Attribute>();
+			HG2IMG img = frameInfo.Img;
+			HG2IMG_BASE? imgEx = frameInfo.ImgBase;
+			Id = img.Id;
+			Width = img.Width;
+			Height = img.Height;
+			TotalWidth = img.TotalWidth;
+			TotalHeight = img.TotalHeight;
+			OffsetX = img.OffsetX;
+			OffsetY = img.OffsetY;
+			DepthBits = img.DepthBits;
+			IsTransparent = img.IsTransparent != 0;
+			BaseX = imgEx?.BaseX ?? 0;
+			BaseY = imgEx?.BaseY ?? 0;
+			Type = null;
+			Mode = null;
 		}
 
 		#endregion
@@ -246,8 +272,8 @@ namespace TriggersTools.CatSystem2 {
 		/// <summary>
 		///  Gets the index of the attribute.
 		/// </summary>
-		/// <param name="attribute">The HG-3 attribute to get the index of.</param>
-		/// <returns>The index of the located HG-3 attribute.-or- -1 if the attribute was not found.</returns>
+		/// <param name="attribute">The HG-X attribute to get the index of.</param>
+		/// <returns>The index of the located HG-X attribute.-or- -1 if the attribute was not found.</returns>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="attribute"/> is null.
@@ -266,24 +292,24 @@ namespace TriggersTools.CatSystem2 {
 		///  Gets the file name for the PNG image with the specified image and frame indecies.
 		/// </summary>
 		/// <param name="forcePostfix">
-		///  True if the animation postfix will always be displayed even when <see cref="Hg3Image.IsAnimation"/> is
+		///  True if the animation postfix will always be displayed even when <see cref="HgxImage.IsAnimation"/> is
 		///  false.
 		/// </param>
 		/// <returns>The file name of the frame.</returns>
 		public string GetFrameFileName(bool forcePostfix) {
-			return Hg3Image.GetFrameFileName(Id, forcePostfix);
+			return HgxImage.GetFrameFileName(Id, forcePostfix);
 		}
 		/// <summary>
 		///  Gets the file path for the PNG image with the specified image and frame indecies.
 		/// </summary>
-		/// <param name="directory">The directory of the <see cref="CatSystem2.Hg3Image"/> images.</param>
+		/// <param name="directory">The directory of the <see cref="CatSystem2.HgxImage"/> images.</param>
 		/// <param name="forcePostfix">
-		///  True if the animation postfix will always be displayed even when <see cref="Hg3Image.IsAnimation"/> is
+		///  True if the animation postfix will always be displayed even when <see cref="HgxImage.IsAnimation"/> is
 		///  false.
 		/// </param>
 		/// <returns>The file path of the frame.</returns>
 		public string GetFrameFilePath(string directory, bool forcePostfix) {
-			return Hg3Image.GetFrameFilePath(directory, Id, forcePostfix);
+			return HgxImage.GetFrameFilePath(directory, Id, forcePostfix);
 		}
 
 		#endregion
@@ -291,9 +317,9 @@ namespace TriggersTools.CatSystem2 {
 		#region IEnumerable Implementation
 
 		/// <summary>
-		///  Gets the enumerator for the HG-3 frames's attributes.
+		///  Gets the enumerator for the HG-X frames's attributes.
 		/// </summary>
-		/// <returns>The HG-3 attribute enumerator.</returns>
+		/// <returns>The HG-X attribute enumerator.</returns>
 		public IEnumerator<Hg3Attribute> GetEnumerator() => Attributes.GetEnumerator();
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
@@ -302,10 +328,12 @@ namespace TriggersTools.CatSystem2 {
 		#region ToString Override
 
 		/// <summary>
-		///  Gets the string representation of the HG-3.
+		///  Gets the string representation of the HG-X frame.
 		/// </summary>
-		/// <returns>The string representation of the HG-3.</returns>
-		public override string ToString() => $"HG-3 Frame {Id:D4} {Width}x{Height} {BaseX},{BaseY}";
+		/// <returns>The string representation of the HG-X frame.</returns>
+		public override string ToString() {
+			return $"{HgxType.ToDescription() ?? "HG-X"} Frame {Id:D4} {Width}x{Height} {BaseX},{BaseY}";
+		}
 
 		#endregion
 	}

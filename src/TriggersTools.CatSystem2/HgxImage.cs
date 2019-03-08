@@ -6,110 +6,146 @@ using System.IO;
 using System.Linq;
 using TriggersTools.SharpUtils.Collections;
 using System.Collections;
+using TriggersTools.SharpUtils.Enums;
+using System.Collections.Immutable;
+using TriggersTools.CatSystem2.Json;
 
 namespace TriggersTools.CatSystem2 {
 	/// <summary>
-	///  Dimensions and other information extracted from an HG-3 image.
+	///  Dimensions and other information extracted from an HG-2 or HG-3 image.
 	/// </summary>
 	[JsonObject]
-	public sealed partial class Hg3Image : IEnumerable<Hg3Frame> {
+	public sealed partial class HgxImage : IEnumerable<HgxFrame> {
 		#region Constants
 
 		/// <summary>
-		///  The current file version for the HG-3.
+		///  The current file version for the HG-X json format.
 		/// </summary>
-		public const int CurrentVersion = 3;
+		public const int CurrentVersion = 4;
 
 		#endregion
 
 		#region Fields
 
 		/// <summary>
-		///  Gets the file version of the loaded HG-3.
+		///  Gets the file version of the loaded HG-X image.
 		/// </summary>
 		[JsonProperty("version")]
 		public int Version { get; private set; }
 
 		/// <summary>
-		///  Gets the file name of the HG-3 file with the .hg3 extension.
+		///  Gets the file name of the HG-X file with the .hg2 or .hg3 extension.
 		/// </summary>
 		[JsonProperty("file_name")]
 		public string FileName { get; private set; }
 		/// <summary>
-		///  Unknown 4-byte value. Always seems to be 768
+		///  Unknown 4-byte value. Always seems to be 0x20 or 0x25 for HG-2, and 0x300 for HG-3.
 		/// </summary>
-		[JsonProperty("unknown")]
-		public int Unknown { get; private set; }
+		[JsonProperty("type")]
+		public int Type { get; private set; }
 		/// <summary>
-		///  Gets if the HG-3 frames were saved while expended.
+		///  Gets if the HG-X frames were saved with <see cref="HgxOptions.Expand"/>.
 		/// </summary>
 		[JsonProperty("expanded")]
 		public bool Expanded { get; private set; }
 		/// <summary>
-		///  Gets the list of frames in the HG-3 image.
+		///  Gets if the HG-X frames were saved with <see cref="HgxOptions.Expand"/>.
+		/// </summary>
+		[JsonProperty("flipped")]
+		public bool Flipped { get; private set; }
+		/// <summary>
+		///  Gets the HG-X type of the image.
+		/// </summary>
+		[JsonProperty("hgx")]
+		[JsonConverter(typeof(JsonStringEnumConverter))]
+		public HgxType HgxType { get; private set; }
+		/// <summary>
+		///  Gets the list of frames in the HG-X image.
 		/// </summary>
 		[JsonIgnore]
-		//private IReadOnlyList<Hg3Frame> frames;
-		private IReadOnlyList<Hg3Frame> frames;
+		private IReadOnlyList<HgxFrame> frames;
 
 		#endregion
 
 		#region Properties
 
 		/// <summary>
-		///  Gets the list of frames associated with this HG-3 file.
+		///  Gets the list of frames associated with this HG-X file.
 		/// </summary>
 		[JsonProperty("frames")]
-		public IReadOnlyList<Hg3Frame> Frames {
+		public IReadOnlyList<HgxFrame> Frames {
 			get => frames;
 			private set {
 				frames = value;
 				for (int i = 0; i < frames.Count; i++)
-					frames[i].Hg3Image = this;
+					frames[i].HgxImage = this;
 			}
 		}
 		/// <summary>
-		///  Gets if this HG-3 has multiple frames. This also means the file name will have a +###[+###] at the end.
+		///  Gets if this HG-X has multiple frames. This also means the file name will have a +#### at the end.
 		/// </summary>
 		[JsonIgnore]
 		public bool IsAnimation => Frames.Count != 1;
 		/// <summary>
-		///  Gets the number of HG-3 frames in <see cref="Frames"/>.
+		///  Gets the number of HG-X frames in <see cref="Frames"/>.
 		/// </summary>
 		[JsonIgnore]
 		public int Count => Frames.Count;
 		/// <summary>
-		///  Gets the name of the file for loading the <see cref="Hg3Image"/> data.
+		///  Gets the name of the file for loading the <see cref="HgxImage"/> data.
 		/// </summary>
 		[JsonIgnore]
-		public string JsonFileName => Hg3Image.GetJsonFileName(FileName);
-
+		public string JsonFileName => HgxImage.GetJsonFileName(FileName);
+		
 		#endregion
 		
 		#region Constructors
 
 		/// <summary>
-		///  Constructs an unassigned HG-3 image for use with loading via <see cref="Newtonsoft.Json"/>.
+		///  Constructs an unassigned HG-X image for use with loading via <see cref="Newtonsoft.Json"/>.
 		/// </summary>
-		public Hg3Image() { }
+		public HgxImage() { }
 		/// <summary>
 		///  Constructs an HG-3 image with the specified file name, image index, <see cref="HG3STDINFO"/>, and
 		///  bitmap frames.
 		/// </summary>
 		/// <param name="fileName">The file name of the HG-3 image with the .hg3 extension.</param>
-		/// <param name="hdr">The HG3HDR struct containing extra information on the HG-3.</param>
-		/// <param name="frameInfos">The frame information classes to construct the frames from.</param>
+		/// <param name="hdr">The HGXHDR struct containing extra information on the HG-3.</param>
+		/// <param name="frameInfos">The HG-3 frame information classes to construct the frames from.</param>
 		/// <param name="expand">True if the images were extracted while <paramref name="expand"/> was true.</param>
-		internal Hg3Image(string fileName, HGXHDR hdr, Hg3FrameInfo[] frameInfos, bool expand) {
+		internal HgxImage(string fileName, HGXHDR hdr, Hg3FrameInfo[] frameInfos, HgxOptions options) {
 			Version = CurrentVersion;
 			FileName = fileName;
-			Unknown = hdr.Type;
+			Type = hdr.Type;
+			HgxType = HgxType.Hg3;
 
-			Expanded = expand;
-			Hg3Frame[] frames = new Hg3Frame[frameInfos.Length];
+			Expanded = options.HasFlag(HgxOptions.Expand);
+			Flipped = options.HasFlag(HgxOptions.Flip);
+			HgxFrame[] frames = new HgxFrame[frameInfos.Length];
 			for (int i = 0; i < frames.Length; i++)
-				frames[i] = new Hg3Frame(frameInfos[i], this);
-			this.frames = Array.AsReadOnly(frames);
+				frames[i] = new HgxFrame(frameInfos[i], this);
+			this.frames = frames.ToImmutableArray();
+		}
+		/// <summary>
+		///  Constructs an HG-2 image with the specified file name, image index, <see cref="HG3STDINFO"/>, and
+		///  bitmap frames.
+		/// </summary>
+		/// <param name="fileName">The file name of the HG-2 image with the .hg2 extension.</param>
+		/// <param name="hdr">The HGXHDR struct containing extra information on the HG-2.</param>
+		/// <param name="frameInfos">The HG-2 frame information classes to construct the frames from.</param>
+		/// <param name="expand">True if the images were extracted while <paramref name="expand"/> was true.</param>
+		internal HgxImage(string fileName, HGXHDR hdr, Hg2FrameInfo[] frameInfos, HgxOptions options) {
+			Version = CurrentVersion;
+			FileName = fileName;
+			Type = hdr.Type;
+			HgxType = HgxType.Hg2;
+
+			Expanded = options.HasFlag(HgxOptions.Expand);
+			Flipped = options.HasFlag(HgxOptions.Flip);
+			HgxFrame[] frames = new HgxFrame[frameInfos.Length];
+			for (int i = 0; i < frames.Length; i++)
+				frames[i] = new HgxFrame(frameInfos[i], this);
+			this.frames = frames.ToImmutableArray();
 		}
 
 		#endregion
@@ -120,13 +156,13 @@ namespace TriggersTools.CatSystem2 {
 		///  Finds the frame with the specified Id.
 		/// </summary>
 		/// <param name="id">The Id of the frame to find.</param>
-		/// <returns>The located HG-3 frame.</returns>
+		/// <returns>The located HG-X frame.</returns>
 		/// 
 		/// <exception cref="KeyNotFoundException">
-		///  No HG-3 frame with the <paramref name="id"/> was found.
+		///  No HG-X frame with the <paramref name="id"/> was found.
 		/// </exception>
-		public Hg3Frame GetFrameById(int id) {
-			Hg3Frame frame = Frames.FirstOrDefault(f => f.Id == id);
+		public HgxFrame GetFrameById(int id) {
+			HgxFrame frame = Frames.FirstOrDefault(f => f.Id == id);
 			if (frame == null)
 				throw new KeyNotFoundException($"Could not find the Id \"{id}\"!");
 			return frame;
@@ -135,17 +171,17 @@ namespace TriggersTools.CatSystem2 {
 		///  Finds the frame with the specified Id.
 		/// </summary>
 		/// <param name="id">The Id of the frame to find.</param>
-		/// <returns>The located HG-3 frame.-or- null if the Id was not found.</returns>
-		public Hg3Frame FindFrameById(int id) {
+		/// <returns>The located HG-X frame.-or- null if the Id was not found.</returns>
+		public HgxFrame FindFrameById(int id) {
 			return Frames.FirstOrDefault(f => f.Id == id);
 		}
 		/// <summary>
 		///  Tries to get the frame with the specified Id.
 		/// </summary>
 		/// <param name="id">The Id of the frame to find.</param>
-		/// <param name="frame">The output located HG-3 frame.-or- null if the Id was not found.</param>
+		/// <param name="frame">The output located HG-X frame.-or- null if the Id was not found.</param>
 		/// <returns>True if the frame was found, otherwise false.</returns>
-		public bool TryGetFrameById(int id, out Hg3Frame frame) {
+		public bool TryGetFrameById(int id, out HgxFrame frame) {
 			frame = FindFrameById(id);
 			return frame != null;
 		}
@@ -153,20 +189,20 @@ namespace TriggersTools.CatSystem2 {
 		///  Gets the index of the frame with the specified Id.
 		/// </summary>
 		/// <param name="id">The Id of the frame to find.</param>
-		/// <returns>The index of the located HG-3 frame.-or- -1 if the Id was not found.</returns>
+		/// <returns>The index of the located HG-X frame.-or- -1 if the Id was not found.</returns>
 		public int IndexOfFrameById(int id) {
 			return Frames.IndexOf(f => f.Id == id);
 		}
 		/// <summary>
 		///  Gets the index of the frame.
 		/// </summary>
-		/// <param name="frame">The HG-3 frame to get the index of.</param>
-		/// <returns>The index of the located HG-3 frame.-or- -1 if the frame was not found.</returns>
+		/// <param name="frame">The HG-X frame to get the index of.</param>
+		/// <returns>The index of the located HG-X frame.-or- -1 if the frame was not found.</returns>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="frame"/> is null.
 		/// </exception>
-		public int IndexOfFrame(Hg3Frame frame) {
+		public int IndexOfFrame(HgxFrame frame) {
 			if (frame == null)
 				throw new ArgumentNullException(nameof(frame));
 			return Frames.IndexOf(frame);
@@ -179,7 +215,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <summary>
 		///  Gets the file name for the PNG image with the specified image and frame indecies.
 		/// </summary>
-		/// <param name="id">The id, which is assocaited to the <see cref="Hg3Frame.Id"/>.</param>
+		/// <param name="id">The id, which is assocaited to the <see cref="HgxFrame.Id"/>.</param>
 		/// <param name="forcePostfix">
 		///  True if the animation postfix will always be displayed even when <see cref="IsAnimation"/> is false.
 		/// </param>
@@ -193,8 +229,8 @@ namespace TriggersTools.CatSystem2 {
 		/// <summary>
 		///  Gets the file path for the PNG image with the specified image and frame indecies.
 		/// </summary>
-		/// <param name="directory">The directory of the <see cref="Hg3Image"/> images.</param>
-		/// <param name="id">The id, which is assocaited to the <see cref="Hg3Frame.Id"/>.</param>
+		/// <param name="directory">The directory of the <see cref="HgxImage"/> images.</param>
+		/// <param name="id">The id, which is assocaited to the <see cref="HgxFrame.Id"/>.</param>
 		/// <param name="forcePostfix">
 		///  True if the animation postfix will always be displayed even when <see cref="IsAnimation"/> is false.
 		/// </param>
@@ -216,79 +252,79 @@ namespace TriggersTools.CatSystem2 {
 		/// <param name="frmIndex">
 		///  The second index, which is associated to a frame inside an <see cref="Hg3Image"/>.
 		/// </param>
-		/// <returns>The file name of the HG-3 image frame.</returns>
+		/// <returns>The file name of the HG-X image frame.</returns>
 		public static string GetFrameFileName(string fileName, int imgIndex, int frmIndex) {
 			string baseName = $"{Path.GetFileNameWithoutExtension(fileName)}+{imgIndex:D3}+{frmIndex:D3}";
 			return Path.ChangeExtension(baseName, ".png");
 		}*/
 		/// <summary>
-		///  Gets the file name for the JSON HG-3 information.
+		///  Gets the file name for the JSON HG-X information.
 		/// </summary>
 		/// <param name="fileName">The base filename of the <see cref="Hg3"/>.</param>
-		/// <returns>The file name of the JSON HG-3 information.</returns>
+		/// <returns>The file name of the JSON HG-X information.</returns>
 		public static string GetJsonFileName(string fileName) {
 			return Path.ChangeExtension(Path.GetFileNameWithoutExtension(fileName) + "+hg3", ".json");
 		}
 		/// <summary>
-		///  Gets the file path for the JSON HG-3 information.
+		///  Gets the file path for the JSON HG-X information.
 		/// </summary>
-		/// <param name="filePath">The file path of the <see cref="Hg3Image"/>.</param>
-		/// <returns>The file path of the JSON HG-3 information.</returns>
+		/// <param name="filePath">The file path of the <see cref="HgxImage"/>.</param>
+		/// <returns>The file path of the JSON HG-X information.</returns>
 		public static string GetJsonFilePath(string filePath) {
 			return Path.Combine(Path.GetDirectoryName(filePath), GetJsonFileName(filePath));
 		}
 		/// <summary>
-		///  Gets the file path for the JSON HG-3 information.
+		///  Gets the file path for the JSON HG-X information.
 		/// </summary>
-		/// <param name="directory">The directory of the <see cref="Hg3Image"/>.</param>
-		/// <param name="fileName">The base file name of the <see cref="Hg3Image"/>.</param>
-		/// <returns>The file path of the JSON HG-3 information.</returns>
+		/// <param name="directory">The directory of the <see cref="HgxImage"/>.</param>
+		/// <param name="fileName">The base file name of the <see cref="HgxImage"/>.</param>
+		/// <returns>The file path of the JSON HG-X information.</returns>
 		public static string GetJsonFilePath(string directory, string fileName) {
 			return Path.Combine(directory, GetJsonFileName(fileName));
 		}
-
+		
 		#endregion
 
 		#region I/O
 
 		/// <summary>
-		///  Deserializes the HG-3 image from a json file in the specified directory and file name.
+		///  Deserializes the HG-X image from a json file in the specified directory and file name.
 		/// </summary>
 		/// <param name="directory">
 		///  The directory for the json file to load and deserialize with <paramref name="fileName"/>.
 		/// </param>
-		/// <returns>The deserialized HG-3 image.</returns>
+		/// <returns>The deserialized HG-X image.</returns>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="directory"/> or <paramref name="fileName"/> is null.
 		/// </exception>
-		public static Hg3Image FromJsonDirectory(string directory, string fileName) {
+		public static HgxImage FromJsonDirectory(string directory, string fileName) {
 			if (directory == null)
 				throw new ArgumentNullException(nameof(directory));
 			if (fileName == null)
 				throw new ArgumentNullException(nameof(fileName));
 			string jsonFile = GetJsonFilePath(directory, fileName);
-			return JsonConvert.DeserializeObject<Hg3Image>(File.ReadAllText(jsonFile));
+			return JsonConvert.DeserializeObject<HgxImage>(File.ReadAllText(jsonFile));
 		}
 		/// <summary>
-		///  Deserializes the HG-3 image from a json file path.
+		///  Deserializes the HG-X image from a json file path.
 		/// </summary>
 		/// <param name="filePath">
 		///  The file path to the json file to load and deserialize.
 		/// </param>
-		/// <returns>The deserialized HG-3 image.</returns>
+		/// <returns>The deserialized HG-X image.</returns>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="filePath"/> is null.
 		/// </exception>
-		public static Hg3Image FromJsonFile(string filePath) {
+		public static HgxImage FromJsonFile(string filePath) {
 			if (filePath == null)
 				throw new ArgumentNullException(nameof(filePath));
 			string jsonFile = GetJsonFilePath(filePath);
-			return JsonConvert.DeserializeObject<Hg3Image>(File.ReadAllText(filePath));
+			return JsonConvert.DeserializeObject<HgxImage>(File.ReadAllText(filePath));
 		}
 		/// <summary>
-		///  Serializes the HG-3 image to a json file in the specified directory.
+		///  Serializes the HG-X image to a json file in the specified directory.
 		/// </summary>
 		/// <param name="directory">The directory to save the json file to using <see cref="JsonFileName"/>.</param>
 		/// 
@@ -302,7 +338,7 @@ namespace TriggersTools.CatSystem2 {
 			File.WriteAllText(jsonFile, JsonConvert.SerializeObject(this, Formatting.Indented));
 		}
 		/// <summary>
-		///  Serializes the HG-3 image to a json file in the specified directory.
+		///  Serializes the HG-X image to a json file in the specified directory.
 		/// </summary>
 		/// <param name="filePath">The file path to save the json file to.</param>
 		/// 
@@ -334,7 +370,7 @@ namespace TriggersTools.CatSystem2 {
 		///  Opens the stream to the bitmap from the specified directory.
 		/// </summary>
 		/// <param name="directory">The directory to load the bitmap from using <see cref="GetFrameFileName"/>.</param>
-		/// <param name="id">The id, which is assocaited to the <see cref="Hg3Frame.Id"/>.</param>
+		/// <param name="id">The id, which is assocaited to the <see cref="HgxFrame.Id"/>.</param>
 		/// <param name="forcePostfix">
 		///  True if the animation postfix will always be displayed even when <see cref="IsAnimation"/> is false.
 		/// </param>
@@ -380,10 +416,10 @@ namespace TriggersTools.CatSystem2 {
 		#region IEnumerable Implementation
 
 		/// <summary>
-		///  Gets the enumerator for the HG-3 images's frames.
+		///  Gets the enumerator for the HG-X images's frames.
 		/// </summary>
-		/// <returns>The HG-3 frame enumerator.</returns>
-		public IEnumerator<Hg3Frame> GetEnumerator() => frames.GetEnumerator();
+		/// <returns>The HG-X frame enumerator.</returns>
+		public IEnumerator<HgxFrame> GetEnumerator() => frames.GetEnumerator();
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
 		#endregion
@@ -391,10 +427,10 @@ namespace TriggersTools.CatSystem2 {
 		#region ToString Override
 
 		/// <summary>
-		///  Gets the string representation of the HG-3 image.
+		///  Gets the string representation of the HG-X image.
 		/// </summary>
-		/// <returns>The string representation of the HG-3 image.</returns>
-		public override string ToString() => $"HG-3 \"{FileName}\" Frames={Count}";
+		/// <returns>The string representation of the HG-X image.</returns>
+		public override string ToString() => $"{HgxType.ToDescription() ?? "HG-X"} \"{FileName}\" Frames={Count}";
 		
 		#endregion
 	}

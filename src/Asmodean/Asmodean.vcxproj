@@ -18,13 +18,25 @@
   </PropertyGroup>
   <ItemGroup>
     <ClInclude Include="asmodean.h" />
-    <ClInclude Include="blowfish.h" />
-    <ClInclude Include="exkifint.h" />
+    <ClInclude Include="blowfish.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="exkifint.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="hgx2bmp.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="blowfish.cpp" />
-    <ClCompile Include="exkifint.cpp" />
+    <ClCompile Include="blowfish.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="exkifint.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="hgx2bmp.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -11,7 +11,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <summary>
 		///  Getts the KIFINT archive for the currently open stream.
 		/// </summary>
-		public Kifint Kifint { get; private set; }
+		public KifintArchive Kifint { get; private set; }
 		/// <summary>
 		///  Getts the stream for the currently open KIFINT archive.
 		/// </summary>
@@ -79,7 +79,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="kifint"/> is null.
 		/// </exception>
-		public KifintStream(Kifint kifint) {
+		public KifintStream(KifintArchive kifint) {
 			Open(kifint);
 		}
 
@@ -97,7 +97,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="kifint"/> is null.
 		/// </exception>
-		public void Open(Kifint kifint) {
+		public void Open(KifintArchive kifint) {
 			if (kifint == null)
 				throw new ArgumentNullException(nameof(kifint));
 			if (kifint == Kifint)

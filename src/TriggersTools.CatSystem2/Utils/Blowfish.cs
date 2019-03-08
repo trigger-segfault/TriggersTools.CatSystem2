@@ -10,14 +10,18 @@
 using System;
 using System.Runtime.InteropServices;
 using TriggersTools.SharpUtils.Exceptions;
+using TriggersTools.SharpUtils.Mathematics;
 
 namespace TriggersTools.CatSystem2.Utils {
+	/// <summary>
+	///  A managed implementation of the Blowfish encryption algorithm.
+	/// </summary>
 	internal unsafe partial class Blowfish {
-		#region Private Structs
+		#region Aword Structs
 
 		// DCBA - little endian - intel
 		[StructLayout(LayoutKind.Explicit, Pack = 1)]
-		private struct aword {
+		private struct Aword {
 			[FieldOffset(0)]
 			public uint dword;
 			[FieldOffset(0)]
@@ -32,7 +36,7 @@ namespace TriggersTools.CatSystem2.Utils {
 
 		/*// ABCD - big endian - motorola
 		[StructLayout(LayoutKind.Explicit, Pack = 1)]
-		private struct aword {
+		private struct Aword {
 			[FieldOffset(0)]
 			public uint dword;
 			[FieldOffset(0)]
@@ -47,7 +51,7 @@ namespace TriggersTools.CatSystem2.Utils {
 
 		// BADC - vax
 		[StructLayout(LayoutKind.Explicit, Pack = 1)]
-		private struct aword {
+		private struct Aword {
 			[FieldOffset(0)]
 			public uint dword;
 			[FieldOffset(0)]
@@ -80,80 +84,238 @@ namespace TriggersTools.CatSystem2.Utils {
 
 		#region Constructors
 
+		/// <summary>
+		///  Constructs the blowfish encryption with a 4-byte key.
+		/// </summary>
+		/// <param name="key">The 4-byte key to use as a key.</param>
 		public Blowfish(uint key) {
 			Initialize((byte*) &key, 4);
 		}
+		/// <summary>
+		///  Constructs the blowfish encryption with a byte array.
+		/// </summary>
+		/// <param name="key">The byte array to use as a key.</param>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="key"/> is null.
+		/// </exception>
 		public Blowfish(byte[] key) {
+			if (key == null)
+				throw new ArgumentNullException(nameof(key));
 			fixed (byte* pKey = key) {
 				Initialize(pKey, key.Length);
 			}
 		}
-		private Blowfish(byte* pKey, int keyLength) {
-			Initialize(pKey, keyLength);
+		/// <summary>
+		///  Constructs the blowfish encryption with a byte array pointed to and the length.
+		/// </summary>
+		/// <param name="key">The address of the byte array to use as a key.</param>
+		/// <param name="keyLength">The length of the byte array.</param>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="key"/> is null.
+		/// </exception>
+		private Blowfish(byte* key, int keyLength) {
+			if (key == null)
+				throw new ArgumentNullException(nameof(key));
+			Initialize(key, keyLength);
 		}
 
 		#endregion
 
 		#region Encrypt/Decrypt
 		
+		/// <summary>
+		///  Encrypts the ulong value.
+		/// </summary>
+		/// <param name="value">The 8-byte value to encrypt.</param>
 		public void Encrypt(ref ulong value) {
 			ulong localValue = value;
 			Encrypt((byte*) &localValue, 8);
 			value = localValue;
 		}
-		public void Encrypt(byte[] input) {
-			fixed (byte* pInput = input)
-				Encrypt(pInput, input.Length);
+		/// <summary>
+		///  Encrypts the buffer.
+		/// </summary>
+		/// <param name="buffer">The buffer to encrypt that must have a length padded to 8.</param>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="buffer"/> is null.
+		/// </exception>
+		/// <exception cref="ArgumentException">
+		///  <paramref name="buffer"/>'s length is not a multiple of 8.
+		/// </exception>
+		public void Encrypt(byte[] buffer) {
+			if (buffer == null)
+				throw new ArgumentNullException(nameof(buffer));
+			fixed (byte* pInput = buffer)
+				Encrypt(pInput, buffer.Length);
 		}
-		public void Encrypt(byte[] input, int inputLength) {
-			if (inputLength > input.Length) {
-				throw ArgumentOutOfRangeUtils.OutsideMax(nameof(inputLength), inputLength,
-					$"{nameof(input)}.{nameof(input.Length)}", input.Length, true);
+		/// <summary>
+		///  Encrypts the buffer with the specified length.
+		/// </summary>
+		/// <param name="buffer">The buffer to encrypt.</param>
+		/// <param name="bufferLength">The buffer length which must be a multiple of 8.</param>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="buffer"/> is null.
+		/// </exception>
+		/// <exception cref="ArgumentOutOfRangeException">
+		///  <paramref name="bufferLength"/> is less than zero or greater than the length of <paramref name="buffer"/>.
+		/// </exception>
+		/// <exception cref="ArgumentException">
+		///  <paramref name="bufferLength"/> is not a multiple of 8.
+		/// </exception>
+		public void Encrypt(byte[] buffer, int bufferLength) {
+			if (buffer == null)
+				throw new ArgumentNullException(nameof(buffer));
+			if (bufferLength < 0 || bufferLength > buffer.Length) {
+				throw ArgumentOutOfRangeUtils.OutsideRange(nameof(bufferLength), bufferLength, 0,
+					$"{nameof(buffer)}.{nameof(buffer.Length)}", buffer.Length, true, true);
 			}
-			fixed (byte* pInput = input)
-				Encrypt(pInput, inputLength);
+			fixed (byte* pBuffer = buffer)
+				Encrypt(pBuffer, bufferLength);
 		}
-		private void Encrypt(byte* pInput, int inputLength) {
-			if (inputLength != GetOutputLength(inputLength))
-				throw new ArgumentException("%s", "Input len != Output len");
+		/// <summary>
+		///  Encrypts the buffer pointed to with the specified length.
+		/// </summary>
+		/// <param name="buffer">The address of the buffer to encrypt.</param>
+		/// <param name="bufferLength">The buffer length which must be a multiple of 8.</param>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="buffer"/> is null.
+		/// </exception>
+		/// <exception cref="ArgumentException">
+		///  <paramref name="bufferLength"/> is not a multiple of 8.
+		/// </exception>
+		private void Encrypt(byte* buffer, int bufferLength) {
+			if (buffer == null)
+				throw new ArgumentNullException(nameof(buffer));
+			if (bufferLength != GetOutputLength(bufferLength))
+				throw new ArgumentException($"Buffer length is not a multiple of 8!");
 
-			Encode(pInput, inputLength);
+			//Encode(buffer, bufferLength);
+			for (int i = 0; i < bufferLength; i += 8) {
+				Encipher((uint*) buffer, (uint*) (buffer + 4));
+				buffer += 8;
+			}
 		}
-		
+
+		/// <summary>
+		///  Decrypts the ulong value.
+		/// </summary>
+		/// <param name="value">The 8-byte value to decrypt.</param>
 		public void Decrypt(ref ulong value) {
 			ulong localValue = value;
 			Decrypt((byte*) &localValue, 8);
 			value = localValue;
 		}
-		public void Decrypt(byte[] input) {
-			fixed (byte* pInput = input)
-				Decrypt(pInput, input.Length);
+		/// <summary>
+		///  Decrypts the buffer.
+		/// </summary>
+		/// <param name="buffer">The buffer to decrypt that must have a length padded to 8.</param>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="buffer"/> is null.
+		/// </exception>
+		/// <exception cref="ArgumentException">
+		///  <paramref name="buffer"/>'s length is not a multiple of 8.
+		/// </exception>
+		public void Decrypt(byte[] buffer) {
+			if (buffer == null)
+				throw new ArgumentNullException(nameof(buffer));
+			fixed (byte* pBuffer = buffer)
+				Decrypt(pBuffer, buffer.Length);
 		}
-		public void Decrypt(byte[] input, int inputLength) {
-			if (inputLength > input.Length) {
-				throw ArgumentOutOfRangeUtils.OutsideMax(nameof(inputLength), inputLength,
-					$"{nameof(input)}.{nameof(input.Length)}", input.Length, true);
+		/// <summary>
+		///  Decrypts the buffer with the specified length.
+		/// </summary>
+		/// <param name="buffer">The buffer to decrypt.</param>
+		/// <param name="bufferLength">The buffer length which must be a multiple of 8.</param>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="buffer"/> is null.
+		/// </exception>
+		/// <exception cref="ArgumentOutOfRangeException">
+		///  <paramref name="bufferLength"/> is less than zero or greater than the length of <paramref name="buffer"/>.
+		/// </exception>
+		/// <exception cref="ArgumentException">
+		///  <paramref name="bufferLength"/> is not a multiple of 8.
+		/// </exception>
+		public void Decrypt(byte[] buffer, int bufferLength) {
+			if (buffer == null)
+				throw new ArgumentNullException(nameof(buffer));
+			if (bufferLength > buffer.Length) {
+				throw ArgumentOutOfRangeUtils.OutsideMax(nameof(bufferLength), bufferLength,
+					$"{nameof(buffer)}.{nameof(buffer.Length)}", buffer.Length, true);
 			}
-			fixed (byte* pInput = input)
-				Decrypt(pInput, inputLength);
+			fixed (byte* pInput = buffer)
+				Decrypt(pInput, bufferLength);
 		}
-		private void Decrypt(byte* pInput, int inputLength) {
-			if (inputLength != GetOutputLength(inputLength))
-				throw new ArgumentException("Input Length is not a multiple of 8!");
+		/// <summary>
+		///  Decrypts the buffer pointed to with the specified length.
+		/// </summary>
+		/// <param name="buffer">The address of the buffer to decrypt.</param>
+		/// <param name="bufferLength">The buffer length which must be a multiple of 8.</param>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="buffer"/> is null.
+		/// </exception>
+		/// <exception cref="ArgumentException">
+		///  <paramref name="bufferLength"/> is not a multiple of 8.
+		/// </exception>
+		private void Decrypt(byte* buffer, int bufferLength) {
+			if (buffer == null)
+				throw new ArgumentNullException(nameof(buffer));
+			if (bufferLength != GetOutputLength(bufferLength))
+				throw new ArgumentException("Buffer Length is not a multiple of 8!");
 
-			Decode(pInput, inputLength);
+			//Decode(buffer, bufferLength);
+			for (int i = 0; i < bufferLength; i += 8) {
+				Decipher((uint*) buffer, (uint*) (buffer + 4));
+				buffer += 8;
+			}
 		}
 
 		#endregion
 
+		/*#region Encode/Decode
+
+		/// <summary>
+		///  Encode <paramref name="buffer"/>. Input length in <paramref name="bufferLength"/>.
+		///  The buffer length MUST be MOD 8.
+		/// </summary>
+		/// <param name="buffer">The pointer to the buffer to encode.</param>
+		/// <param name="bufferLength">The size of the buffer.</param>
+		private void Encode(byte* buffer, int bufferLength) {
+			for (int i = 0; i < bufferLength; i += 8) {
+				Encipher((uint*) buffer, (uint*) (buffer + 4));
+				buffer += 8;
+			}
+		}
+		/// <summary>
+		///  Decode <paramref name="buffer"/>. Input length in <paramref name="bufferLength"/>.
+		///  The buffer length MUST be MOD 8.
+		/// </summary>
+		/// <param name="buffer">The pointer to the buffer to decode.</param>
+		/// <param name="bufferLength">The size of the buffer.</param>
+		private void Decode(byte* buffer, int bufferLength) {
+			for (int i = 0; i < bufferLength; i += 8) {
+				Decipher((uint*) buffer, (uint*) (buffer + 4));
+				buffer += 8;
+			}
+		}
+
+		#endregion*/
+
 		#region Initialize
-		
+
 		/// <summary>
 		///  Constructs the encryption sieve.
 		/// </summary>
-		/// <param name="key"></param>
-		/// <param name="keybytes"></param>
-		private void Initialize(byte* key, int keybytes) {
+		/// <param name="key">The pointer to the key to initialize.</param>
+		/// <param name="keyLength">The length of the key pointed to.</param>
+		private void Initialize(byte* key, int keyLength) {
 			unchecked {
 				// first fill arrays from data tables
 				for (int i = 0; i < 18; i++)
@@ -165,14 +327,14 @@ namespace TriggersTools.CatSystem2.Utils {
 				}
 
 				for (int i = 0, j = 0; i < NPass + 2; i++) {
-					aword temp = new aword {
+					Aword temp = new Aword {
 						byte0 = key[j],
-						byte1 = key[(j + 1) % keybytes],
-						byte2 = key[(j + 2) % keybytes],
-						byte3 = key[(j + 3) % keybytes],
+						byte1 = key[(j + 1) % keyLength],
+						byte2 = key[(j + 2) % keyLength],
+						byte3 = key[(j + 3) % keyLength],
 					};
 					PArray[i] ^= temp.dword;
-					j = (j + 4) % keybytes;
+					j = (j + 4) % keyLength;
 				}
 
 				uint datal = 0;
@@ -196,43 +358,16 @@ namespace TriggersTools.CatSystem2.Utils {
 
 		#endregion
 
-		#region Private Helpers
-
-		//#define S(x,i) (SBoxes[i][x.w.byte##i])
-		//#define bf_F(x) (((S(x,0) + S(x,1)) ^ S(x,2)) + S(x,3))
-		//#define ROUND(a,b,n) (a.dword ^= bf_F(b) ^ PArray[n])
-
-		private void ROUND(aword* a, aword b, int n) {
-			unchecked {
-				a->dword ^= (((SBoxes[0, b.byte0] + SBoxes[1, b.byte1]) ^
-							   SBoxes[2, b.byte2]) + SBoxes[3, b.byte3]) ^ PArray[n];
-			}
-		}
-		/// <summary>
-		///  Get the output length, which must be even MOD 8.
-		/// </summary>
-		/// <param name="lInputLong"></param>
-		/// <returns></returns>
-		private static int GetOutputLength(int lInputLong) {
-			int lVal = lInputLong % 8;  // find out if uneven number of bytes at the end
-			if (lVal != 0)
-				return lInputLong + 8 - lVal;
-			else
-				return lInputLong;
-		}
-
-		#endregion
-
 		#region Encipher/Decipher
 
 		/// <summary>
 		///  The low level (private) encryption function.
 		/// </summary>
-		/// <param name="xl"></param>
-		/// <param name="xr"></param>
+		/// <param name="xl">The left (first 4 bytes) to encipher.</param>
+		/// <param name="xr">The right (next 4 bytes) to encipher.</param>
 		private void Encipher(uint* xl, uint* xr) {
-			aword Xl = new aword();
-			aword Xr = new aword();
+			Aword Xl = new Aword();
+			Aword Xr = new Aword();
 
 			Xl.dword = *xl;
 			Xr.dword = *xr;
@@ -256,11 +391,11 @@ namespace TriggersTools.CatSystem2.Utils {
 		/// <summary>
 		///  The low level (private) decryption function.
 		/// </summary>
-		/// <param name="xl"></param>
-		/// <param name="xr"></param>
+		/// <param name="xl">The left (first 4 bytes) to decipher.</param>
+		/// <param name="xr">The right (next 4 bytes) to decipher.</param>
 		private void Decipher(uint* xl, uint* xr) {
-			aword Xl = new aword();
-			aword Xr = new aword();
+			Aword Xl = new Aword();
+			Aword Xr = new Aword();
 
 			Xl.dword = *xl;
 			Xr.dword = *xr;
@@ -281,30 +416,34 @@ namespace TriggersTools.CatSystem2.Utils {
 			*xl = Xr.dword;
 			*xr = Xl.dword;
 		}
+
+		#endregion
+
+		#region Private Helpers
+
+		//#define S(x,i) (SBoxes[i][x.w.byte##i])
+		//#define bf_F(x) (((S(x,0) + S(x,1)) ^ S(x,2)) + S(x,3))
+		//#define ROUND(a,b,n) (a.dword ^= bf_F(b) ^ PArray[n])
+
 		/// <summary>
-		///  Encode pIntput into pOutput.  Input length in lSize.  Returned value
-		///  is length of output which will be even MOD 8 bytes.  Inputbuffer and
-		///  output buffer can be the same, but be sure buffer length is even MOD 8.
+		///  Performs blowfish rounding inside <see cref="Encipher"/> and <see cref="Decipher"/>.
 		/// </summary>
-		/// <param name="pInput"></param>
-		/// <param name="inputSize"></param>
-		private void Encode(byte* pInput, int inputSize) {
-			for (int lCount = 0; lCount < inputSize; lCount += 8) {
-				Encipher((uint*) pInput, (uint*) (pInput + 4));
-				pInput += 8;
+		/// <param name="a">The aword to save to.</param>
+		/// <param name="b">The aword to get the indecies from for <see cref="SBoxes"/>.</param>
+		/// <param name="n">The nth index of <see cref="PArray"/></param>
+		private void ROUND(Aword* a, Aword b, int n) {
+			unchecked {
+				a->dword ^= (((SBoxes[0, b.byte0] + SBoxes[1, b.byte1]) ^
+							   SBoxes[2, b.byte2]) + SBoxes[3, b.byte3]) ^ PArray[n];
 			}
 		}
 		/// <summary>
-		///  Decode pIntput into pOutput.  Input length in lSize.  Inputbuffer and
-		///  output buffer can be the same, but be sure buffer length is even MOD 8.
+		///  Get the output length, which must be even MOD 8.
 		/// </summary>
-		/// <param name="pInput"></param>
-		/// <param name="inputSize"></param>
-		private void Decode(byte* pInput, int inputSize) {
-			for (int lCount = 0; lCount < inputSize; lCount += 8) {
-				Decipher((uint*) pInput, (uint*) (pInput + 4));
-				pInput += 8;
-			}
+		/// <param name="inputLength">The original length of the buffer size.</param>
+		/// <returns>The input length padded to MOD 8</returns>
+		private static int GetOutputLength(int inputLength) {
+			return MathUtils.Pad(inputLength, 8);
 		}
 
 		#endregion

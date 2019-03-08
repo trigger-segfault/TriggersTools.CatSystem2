@@ -8,7 +8,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using TriggersTools.CatSystem2.Native;
 using TriggersTools.CatSystem2.Patcher;
 using TriggersTools.CatSystem2.Patcher.Patches;
 using TriggersTools.SharpUtils.IO;
@@ -27,6 +26,40 @@ namespace TriggersTools.CatSystem2.Testing {
 		[DllImport("kernel32", SetLastError = true, CharSet = CharSet.Unicode)]
 		public static extern IntPtr LoadLibrary(string lpFileName);
 		static void Main(string[] args) {
+			Random random = new Random();
+			const int rngLength = 1024 * 64;
+			byte[] rngBytesOrigin = new byte[rngLength];
+			byte[] rngBytes = new byte[rngLength];
+			byte[] rngUints = new byte[rngLength];
+			byte[] rngBytesAdd = new byte[rngLength];
+			random.NextBytes(rngBytesOrigin);
+			random.NextBytes(rngBytesAdd);
+			Buffer.BlockCopy(rngBytesOrigin, 0, rngBytes, 0, rngLength);
+			Buffer.BlockCopy(rngBytesOrigin, 0, rngUints, 0, rngLength);
+			unchecked {
+				unsafe {
+					fixed (byte* pRngBytesAdd = rngBytesAdd)
+					fixed (byte* pRngBytes = rngUints) {
+						uint* pRngUintsAdd = (uint*) pRngBytesAdd;
+						uint* pRngUints = (uint*) pRngBytes;
+						for (int i = 0; i < rngLength / 4; i++) {
+							pRngUints[i] += pRngUintsAdd[i];
+						}
+						/*for (int i = 0; i < rngLength; i++) {
+							pRngBytes[i] += pRngBytesAdd[i];
+						}*/
+					}
+					for (int i = 0; i < rngLength; i++) {
+						rngBytes[i] += rngBytesAdd[i];
+					}
+				}
+			}
+			/*for (int i = 0; i < rngLength; i++) {
+				if (rngBytes[i] != rngUints[i])
+					Console.WriteLine(i);
+			}*/
+			bool isEqual = rngBytes.SequenceEqual(rngUints);
+
 			/*string vcode22 = VCodes.FindVCode2(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)\Grisaia2.bin.bak");
 			Kifint.DecryptLookup(KifintType.Image, @"C:\Programs\Games\Frontwing\Labyrinth of Grisaia", vcode22);
 			Kifint.DecryptLookup(KifintType.Image, @"C:\Programs\Games\Frontwing\Labyrinth of Grisaia", vcode22, csBlowfish: true);
@@ -35,20 +68,27 @@ namespace TriggersTools.CatSystem2.Testing {
 			for (int i = 0; i < ll.Count; i++) {
 
 			}*/
+			Directory.CreateDirectory("img2");
+			Directory.CreateDirectory("imgv");
+			Directory.CreateDirectory("imgnv");
+			HgxImage.ExtractImages("sys_flipped.hg3", "imgv", HgxOptions.Flip).SaveJsonToDirectory("imgv");
+			HgxImage.ExtractImages("sys_flipped.hg3", "imgnv", HgxOptions.None).SaveJsonToDirectory("imgnv");
+			//HgxImage.ExtractImages("img_flipped.hg3", "img2", HgxOptions.None).SaveJsonToDirectory("img2");
+			//HgxImage.ExtractImages("img_notflipped.hg3", "img2", HgxOptions.None).SaveJsonToDirectory("img2");
+			Console.ReadLine();
 			Directory.CreateDirectory("img");
-			var hg3Files = Directory.EnumerateFiles(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)\image", "*.hg3");
+			IEnumerable<string> hg3Files = Directory.GetFiles(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)\image", "*.hg3");
 			//hg3Files = hg3Files.Take(100);
-			int take = int.MaxValue;
+			int take = 100;
 			try {
 				foreach (string hg3File in hg3Files.Take(10))
-					Hg3Image.ExtractImages(hg3File, "img", false);
-				Stopwatch hg3Watch = Stopwatch.StartNew();
-				foreach (string hg3File in hg3Files.Take(take))
-					Hg3Image.ExtractImages(hg3File, "img", false);
-				Console.WriteLine(hg3Watch.ElapsedMilliseconds); hg3Watch.Restart();
-				foreach (string hg3File in hg3Files.Take(take))
-					Hg3Image.ExtractImages(hg3File, "img", false);
-				Console.WriteLine(hg3Watch.ElapsedMilliseconds); hg3Watch.Restart();
+					HgxImage.ExtractImages(hg3File, "img", HgxOptions.None);
+				/*Stopwatch hg3Watch = HgxImage.ProcessImageWatch; hg3Watch.Reset();
+				for (int i = 0; i < 10; i++) {
+					foreach (string hg3File in hg3Files.Take(take))
+						HgxImage.ExtractImages(hg3File, "img", false);
+					Console.WriteLine(hg3Watch.ElapsedMilliseconds); hg3Watch.Reset();
+				}*/
 			}
 			catch (Exception ex) {
 				Console.ForegroundColor = ConsoleColor.Red;
@@ -56,7 +96,7 @@ namespace TriggersTools.CatSystem2.Testing {
 			}
 			Console.ReadLine();
 			Environment.Exit(0);
-			Hg3Image.ExtractImages(@"C:\Programs\Tools\CatSystem2_v401\tool\img_test2.hg3", ".", false);
+			HgxImage.ExtractImages(@"C:\Programs\Tools\CatSystem2_v401\tool\img_test2.hg3", ".", HgxOptions.None);
 			StringsScraper.BinaryScrape("cs2_open.exe", "strings/null/cs2", 0x5B6458, 0x5B7558);
 			Console.ReadLine();
 			StringsScraper.BinarySearch("cs2_open.exe", "page");
@@ -92,7 +132,7 @@ namespace TriggersTools.CatSystem2.Testing {
 			}
 			//var h = LoadLibrary(@"C:\Users\Onii-chan\AppData\Local\Temp\TriggersToolsGames\CatSystem2\asmodean.dll");
 			//Embedded
-			var hg3 = Hg3Image.ExtractImages(@"C:\Programs\Tools\CatSystem2_v401\system\image\sys_confirm.hg3", ".", false);
+			var hg3 = HgxImage.ExtractImages(@"C:\Programs\Tools\CatSystem2_v401\system\image\sys_confirm.hg3", ".", HgxOptions.None);
 			string grisaiaInstallDir = @"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)";
 			string grisaiaExe = Path.Combine(grisaiaInstallDir, "Grisaia2.bin.bak");
 			string grisaiaConfigInt = Path.Combine(grisaiaInstallDir, "config.int");
@@ -154,7 +194,7 @@ namespace TriggersTools.CatSystem2.Testing {
 					byte[] compressed = reader.ReadBytes(compressedLength);
 					watch.Restart();
 					byte[] decompressed = new byte[decompressedLength];
-					ZLib.Uncompress(decompressed, ref decompressedLength, compressed, compressedLength);
+					//ZLib.Uncompress(decompressed, ref decompressedLength, compressed, compressedLength);
 					decompressedA = decompressed;
 					Console.WriteLine(watch.ElapsedMilliseconds);
 					/*Console.WriteLine(offsetToData);
@@ -208,10 +248,10 @@ namespace TriggersTools.CatSystem2.Testing {
 			//344AC
 			//@"C:\Programs\Tools\CatSystem2_v401\psds\BA01_1.hg2"
 			Directory.CreateDirectory("hg3");
-			Hg3Image.Extract(@"C:\Programs\Tools\CatSystem2_v401\tool\img_test2.hg3");
-			Hg3Image.Extract(@"C:\Programs\Tools\CatSystem2_v401\psds\sys_confirm.hg2");
-			var hg3Img = Hg3Image.ExtractImages(@"C:\Programs\Tools\CatSystem2_v401\psds\BA01_1.hg3",
-				"hg3", false);
+			HgxImage.Extract(@"C:\Programs\Tools\CatSystem2_v401\tool\img_test2.hg3");
+			HgxImage.Extract(@"C:\Programs\Tools\CatSystem2_v401\psds\sys_confirm.hg2");
+			var hg3Img = HgxImage.ExtractImages(@"C:\Programs\Tools\CatSystem2_v401\psds\BA01_1.hg3",
+				"hg3", HgxOptions.None);
 			hg3Img.SaveJsonToDirectory("hg3");
 			Console.OutputEncoding = CatUtils.ShiftJIS;
 			ZTPatcher zt2 = new ZTPatcher {
@@ -321,10 +361,10 @@ namespace TriggersTools.CatSystem2.Testing {
 			//212298
 			//string vcode = VCodes.FindVCode(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)\Grisaia2.bin.bak");
 			string vcode2 = VCodes.FindVCode2(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)\Grisaia2.bin.bak");
-			var hg = Hg3Image.ExtractImages(@"C:\Programs\Tools\CatSystem2_v401\tool\img_test2.hg3", ".", false);
-			hg = Hg3Image.Extract(@"C:\Programs\Tools\CatSystem2_v401\system\image\sys_confirm.hg3");
+			var hg = HgxImage.ExtractImages(@"C:\Programs\Tools\CatSystem2_v401\tool\img_test2.hg3", ".", HgxOptions.None);
+			hg = HgxImage.Extract(@"C:\Programs\Tools\CatSystem2_v401\system\image\sys_confirm.hg3");
 			//int iiii = int.Parse("FFFFFFFF", NumberStyles.HexNumber);
-			hg = Hg3Image.Extract(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)\image\Tmic1cs_6.hg3");
+			hg = HgxImage.Extract(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)\image\Tmic1cs_6.hg3");
 			byte[] zt = File.ReadAllBytes("zt.zt");
 			/*using (var ms = new MemoryStream()) {
 				BinaryWriter writer = new BinaryWriter(ms);

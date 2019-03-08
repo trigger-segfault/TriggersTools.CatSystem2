@@ -7,6 +7,7 @@ using TriggersTools.CatSystem2.Scenes.Commands;
 using TriggersTools.CatSystem2.Structs;
 using Newtonsoft.Json;
 using TriggersTools.CatSystem2.Scenes;
+using System.Collections.Immutable;
 
 namespace TriggersTools.CatSystem2 {
 	/// <summary>
@@ -29,14 +30,14 @@ namespace TriggersTools.CatSystem2 {
 
 		[JsonProperty("lines")]
 		private IReadOnlyList<SceneLine> IOLines {
-			get => Array.AsReadOnly(Lines.Select(l => new SceneLine(l)).ToArray());
+			get => Lines.Select(l => new SceneLine(l)).ToImmutableArray();
 			set {
 				if (value == null)
 					throw new ArgumentNullException(nameof(IOLines));
 				ISceneLine[] newLines = new ISceneLine[value.Count];
 				for (int i = 0; i < value.Count; i++)
 					newLines[i] = SceneUtils.CreateLine((SceneLineType) value[i].Type, value[i].Content);
-				Lines = Array.AsReadOnly(newLines);
+				Lines = newLines.ToImmutableArray();
 			}
 		}
 
@@ -68,7 +69,7 @@ namespace TriggersTools.CatSystem2 {
 			ISceneLine[] newLines = new ISceneLine[lines.Length];
 			for (int i = 0; i < lines.Length; i++)
 				newLines[i] = SceneUtils.CreateLine((SceneLineType) lines[i].Type, lines[i].Content);
-			Lines = Array.AsReadOnly(newLines);
+			Lines = newLines.ToImmutableArray();
 		}
 
 		#endregion

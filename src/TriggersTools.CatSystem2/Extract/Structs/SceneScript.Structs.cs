@@ -26,11 +26,11 @@ namespace TriggersTools.CatSystem2.Structs {
 		/// <summary>
 		///  The size of the CatScene compressed data.
 		/// </summary>
-		public int CompressedSize;
+		public int CompressedLength;
 		/// <summary>
 		///  The size of the CatScene decompressed data.
 		/// </summary>
-		public int DecompressedSize;
+		public int DecompressedLength;
 
 		#endregion
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -53,7 +54,7 @@ namespace TriggersTools.CatSystem2.Scenes.Commands {
 					}
 				}
 				Command = SceneUtils.CreateCommand(parameters[2]);
-				Parameters = Array.AsReadOnly(parameters);
+				Parameters = parameters.ToImmutableArray();
 			}
 		}
 

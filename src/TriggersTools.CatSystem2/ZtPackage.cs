@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,9 +26,11 @@ namespace TriggersTools.CatSystem2 {
 		#region Constructors
 
 		public ZtPackage() { }
-		internal ZtPackage(ZTENTRY[] fileEntries) {
-			var entries = fileEntries.Select(f => new ZtEntry(f));
-			Entries = Array.AsReadOnly(entries.ToArray());
+		internal ZtPackage(ZTENTRY[] entries) {
+			ZtEntry[] newEntries = new ZtEntry[entries.Length];
+			for (int i = 0; i < entries.Length; i++)
+				newEntries[i] = new ZtEntry(entries[i]);
+			Entries = newEntries.ToImmutableArray();
 		}
 
 		#endregion

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -56,7 +57,7 @@ namespace TriggersTools.CatSystem2.Scenes.Commands {
 					}
 				}
 				//IfCommand = SceneCommands.CreateCommand(parameters[2]);
-				Parameters = Array.AsReadOnly(parameters);
+				Parameters = parameters.ToImmutableArray();
 			}
 		}
 

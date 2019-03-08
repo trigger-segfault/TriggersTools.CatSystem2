@@ -3,14 +3,22 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
-using TriggersTools.CatSystem2.Native;
 using TriggersTools.CatSystem2.Structs;
 using TriggersTools.CatSystem2.Utils;
 using TriggersTools.SharpUtils.Exceptions;
 using TriggersTools.SharpUtils.IO;
 
 namespace TriggersTools.CatSystem2 {
-	partial class Kifint {
+	partial class KifintArchive {
+		#region Constants
+
+		/// <summary>
+		///  Gets the file name used as a decryption key.
+		/// </summary>
+		public const string KeyFileName = "__key__.dat";
+
+		#endregion
+
 		#region Private DecryptLookup
 
 		/// <summary>
@@ -29,7 +37,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <exception cref="ObjectDisposedException">
 		///  The <paramref name="stream"/> is closed.
 		/// </exception>
-		private static Kifint DecryptLookup(KifintType type, Stream stream, string kifintPath, string vcode2,
+		private static KifintArchive LoadLookup(KifintType type, Stream stream, string kifintPath, string vcode2,
 			KifintProgressArgs progress, KifintProgressCallback callback)
 		{
 			if (kifintPath == null)
@@ -90,7 +98,7 @@ namespace TriggersTools.CatSystem2 {
 				}
 			}
 
-			return new Kifint(kifintPath, entries, decrypt, fileKey, type, blowfish);
+			return new KifintArchive(kifintPath, entries, decrypt, fileKey, type, blowfish);
 		}
 
 		#endregion

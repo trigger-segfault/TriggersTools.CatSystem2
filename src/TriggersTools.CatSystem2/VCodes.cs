@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text;
 using Newtonsoft.Json;
-using TriggersTools.CatSystem2.Native;
 using TriggersTools.CatSystem2.Utils;
 using TriggersTools.Resources;
 using TriggersTools.Resources.Enumerations;

@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TriggersTools.CatSystem2.Native;
 using TriggersTools.CatSystem2.Structs;
+using TriggersTools.CatSystem2.Utils;
 using TriggersTools.SharpUtils.IO;
 
 namespace TriggersTools.CatSystem2 {
@@ -51,11 +51,12 @@ namespace TriggersTools.CatSystem2 {
 				fileEntries.Add(entry);
 
 				if (outputDir != null) {
-					byte[] compressed = reader.ReadBytes(entry.CompressedLength);
+					byte[] fileData = Zlib.Decompress(reader, entry.CompressedLength, entry.DecompressedLength);
+					/*byte[] compressed = reader.ReadBytes(entry.CompressedLength);
 					byte[] decompressed = new byte[entry.DecompressedLength];
 
-					Zlib.Uncompress(decompressed, ref entry.DecompressedLength, compressed, entry.CompressedLength);
-					File.WriteAllBytes(Path.Combine(outputDir, entry.FileName), decompressed);
+					Zlib.Uncompress(decompressed, ref entry.DecompressedLength, compressed, entry.CompressedLength);*/
+					File.WriteAllBytes(Path.Combine(outputDir, entry.FileName), fileData);
 				}
 			} while (entryHdr.OffsetNext != 0);
 

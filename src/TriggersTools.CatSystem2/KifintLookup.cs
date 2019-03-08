@@ -31,7 +31,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <summary>
 		///  The list of merged KIFINT archives.
 		/// </summary>
-		private readonly List<Kifint> kifints = new List<Kifint>();
+		private readonly List<KifintArchive> kifints = new List<KifintArchive>();
 		/// <summary>
 		///  The KIFINT lookup for all update##.int archives.
 		/// </summary>
@@ -68,7 +68,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <summary>
 		///  Gets the list of merged KIFINT archives.
 		/// </summary>
-		public IReadOnlyList<Kifint> Kifints { get; }
+		public IReadOnlyList<KifintArchive> Kifints { get; }
 
 		/// <summary>
 		///  Gets all entries without being overwritten by the <see cref="Update"/> lookup.
@@ -76,7 +76,7 @@ namespace TriggersTools.CatSystem2 {
 		public IEnumerable<KifintEntry> Entries {
 			get {
 				var entries = Enumerable.Empty<KifintEntry>();
-				foreach (Kifint kifint in kifints) {
+				foreach (KifintArchive kifint in kifints) {
 					entries = entries.Concat(kifint);
 				}
 				return entries;
@@ -127,11 +127,11 @@ namespace TriggersTools.CatSystem2 {
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="kifint"/> is null.
 		/// </exception>
-		internal void Merge(Kifint kifint) {
+		internal void Merge(KifintArchive kifint) {
 			if (kifint == null)
 				throw new ArgumentNullException(nameof(kifint));
 			if (kifints.Contains(kifint))
-				throw new InvalidOperationException($"{nameof(KifintLookup)} already contains this {nameof(Kifint)}!");
+				throw new InvalidOperationException($"{nameof(KifintLookup)} already contains this {nameof(KifintArchive)}!");
 			kifints.Add(kifint);
 		}
 
@@ -158,7 +158,7 @@ namespace TriggersTools.CatSystem2 {
 				if (updateLookup != null && updateLookup.TryGetValue(key, out KifintEntry entry))
 					return entry;
 
-				foreach (Kifint kifint in kifints) {
+				foreach (KifintArchive kifint in kifints) {
 					if (kifint.TryGetValue(key, out entry))
 						return entry;
 				}
@@ -181,7 +181,7 @@ namespace TriggersTools.CatSystem2 {
 			if (updateLookup != null && updateLookup.TryGetValue(key, out entry))
 				return true;
 
-			foreach (Kifint kifint in kifints) {
+			foreach (KifintArchive kifint in kifints) {
 				if (kifint.TryGetValue(key, out entry))
 					return true;
 			}
@@ -203,7 +203,7 @@ namespace TriggersTools.CatSystem2 {
 			if (updateLookup != null && updateLookup.ContainsKey(key))
 				return true;
 
-			foreach (Kifint kifint in kifints) {
+			foreach (KifintArchive kifint in kifints) {
 				if (kifint.ContainsKey(key))
 					return true;
 			}
@@ -229,7 +229,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <param name="writer">The stream writer to the archive entries to write to.</param>
 		/// <param name="format">The format to write the entries in.</param>
 		public void SaveList(StreamWriter writer, KifintListFormat format) {
-			foreach (Kifint kifint in kifints)
+			foreach (KifintArchive kifint in kifints)
 				kifint.SaveList(writer, format);
 		}
 
@@ -273,7 +273,7 @@ namespace TriggersTools.CatSystem2 {
 			writer.Write(ArchiveType.ToString());
 
 			writer.Write(kifints.Count);
-			foreach (Kifint kifint in kifints) {
+			foreach (KifintArchive kifint in kifints) {
 				kifint.Write(writer);
 			}
 		}
@@ -330,7 +330,7 @@ namespace TriggersTools.CatSystem2 {
 				lookup.ArchiveType = type;
 				int count = reader.ReadInt32();
 				for (int i = 0; i < count; i++) {
-					Kifint kifint = Kifint.Read(reader, version, installDir, type);
+					KifintArchive kifint = KifintArchive.Read(reader, version, installDir, type);
 					lookup.kifints.Add(kifint);
 				}
 				break;

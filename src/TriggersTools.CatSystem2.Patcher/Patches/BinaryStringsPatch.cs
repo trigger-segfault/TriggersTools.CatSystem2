@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using TriggersTools.SharpUtils.IO;
 using TriggersTools.SharpUtils.Mathematics;
@@ -49,9 +50,9 @@ namespace TriggersTools.CatSystem2.Patcher.Patches {
 		/// <param name="ranges">The range positions.</param>
 		public BinaryStringsPatch(IReadOnlyDictionary<string, string> translations, params BinaryRange[] ranges) {
 			if (ranges.Length == 0)
-				Ranges = Array.AsReadOnly(new BinaryRange[1]);
+				Ranges = new BinaryRange[1].ToImmutableArray();
 			else
-				Ranges = Array.AsReadOnly(ranges);
+				Ranges = ranges.ToImmutableArray();
 			Translations = translations;
 		}
 

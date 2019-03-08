@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace TriggersTools.CatSystem2 {
 		Json,
 	}
 	/// <summary>
-	///  A copy of a <see cref="Kifint"/> for used in outputting a list to json.
+	///  A copy of a <see cref="KifintArchive"/> for used in outputting a list to json.
 	/// </summary>
 	public sealed class KifintList {
 		#region Fields
@@ -44,13 +45,12 @@ namespace TriggersTools.CatSystem2 {
 		///  Constructs the KIFINT archive list and sorts the entry file names.
 		/// </summary>
 		/// <param name="kifint">The associated KIFINT archive.</param>
-		public KifintList(Kifint kifint) {
+		public KifintList(KifintArchive kifint) {
 			StringComparer comparer = StringComparer.InvariantCultureIgnoreCase;
 			FilePath = kifint.FilePath;
 			Entries = kifint.Entries.Values.Select(e => e.FileName)
-												  .OrderBy(e => e, comparer)
-												  .ToList()
-												  .AsReadOnly();
+										   .OrderBy(e => e, comparer)
+										   .ToImmutableArray();
 		}
 
 		#endregion

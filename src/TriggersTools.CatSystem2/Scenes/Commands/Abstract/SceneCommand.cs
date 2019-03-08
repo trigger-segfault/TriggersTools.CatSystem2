@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace TriggersTools.CatSystem2.Scenes.Commands.Abstract {
 	public abstract class SceneCommand : SceneCommandBase, ISceneCommand {
 		#region Constants
 
-		private static readonly IReadOnlyList<string> NoParameters = Array.AsReadOnly(new string[0]);
+		private static readonly IReadOnlyList<string> NoParameters = Array.Empty<string>();
 
 		#endregion
 
@@ -46,7 +47,7 @@ namespace TriggersTools.CatSystem2.Scenes.Commands.Abstract {
 				if (value.Type != SceneLineType.Command)
 					throw new ArgumentException($"{nameof(CatString)} is not of type {nameof(SceneLineType.Command)}!");
 				catString = value;
-				Parameters = Array.AsReadOnly(value.Content.Split(' '));
+				Parameters = value.Content.Split(' ').ToImmutableArray();;
 			}
 		}*/
 		/// <summary>
@@ -59,7 +60,8 @@ namespace TriggersTools.CatSystem2.Scenes.Commands.Abstract {
 				if (content.Length == 0)
 					Parameters = NoParameters;
 				else
-					Parameters = Array.AsReadOnly(content.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+					Parameters = content.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+										.ToImmutableArray();
 			}
 		}
 		/// <summary>
@@ -109,7 +111,7 @@ namespace TriggersTools.CatSystem2.Scenes.Commands.Abstract {
 				throw new ArgumentException($"{nameof(catString)} is not of type {nameof(SceneLineType.Command)}!");
 			Content = CatString.Content;
 			CatString = catString;
-			Parameters = Array.AsReadOnly(catString.Content.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+			Parameters = catString.Content.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToImmutableArray();
 		}*/
 
 		#endregion

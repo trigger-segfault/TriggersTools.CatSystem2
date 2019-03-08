@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 
@@ -90,7 +91,7 @@ namespace TriggersTools.SharpUtils.Enums {
 				if (!valueLookup.ContainsKey(info.Value))
 					valueLookup.Add(info.Value, info);
 			}
-			Fields = Array.AsReadOnly(nameLookup.Values.ToArray());
+			Fields = nameLookup.Values.ToImmutableArray();
 			HasDefaultField = valueLookup.ContainsKey(DefaultValue);
 		}
 

@@ -23,7 +23,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -32,7 +32,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.2.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
   </ItemGroup>
@@ -74,23 +75,30 @@
     <Compile Include="CatCompiler.cs" />
     <Compile Include="Decompile\Animation.Decompile.cs" />
     <Compile Include="Decompile\SceneScript.HumanReadable.cs" />
+    <Compile Include="Exceptions\ExtractException.cs" />
+    <Compile Include="Exceptions\HgxException.cs" />
     <Compile Include="Extract\Animation.Extract.cs" />
     <Compile Include="AnimationFrame.cs" />
     <Compile Include="Attributes\CommandNameAttribute.cs" />
     <Compile Include="CatUtils.cs" />
     <Compile Include="Extract\Hg2Image.Extract.Private.cs" />
-    <Compile Include="Extract\Hg3Image.Extract.cs" />
     <Compile Include="Extract\Hg3Image.Extract.Private.cs" />
-    <Compile Include="Extract\Hg3Image.ProcessImageInternal.cs" />
+    <Compile Include="Extract\HgxImage.ProcessImageManaged.cs" />
+    <Compile Include="Extract\HgxImage.Extract.cs" />
+    <Compile Include="Extract\HgxImage.Extract.Private.cs" />
     <Compile Include="Extract\Structs\Hg2Image.Classes.cs" />
     <Compile Include="Extract\Structs\Hg2Image.Structs.cs" />
     <Compile Include="Extract\Structs\Hg3Image.Classes.cs" />
+    <Compile Include="Extract\Structs\HgxImage.Structs.cs" />
     <Compile Include="Extract\Structs\ZtPackage.Structs.cs" />
     <Compile Include="Extract\ZtPackage.Extract.cs" />
     <Compile Include="Hg3Attribute.cs" />
-    <Compile Include="Hg3Frame.cs" />
-    <Compile Include="Hg3Image.cs" />
+    <Compile Include="HgxFrame.cs" />
+    <Compile Include="HgxImage.cs" />
+    <Compile Include="HgxOptions.cs" />
+    <Compile Include="HgxType.cs" />
     <Compile Include="Json\JsonColorConverter.cs" />
+    <Compile Include="Json\JsonStringEnumConverter.cs" />
     <Compile Include="Scenes\ScenePage.cs" />
     <Compile Include="Scenes\SceneLineType.cs" />
     <Compile Include="SceneScript.cs" />
@@ -121,12 +129,8 @@
     <Compile Include="ZtEntry.cs" />
     <Compile Include="ZtPackage.cs" />
     <None Include="Exceptions\ModuleResourceException.cs" />
-    <None Include="Hg3Old.cs" />
-    <None Include="Extract\Hg3Old.Extract.cs" />
-    <None Include="Extract\Hg3Old.Extract.Private.cs" />
-    <None Include="Hg3OldImage.cs" />
     <Compile Include="KifintCallbacks.cs" />
-    <Compile Include="Kifint.cs" />
+    <Compile Include="KifintArchive.cs" />
     <Compile Include="Extract\Kifint.Extract.cs" />
     <Compile Include="Extract\Kifint.Extract.Private.cs" />
     <Compile Include="KifintEntry.cs" />
@@ -156,9 +160,8 @@
     <Compile Include="Extract\Structs\Kifint.Structs.cs" />
     <Compile Include="Extract\Structs\ScreenScript.Structs.cs" />
     <Compile Include="Utils\MersenneTwister.cs" />
-    <Compile Include="Native\Asmodean.cs" />
-    <None Include="Native\Kernel32.cs" />
-    <Compile Include="Native\Zlib.cs" />
+    <Compile Include="Utils\Asmodean.cs" />
+    <Compile Include="Utils\Zlib.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="VCodeOld.cs" />
   </ItemGroup>
@@ -181,10 +184,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
-  <!--<Target Name="BuildAsmodean" AfterTargets="ResolveAssemblyReferences">
-    <MSBuild Projects="..\Asmodean\asmodean.vcxproj" Properties="Platform=Win32;OutputPath=..\Asmodean\bin\Release\x86" Targets="Build" />
-    <MSBuild Projects="..\Asmodean\asmodean.vcxproj" Properties="Platform=x64;OutputPath=..\Asmodean\bin\Release\x64" Targets="Build" />
-  </Target>-->
+  <Target Name="BuildAsmodean" AfterTargets="ResolveAssemblyReferences">
+    <MSBuild Projects="..\Asmodean\asmodean.vcxproj" Properties="Configuration=Release;Platform=Win32;OutputPath=..\Asmodean\bin\Release\x86" Targets="Build" />
+    <MSBuild Projects="..\Asmodean\asmodean.vcxproj" Properties="Configuration=Release;Platform=x64;OutputPath=..\Asmodean\bin\Release\x64" Targets="Build" />
+  </Target>
   <!-- https://gist.github.com/thoemmi/3724333 -->
   <Target Name="EmbedReferencedAssemblies" AfterTargets="ResolveAssemblyReferences">
     <ItemGroup>

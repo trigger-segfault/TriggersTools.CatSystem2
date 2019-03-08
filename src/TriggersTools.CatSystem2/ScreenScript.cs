@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using Newtonsoft.Json;
 
@@ -48,7 +49,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <param name="lines">The string array containing the screen line commands.</param>
 		internal ScreenScript(string fileName, string[] lines) {
 			FileName = Path.GetFileName(fileName);
-			Lines = Array.AsReadOnly(lines);
+			Lines = lines.ToImmutableArray();
 		}
 
 		#endregion

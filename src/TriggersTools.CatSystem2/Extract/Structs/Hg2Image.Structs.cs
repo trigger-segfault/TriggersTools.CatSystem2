@@ -1,64 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using TriggersTools.SharpUtils.Text;
+﻿using System.Runtime.InteropServices;
 
 namespace TriggersTools.CatSystem2.Structs {
-	/*/// <summary>
-	///  The header for an HG-3 file. Which is used to identify the header size as well as the signature.
+	/// <summary>
+	///  Standard HG-2 image information.
 	/// </summary>
-	[StructLayout(LayoutKind.Sequential, Pack = 1)]
-	internal struct HG2HDR {
-		#region Constants
-
-		/// <summary>
-		///  The expected value of <see cref="Signature"/>.
-		/// </summary>
-		public const string ExpectedSignature = "HG-2";
-
-		#endregion
-
-		#region Fields
-
-		/// <summary>
-		///  The raw character array for the header's signature. This should be "HG-2".
-		/// </summary>
-		[MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.U1, SizeConst = 4)]
-		public char[] SignatureRaw; // "HG-2"
-		/// <summary>
-		///  Unknown 4-byte value 1.
-		/// </summary>
-		public int HeaderSize;
-		/// <summary>
-		///  0x25 = 88 bytes (full header), 0x20 = 80 bytes (truncated)
-		/// </summary>
-		public int Type;
-
-
-		#endregion
-
-		#region Properties
-
-		/// <summary>
-		///  Gets the header's signature from the null-terminated character array.
-		/// </summary>
-		public string Signature => SignatureRaw.ToNullTerminatedString();
-
-		#endregion
-
-		#region ToString Override
-
-		/// <summary>
-		///  Gets the string representation of the HG-2 header.
-		/// </summary>
-		/// <returns>The string representation of the HG-2 header.</returns>
-		public override string ToString() => $"HG2HDR \"{Signature}\"";
-
-		#endregion
-	}*/
 	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	internal struct HG2IMG {
 		#region Fields
@@ -71,22 +16,26 @@ namespace TriggersTools.CatSystem2.Structs {
 		///  The condensed height of the image.
 		/// </summary>
 		public int Height;
-
 		/// <summary>
 		///  The depth of the image format in bits.
 		/// </summary>
 		public int DepthBits;
 
+		/// <summary>
+		///  Unknown 4-byte value 1.
+		/// </summary>
 		public int Unknown1;
+		/// <summary>
+		///  Unknown 4-byte value 2.
+		/// </summary>
 		public int Unknown2;
 
-		public HGXIMGDATA Data;
-		/*public int DataLength; // 32
-		public int OriginalDataLength;
-		public int CmdLength;
-		public int OriginalCmdLength;*/
 		/// <summary>
-		///  Always 40?
+		///  The image compression data.
+		/// </summary>
+		public HGXIMGDATA Data;
+		/// <summary>
+		///  This is possibly the offset to the image data. Always 40.
 		/// </summary>
 		public int ExtraLength; // 48
 		/// <summary>
@@ -116,27 +65,36 @@ namespace TriggersTools.CatSystem2.Structs {
 		/// </summary>
 		public int IsTransparent;
 		/// <summary>
-		///  The offset from the start of this structure.
+		///  The offset from the start of this structure to the next image entry. Zero when there are no more images.
 		/// </summary>
 		public int OffsetNext;
 
-		/*/// <summary>
+		#endregion
+
+		#region ToString Override
+
+		/// <summary>
+		///  Gets the string representation of the HG-2 image.
+		/// </summary>
+		/// <returns>The string representation of the HG-2 image.</returns>
+		public override string ToString() => $"HG2IMG W={Width} H={Height}";
+
+		#endregion
+	}
+	/// <summary>
+	///  Extract HG-2 image base information.
+	/// </summary>
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
+	internal struct HG2IMG_BASE {
+		#region Fields
+
+		/// <summary>
 		///  The horizontal center of the image. Used for drawing in the game.
 		/// </summary>
 		public int BaseX;
 		/// <summary>
 		///  The vertical baseline of the image. Used for drawing in the game.
 		/// </summary>
-		public int BaseY;*/
-
-		#endregion
-	}
-
-	[StructLayout(LayoutKind.Sequential, Pack = 1)]
-	internal struct HG2IMG_EX {
-		#region Fields
-
-		public int BaseX;
 		public int BaseY;
 
 		#endregion
@@ -144,10 +102,10 @@ namespace TriggersTools.CatSystem2.Structs {
 		#region ToString Override
 
 		/// <summary>
-		///  Gets the string representation of the HG-2 header.
+		///  Gets the string representation of the HG-2 image base.
 		/// </summary>
-		/// <returns>The string representation of the HG-2 header.</returns>
-		public override string ToString() => $"HG2HDR_EX";
+		/// <returns>The string representation of the HG-2 image base.</returns>
+		public override string ToString() => $"HG2IMG_BASE X={BaseX} Y={BaseY}";
 
 		#endregion
 	}
