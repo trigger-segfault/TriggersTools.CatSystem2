@@ -6,23 +6,16 @@
 
 #include "blowfish.h"
 
-#define S(x,i) (SBoxes[i][x.w.byte##i])
+#define S(x,i) (SBoxes(i,x.w.byte##i))
 #define bf_F(x) (((S(x,0) + S(x,1)) ^ S(x,2)) + S(x,3))
 #define ROUND(a,b,n) (a.dword ^= bf_F(b) ^ PArray[n])
+#define SBoxes(i,x) SBoxes[(i << 8) | x]
 
 
-Blowfish::Blowfish() {
-	/*PArray = new DWORD[18];
-	SBoxes = new DWORD[4][256];*/
-}
-
-/*Blowfish::~Blowfish() {
-	delete PArray;
-	delete[] SBoxes;
-}*/
+Blowfish::Blowfish() { }
 
 // the low level (private) encryption function
-void Blowfish::Blowfish_encipher(DWORD *xl, DWORD *xr) {
+void Blowfish::Blowfish_encipher(uint32* xl, uint32* xr) {
 	union aword  Xl, Xr;
 
 	Xl.dword = *xl;
@@ -44,7 +37,7 @@ void Blowfish::Blowfish_encipher(DWORD *xl, DWORD *xr) {
 }
 
 // the low level (private) decryption function
-void Blowfish::Blowfish_decipher(DWORD *xl, DWORD *xr) {
+void Blowfish::Blowfish_decipher(uint32* xl, uint32* xr) {
 	union aword  Xl;
 	union aword  Xr;
 
@@ -68,9 +61,9 @@ void Blowfish::Blowfish_decipher(DWORD *xl, DWORD *xr) {
 
 
 // constructs the enctryption sieve
-void Blowfish::Initialize(BYTE key[], int keybytes) {
+void Blowfish::Initialize(byte* key, int keybytes) {
 	int  		i, j;
-	DWORD  		data, datal, datar;
+	uint32  		data, datal, datar;
 	union aword temp;
 
 	// first fill arrays from data tables
@@ -79,7 +72,7 @@ void Blowfish::Initialize(BYTE key[], int keybytes) {
 
 	for (i = 0; i < 4; i++) {
 		for (j = 0; j < 256; j++)
-			SBoxes[i][j] = bf_S[i][j];
+			SBoxes(i,j) = bf_S[i][j];
 	}
 
 
@@ -107,17 +100,17 @@ void Blowfish::Initialize(BYTE key[], int keybytes) {
 	for (i = 0; i < 4; ++i) {
 		for (j = 0; j < 256; j += 2) {
 			Blowfish_encipher(&datal, &datar);
-			SBoxes[i][j] = datal;
-			SBoxes[i][j + 1] = datar;
+			SBoxes(i,j) = datal;
+			SBoxes(i,j + 1) = datar;
 		}
 	}
 }
 
 // get output length, which must be even MOD 8
-DWORD Blowfish::GetOutputLength(DWORD lInputLong) {
-	DWORD 	lVal;
+uint32 Blowfish::GetOutputLength(uint32 lInputLong) {
+	uint32 	lVal;
 
-	lVal = lInputLong % 8;	// find out if uneven number of bytes atthe end
+	lVal = lInputLong % 8;	// find out if uneven number of bytes at the end
 	if (lVal != 0)
 		return lInputLong + 8 - lVal;
 	else
@@ -127,9 +120,9 @@ DWORD Blowfish::GetOutputLength(DWORD lInputLong) {
 // Encode pIntput into pOutput.  Input length in lSize.  Returned value
 // is length of output which will be even MOD 8 bytes.  Inputbuffer and
 // output buffer can be the same, but be sure buffer length is even MOD8.
-DWORD Blowfish::Encode(BYTE * pInput, BYTE * pOutput, DWORD lSize) {
-	DWORD 	lCount, lOutSize, lGoodBytes;
-	BYTE	*pi, *po;
+uint32 Blowfish::Encode(byte* pInput, byte* pOutput, uint32 lSize) {
+	uint32 	lCount, lOutSize, lGoodBytes;
+	byte	*pi, *po;
 	int		i, j;
 	int		SameDest = (pInput == pOutput ? 1 : 0);
 
@@ -139,8 +132,8 @@ DWORD Blowfish::Encode(BYTE * pInput, BYTE * pOutput, DWORD lSize) {
 		{
 			if (lCount < lSize - 7)	// if not dealing with unevenbytes at end
 			{
-				Blowfish_encipher((DWORD *)pInput,
-					(DWORD *)(pInput + 4));
+				Blowfish_encipher((uint32 *)pInput,
+					(uint32 *)(pInput + 4));
 			}
 			else		// pad end of data with null bytes tocomplete encryption
 			{
@@ -148,8 +141,8 @@ DWORD Blowfish::Encode(BYTE * pInput, BYTE * pOutput, DWORD lSize) {
 				j = (int)(lOutSize - lSize);	// number ofbytes to set to null
 				for (i = 0; i < j; i++)
 					*po++ = 0;
-				Blowfish_encipher((DWORD *)pInput,
-					(DWORD *)(pInput + 4));
+				Blowfish_encipher((uint32 *)pInput,
+					(uint32 *)(pInput + 4));
 			}
 			pInput += 8;
 		}
@@ -162,8 +155,8 @@ DWORD Blowfish::Encode(BYTE * pInput, BYTE * pOutput, DWORD lSize) {
 				for (i = 0; i < 8; i++)
 					// copy bytes to output
 					*po++ = *pi++;
-				Blowfish_encipher((DWORD *)pOutput,	// nowencrypt them
-					(DWORD *)(pOutput + 4));
+				Blowfish_encipher((uint32 *)pOutput,	// nowencrypt them
+					(uint32 *)(pOutput + 4));
 			}
 			else		// pad end of data with null bytes tocomplete encryption
 			{
@@ -173,8 +166,8 @@ DWORD Blowfish::Encode(BYTE * pInput, BYTE * pOutput, DWORD lSize) {
 					*po++ = *pInput++;
 				for (j = i; j < 8; j++)
 					*po++ = 0;
-				Blowfish_encipher((DWORD *)pOutput,
-					(DWORD *)(pOutput + 4));
+				Blowfish_encipher((uint32 *)pOutput,
+					(uint32 *)(pOutput + 4));
 			}
 			pInput += 8;
 			pOutput += 8;
@@ -185,17 +178,17 @@ DWORD Blowfish::Encode(BYTE * pInput, BYTE * pOutput, DWORD lSize) {
 
 // Decode pIntput into pOutput.  Input length in lSize.  Inputbuffer and
 // output buffer can be the same, but be sure buffer length is even MOD8.
-void Blowfish::Decode(BYTE * pInput, BYTE * pOutput, DWORD lSize) {
-	DWORD 	lCount;
-	BYTE	*pi, *po;
+void Blowfish::Decode(byte* pInput, byte* pOutput, uint32 lSize) {
+	uint32 	lCount;
+	byte	*pi, *po;
 	int		i;
 	int		SameDest = (pInput == pOutput ? 1 : 0);
 
 	for (lCount = 0; lCount < lSize; lCount += 8) {
 		if (SameDest)	// if encoded data is being written into inputbuffer
 		{
-			Blowfish_decipher((DWORD *)pInput,
-				(DWORD *)(pInput + 4));
+			Blowfish_decipher((uint32 *)pInput,
+				(uint32 *)(pInput + 4));
 			pInput += 8;
 		}
 		else 			// output buffer not equal to inputbuffer
@@ -204,8 +197,8 @@ void Blowfish::Decode(BYTE * pInput, BYTE * pOutput, DWORD lSize) {
 			po = pOutput;
 			for (i = 0; i < 8; i++)
 				*po++ = *pi++;
-			Blowfish_decipher((DWORD *)pOutput,
-				(DWORD *)(pOutput + 4));
+			Blowfish_decipher((uint32 *)pOutput,
+				(uint32 *)(pOutput + 4));
 			pInput += 8;
 			pOutput += 8;
 		}
@@ -213,36 +206,24 @@ void Blowfish::Decode(BYTE * pInput, BYTE * pOutput, DWORD lSize) {
 }
 
 
-void Blowfish::Set_Key(BYTE key[], int keybytes) {
+void Blowfish::Set_Key(byte* key, int keybytes) {
 	Initialize(key, keybytes);
 }
 
-DWORD Blowfish::Encrypt(BYTE * pInput, DWORD lSize) {
-	if (lSize != GetOutputLength(lSize)) {
-		printf("%s", "Input len != Output len");
+uint32 Blowfish::Encrypt(byte* pInput, uint32 lSize) {
+	// This should be checked in managed code
+	if (lSize != GetOutputLength(lSize))
 		return 0;
-	}
 
-	BYTE *pOutput = new BYTE[lSize];
-	DWORD ret = Encode(pInput, pOutput, lSize);
-
-	memcpy(pInput, pOutput, lSize);
-	delete[] pOutput;
-
-	return ret;
+	return Encode(pInput, pInput, lSize);
 }
 
-void Blowfish::Decrypt(BYTE * pInput, DWORD lSize) {
-	if (lSize != GetOutputLength(lSize)) {
-		printf("%s", "Input len != Output len");
+void Blowfish::Decrypt(byte* pInput, uint32 lSize) {
+	// This should be checked in managed code
+	if (lSize != GetOutputLength(lSize))
 		return;
-	}
 
-	BYTE *pOutput = new BYTE[lSize];
-	Decode(pInput, pOutput, lSize);
-
-	memcpy(pInput, pOutput, lSize);
-	delete[] pOutput;
+	Decode(pInput, pInput, lSize);
 }
 
 

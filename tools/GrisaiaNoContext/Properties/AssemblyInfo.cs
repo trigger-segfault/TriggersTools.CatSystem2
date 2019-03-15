@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TriggersTools.Resources")]
+[assembly: AssemblyTitle("GrisaiaNoContext")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("TriggersTools.Resources")]
-[assembly: AssemblyCopyright("Copyright © Robert Jordan {YEAR}")]
+[assembly: AssemblyProduct("GrisaiaNoContext")]
+[assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("2c45462e-7d5a-4923-93a0-20ef5f332220")]
+[assembly: Guid("0203f079-7699-4ae3-9c5f-f5ed7ae66228")]
 
 // Version information for an assembly consists of the following four values:
 //

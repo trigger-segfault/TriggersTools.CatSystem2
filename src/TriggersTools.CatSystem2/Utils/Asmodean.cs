@@ -13,14 +13,20 @@ namespace TriggersTools.CatSystem2.Utils {
 	/// <summary>
 	///  A static class for asmodean.dll native methods.
 	/// </summary>
-	internal static class Asmodean {
+#if DEBUG_LIBRARY
+	public
+#else
+	internal
+#endif
+	unsafe static class Asmodean {
 		#region Static Constructors
 
 		static Asmodean() {
-			// Make sure the zlib1.dll is extracted because asmodean.dll needs it.
-			int unused = 0;
+			// Make sure the zlib1.dll is extracted and loaded because asmodean.dll needs it.
 			try {
-				Zlib.Compress(Array.Empty<byte>(), ref unused, Array.Empty<byte>(), 0);
+				Zlib.CompressedBounds(0);
+				//int unused = 0;
+				//Zlib.Compress(Array.Empty<byte>(), ref unused, Array.Empty<byte>(), 0);
 			} catch { }
 			string arch = (Environment.Is64BitProcess ? "x64" : "x86");
 			string path = Path.Combine(CatUtils.TempDir, arch);
@@ -34,7 +40,7 @@ namespace TriggersTools.CatSystem2.Utils {
 
 		#endregion
 
-		[DllImport("asmodean.dll", CallingConvention = CallingConvention.Cdecl)]
+		/*[DllImport("asmodean.dll", CallingConvention = CallingConvention.Cdecl)]
 		public extern static void DecryptEntry(
 			ref ulong entryInfo,
 			uint fileKey);
@@ -57,9 +63,27 @@ namespace TriggersTools.CatSystem2.Utils {
 			byte[] keyBuffer,
 			int keyLength,
 			byte[] vcodeBuffer,
-			int vcodeLength);
+			int vcodeLength);*/
 
-		
+		[DllImport("asmodean.dll", CallingConvention = CallingConvention.Cdecl)]
+		internal extern static void InitializeBlowfish(
+			ref BlowfishStruct blowfish,
+			byte* key,
+			int keyLength);
+
+		[DllImport("asmodean.dll", CallingConvention = CallingConvention.Cdecl)]
+		internal extern static void EncryptBlowfish(
+			BlowfishStruct blowfish,
+			byte* buffer,
+			int bufferLength);
+
+		[DllImport("asmodean.dll", CallingConvention = CallingConvention.Cdecl)]
+		internal extern static void DecryptBlowfish(
+			BlowfishStruct blowfish,
+			byte* buffer,
+			int bufferLength);
+
+
 		/// <summary>
 		///  Return codes for <see cref="ProcessImageNative"/>.
 		/// </summary>

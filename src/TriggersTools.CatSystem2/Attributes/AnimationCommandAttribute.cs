@@ -3,16 +3,12 @@ using TriggersTools.SharpUtils.Exceptions;
 
 namespace TriggersTools.CatSystem2.Attributes {
 	/// <summary>
-	///  An attribute that specified information about an <see cref="AnimationFrameType"/> command.
+	///  An attribute that specified information about an <see cref="AnimationLineType"/> command.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Field)]
-	internal sealed class AnimationCommandAttribute : Attribute {
+	internal sealed class AnimationCommandAttribute : CommandNameAttribute {
 		#region Properties
-
-		/// <summary>
-		///  Gets the output command name to use for this enum field.
-		/// </summary>
-		public string Command { get; }
+		
 		/// <summary>
 		///  Gets the maximum number of parameters for the command.
 		/// </summary>
@@ -42,10 +38,11 @@ namespace TriggersTools.CatSystem2.Attributes {
 		/// <exception cref="ArgumentOutOfRangeException">
 		///  <paramref name="count"/> is less than zero.
 		/// </exception>
-		public AnimationCommandAttribute(string command, int count, bool isRange = false, bool isJump = false) {
+		public AnimationCommandAttribute(string command, int count, bool isRange = false, bool isJump = false)
+			: base(command)
+		{
 			if (count < 0)
 				throw ArgumentOutOfRangeUtils.OutsideMin(nameof(count), count, 0, true);
-			Command = command;
 			Count = count;
 			IsRange = isRange;
 			IsJump = isJump;

@@ -1,13 +1,13 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using TriggersTools.CatSystem2.Structs;
-using Newtonsoft.Json;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
+using TriggersTools.CatSystem2.Structs;
 using TriggersTools.SharpUtils.Collections;
-using System.Collections;
 using TriggersTools.SharpUtils.Enums;
-using System.Collections.Immutable;
 using TriggersTools.CatSystem2.Json;
 
 namespace TriggersTools.CatSystem2 {
@@ -112,7 +112,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <param name="fileName">The file name of the HG-3 image with the .hg3 extension.</param>
 		/// <param name="hdr">The HGXHDR struct containing extra information on the HG-3.</param>
 		/// <param name="frameInfos">The HG-3 frame information classes to construct the frames from.</param>
-		/// <param name="expand">True if the images were extracted while <paramref name="expand"/> was true.</param>
+		/// <param name="options">The options used when extracting the HG-3 image.</param>
 		internal HgxImage(string fileName, HGXHDR hdr, Hg3FrameInfo[] frameInfos, HgxOptions options) {
 			Version = CurrentVersion;
 			FileName = fileName;
@@ -133,7 +133,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <param name="fileName">The file name of the HG-2 image with the .hg2 extension.</param>
 		/// <param name="hdr">The HGXHDR struct containing extra information on the HG-2.</param>
 		/// <param name="frameInfos">The HG-2 frame information classes to construct the frames from.</param>
-		/// <param name="expand">True if the images were extracted while <paramref name="expand"/> was true.</param>
+		/// <param name="options">The options used when extracting the HG-2 image.</param>
 		internal HgxImage(string fileName, HGXHDR hdr, Hg2FrameInfo[] frameInfos, HgxOptions options) {
 			Version = CurrentVersion;
 			FileName = fileName;
@@ -430,7 +430,7 @@ namespace TriggersTools.CatSystem2 {
 		///  Gets the string representation of the HG-X image.
 		/// </summary>
 		/// <returns>The string representation of the HG-X image.</returns>
-		public override string ToString() => $"{HgxType.ToDescription() ?? "HG-X"} \"{FileName}\" Frames={Count}";
+		public override string ToString() => $"{HgxType.ToDescription() ?? "HG-X"} Image \"{FileName}\" Frames={Count}";
 		
 		#endregion
 	}

@@ -244,7 +244,8 @@ namespace TriggersTools.CatSystem2 {
 			// Generate a new temporary compile directory
 			// Delete the temporary compile directory when done
 			using (var tmp = CreateCompileTempDir()) {
-				string tmpFile = Path.Combine(tmp, Path.ChangeExtension(Path.GetTempFileName(), ".txt"));
+				//string tmpFile = Path.Combine(tmp, Path.ChangeExtension(Path.GetTempFileName(), ".txt"));
+				string tmpFile = Path.Combine(tmp, Path.ChangeExtension(Guid.NewGuid().ToString(), ".txt"));
 
 				// Write the script to the file
 				File.WriteAllText(tmpFile, script, CatUtils.ShiftJIS);
@@ -333,6 +334,7 @@ namespace TriggersTools.CatSystem2 {
 				Arguments = $"\"{patternOrFile}\"",
 				UseShellExecute = false,
 				WorkingDirectory = tmp,
+				RedirectStandardOutput = false,
 			};
 			using (Process p = Process.Start(startInfo))
 				p.WaitForExit();

@@ -4,6 +4,12 @@ using TriggersTools.CatSystem2.Structs;
 
 namespace TriggersTools.CatSystem2 {
 	/// <summary>
+	///  Extensions methods for extracting from <see cref="KifintEntry"/>s.
+	/// </summary>
+	public static partial class KifintEntryExtensions {
+
+	}
+	/// <summary>
 	///  An entry for a file in a KIF INT archive.
 	/// </summary>
 	public sealed partial class KifintEntry {
@@ -12,7 +18,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <summary>
 		///  Gets the KIFINT file used to extract this entry from.
 		/// </summary>
-		public KifintArchive Kifint { get; private set; }
+		public KifintArchiveInfo Kifint { get; private set; }
 		/// <summary>
 		///  Gets the name of the file with the extension.
 		/// </summary>
@@ -38,6 +44,11 @@ namespace TriggersTools.CatSystem2 {
 		///  Gets the extension of the file.
 		/// </summary>
 		public string Extension => Path.GetExtension(FileName).ToLower();
+		/// <summary>
+		///  Gets the weak reference to the KIFINT archive for this KIFINT archive information.
+		///  Returns null if the KIFINT archive has been collected.
+		/// </summary>
+		public KifintArchive Archive => Kifint.Archive;
 
 		#endregion
 
@@ -47,6 +58,17 @@ namespace TriggersTools.CatSystem2 {
 		///  Constructs an unassigned KIFINT entry for use with <see cref="Read"/>.
 		/// </summary>
 		private KifintEntry() { }
+		/// <summary>
+		///  Constructs a KIFINT entry with the specified entry data, parent KIFINT archive.
+		/// </summary>
+		/// <param name="kifEntry">The decrypted data for the entry.</param>
+		/// <param name="kifint">The parent KIFINT arhive.</param>
+		internal KifintEntry(KIFENTRY kifEntry, KifintArchive kifint) {
+			Kifint = kifint;
+			FileName = kifEntry.FileName;
+			Offset = kifEntry.Offset;
+			Length = kifEntry.Length;
+		}
 		/// <summary>
 		///  Constructs a KIFINT entry with the specified file name, entry data, parent KIFINT archive.
 		/// </summary>
@@ -69,7 +91,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <summary>
 		///  Writes the decrypted KIFINT entry to the stream. For use with <see cref="KifintLookup"/>.
 		/// </summary>
-		/// <param name="writer"></param>
+		/// <param name="writer">The writer for the current stream.</param>
 		internal void Write(BinaryWriter writer) {
 			writer.Write(FileName);
 			writer.Write(Offset);
@@ -99,8 +121,9 @@ namespace TriggersTools.CatSystem2 {
 		///  Extracts the KIFINT entry to a <see cref="byte[]"/>.
 		/// </summary>
 		/// <returns>A byte array containing the data of the decrypted entry.</returns>
-		public byte[] Extract() {
-			return KifintArchive.Extract(this);
+		public byte[] ExtractToBytes() {
+			using (KifintStream kifintStream = new KifintStream())
+				return KifintArchive.ExtractToBytes(kifintStream, this);
 		}
 		/// <summary>
 		///  Extracts the KIFINT entry to a <see cref="byte[]"/>.
@@ -111,27 +134,59 @@ namespace TriggersTools.CatSystem2 {
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="kifintStream"/> is null.
 		/// </exception>
-		public byte[] Extract(KifintStream kifintStream) {
-			return KifintArchive.Extract(kifintStream, this);
+		public byte[] ExtractToBytes(KifintStream kifintStream) {
+			return KifintArchive.ExtractToBytes(kifintStream, this);
 		}
 		/// <summary>
-		///  Extracts the KIFINT entry to a <see cref="MemoryStream"/>.
+		///  Extracts the KIFINT entry to a fixed stream.
 		/// </summary>
-		/// <returns>A memory stream containing the data of the decrypted entry.</returns>
-		public MemoryStream ExtractToStream() {
-			return new MemoryStream(Extract());
+		/// <returns>A fixed stream containing the data of the decrypted entry.</returns>
+		public Stream ExtractToStream() {
+			if (CatDebug.StreamExtract) // Do not leave the stream open, it's not used anywhere else.
+				return ExtractToStream(new KifintStream(), false);
+			else
+				return new MemoryStream(ExtractToBytes());
 		}
 		/// <summary>
-		///  Extracts the KIFINT entry to a <see cref="MemoryStream"/>.
+		///  Extracts the KIFINT entry to a fixed stream of <paramref name="kifintStream"/>.
 		/// </summary>
 		/// <param name="kifintStream">The stream to the open KIFINT archive.</param>
-		/// <returns>A memory stream containing the data of the decrypted entry.</returns>
+		/// <returns>
+		///  A fixed stream containing the data of the decrypted entry. This stream must always be disposed of, because
+		///  it's not guaranteed to be a fixed stream of <paramref name="kifintStream"/>. This is the case when the
+		///  length is small enough for extracting bytes to be more efficient.
+		/// </returns>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="kifintStream"/> is null.
 		/// </exception>
-		public MemoryStream ExtractToStream(KifintStream kifintStream) {
-			return new MemoryStream(Extract(kifintStream));
+		public Stream ExtractToStream(KifintStream kifintStream) {
+			if (CatDebug.StreamExtract) // Leave stream open by default, it may be used again.
+				return ExtractToStream(kifintStream, true);
+			else
+				return new MemoryStream(ExtractToBytes(kifintStream));
+		}
+		/// <summary>
+		///  Extracts the KIFINT entry to a fixed stream of <paramref name="kifintStream"/>.
+		/// </summary>
+		/// <param name="kifintStream">The stream to the open KIFINT archive.</param>
+		/// <param name="leaveOpen">
+		///  True if the KIFINT archive stream should be left open even after closing the returned stream.
+		/// </param>
+		/// <returns>
+		///  A fixed stream containing the data of the decrypted entry. This stream must always be disposed of, because
+		///  it's not guaranteed to be a fixed stream of <paramref name="kifintStream"/>. This is the case when the
+		///  length is small enough for extracting bytes to be more efficient.
+		/// </returns>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="kifintStream"/> is null.
+		/// </exception>
+		public Stream ExtractToStream(KifintStream kifintStream, bool leaveOpen) {
+			if (CatDebug.StreamExtract)
+				return KifintArchive.ExtractToStream(kifintStream, this, leaveOpen);
+			else
+				return new MemoryStream(ExtractToBytes(kifintStream));
 		}
 		/// <summary>
 		///  Extracts the KIFINT entry and saves it to <paramref name="filePath"/>.
@@ -142,7 +197,14 @@ namespace TriggersTools.CatSystem2 {
 		///  <paramref name="filePath"/> is null.
 		/// </exception>
 		public void ExtractToFile(string filePath) {
-			File.WriteAllBytes(filePath, Extract());
+			if (CatDebug.StreamExtract) {
+				using (var output = File.Create(filePath))
+				using (var input = ExtractToStream())
+					input.CopyTo(output);
+			}
+			else {
+				File.WriteAllBytes(filePath, ExtractToBytes());
+			}
 		}
 		/// <summary>
 		///  Extracts the KIFINT entry and saves it to <paramref name="filePath"/>.
@@ -154,7 +216,15 @@ namespace TriggersTools.CatSystem2 {
 		///  <paramref name="kifintStream"/> or <paramref name="filePath"/> is null.
 		/// </exception>
 		public void ExtractToFile(KifintStream kifintStream, string filePath) {
-			File.WriteAllBytes(filePath, Extract(kifintStream));
+			if (CatDebug.StreamExtract) {
+				using (var output = File.Create(filePath))
+				using (var input = ExtractToStream(kifintStream, true))
+					input.CopyTo(output);
+			}
+			else {
+				File.WriteAllBytes(filePath, ExtractToBytes());
+			}
+			File.WriteAllBytes(filePath, ExtractToBytes(kifintStream));
 		}
 		/// <summary>
 		///  Extracts the KIFINT entry and saves it to <paramref name="directory"/>/<see cref="FileName"/>.
@@ -183,29 +253,6 @@ namespace TriggersTools.CatSystem2 {
 				throw new ArgumentNullException(nameof(directory));
 			ExtractToFile(kifintStream, Path.Combine(directory, FileName));
 		}
-		/*/// <summary>
-		///  Extracts the HG-3 file and the images contained within to the output <paramref name="directory"/>.
-		/// </summary>
-		/// <param name="directory">The output directory to save the images to.</param>
-		/// <param name="expand">True if the images are expanded to their full size when saving.</param>
-		/// <returns>The extracted <see cref="Hg3"/> information.</returns>
-		public Hg3 ExtractHg3AndImages(string directory, bool expand) {
-			return Kifint.ExtractHg3AndImages(this, directory, expand);
-		}
-		/// <summary>
-		///  Extracts the HG-3 image information ONLY and does not extract the actual images.
-		/// </summary>
-		/// <returns>The extracted <see cref="Hg3"/> information.</returns>
-		public Hg3 ExtractHg3() {
-			return Kifint.ExtractHg3(this);
-		}
-		/// <summary>
-		///  Extracts the ANM animation information from the entry.
-		/// </summary>
-		/// <returns>The extracted <see cref="Animation"/> animation information.</returns>
-		public Animation ExtractAnm() {
-			return Kifint.ExtractAnimation(this);
-		}*/
 
 		#endregion
 
@@ -215,7 +262,7 @@ namespace TriggersTools.CatSystem2 {
 		///  Gets the string representation of the KIFINT entry.
 		/// </summary>
 		/// <returns>The string representation of the KIFINT entry.</returns>
-		public override string ToString() => $"KifintEntry: \"{FileName}\"";
+		public override string ToString() => $"\"{FileName}\" Length={Length}";
 
 		#endregion
 	}

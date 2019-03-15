@@ -37,10 +37,8 @@ namespace TriggersTools.CatSystem2 {
 		private readonly GenericResource vcodeRes;
 		[JsonIgnore]
 		private readonly GenericResource vcode2Res;
-#if !NATIVE_BLOWFISH
 		[JsonIgnore]
 		private Blowfish blowfish;
-#endif
 
 		#endregion
 
@@ -55,10 +53,10 @@ namespace TriggersTools.CatSystem2 {
 			keyCodeRes.Data = Cs2KeyCode;
 			vcodeRes.Data = Cs2VCodes;
 			vcode2Res.Data = Cs2VCodes;
-
-			//InitializeBlowfish();
 		}
 		private VCodes(string exeFile) {
+			// We're using this here so that we can dispose of the loaded module after we're done.
+			// We'll still keep the loaded resources.
 			using (resInfo = new ResourceInfo(exeFile, false)) {
 				IntPtr hModule = resInfo.ModuleHandle;
 				ushort language = (ushort) LanguageIdentifier.Japanese;
@@ -66,8 +64,6 @@ namespace TriggersTools.CatSystem2 {
 				resInfo.Add(vcodeRes = new GenericResource(hModule, VCodeType, VCodeName, language));
 				resInfo.Add(vcode2Res = new GenericResource(hModule, VCode2Type, VCode2Name, language));
 			}
-
-			//InitializeBlowfish();
 		}
 
 		#endregion
@@ -162,6 +158,10 @@ namespace TriggersTools.CatSystem2 {
 
 		#region Encrypt/Decrypt
 
+		/// <summary>
+		///  Generates the blowfish key from <see cref="KeyCode"/>.
+		/// </summary>
+		/// <returns>The blowfish key.</returns>
 		private byte[] GetKey() {
 			byte[] key = new byte[keyCodeRes.Length];
 			Array.Copy(keyCodeRes.Data, key, key.Length);
@@ -169,15 +169,20 @@ namespace TriggersTools.CatSystem2 {
 				key[i] ^= 0xCD;
 			return key;
 		}
+		/// <summary>
+		///  Initializes a new instance of the blowfish encryption algorithm.
+		/// </summary>
 		private void InitializeBlowfish() {
-#if !NATIVE_BLOWFISH
-			/*byte[] key = new byte[keyCodeRes.Length];
-			Array.Copy(keyCodeRes.Data, key, key.Length);
-			for (int i = 0; i < key.Length; i++)
-				key[i] ^= 0xCD;*/
-			blowfish = new Blowfish(GetKey());
-#endif
+			if (!CatDebug.NativeBlowfish)
+				blowfish = new BlowfishManaged(GetKey());
+			else
+				blowfish = new BlowfishNative(GetKey());
 		}
+		/// <summary>
+		///  Encrypts the V_CODE or V_CODE 2 into binary data.
+		/// </summary>
+		/// <param name="vcode">The V_CODE to encrypt.</param>
+		/// <returns>The encrypted V_CODE data.</returns>
 		private byte[] Encrypt(string vcode) {
 			// Get the encipher key
 			// Get the byte length of the V_CODE string
@@ -187,14 +192,9 @@ namespace TriggersTools.CatSystem2 {
 			// Copy the code to the buffer
 			CatUtils.ShiftJIS.GetBytes(vcode, 0, vcode.Length, vcodeBuffer, 0);
 			// Encrypt the V_CODE buffer
-#if !NATIVE_BLOWFISH
 			if (blowfish == null)
 				InitializeBlowfish();
 			blowfish.Encrypt(vcodeBuffer);
-#else
-			byte[] key = GetKey();
-			Asmodean.EncryptVCode(key, key.Length, vcodeData, vcodeData.Length);
-#endif
 			return vcodeBuffer;
 
 			//byte[] vcodeBytes = CatUtils.ShiftJIS.GetBytes(vcode.Code);
@@ -211,6 +211,11 @@ namespace TriggersTools.CatSystem2 {
 			//byte[] vcodeData2 = new byte[vcode.Length];
 			//Array.Copy(vcodeBuffer, vcodeData2, vcodeData2.Length);
 		}
+		/// <summary>
+		///  Decrypts the V_CODE or V_CODE2 data into a human-readable string.
+		/// </summary>
+		/// <param name="vcodeData">The V_CODE data to decrypt.</param>
+		/// <returns>The human-readable V_CODE string.</returns>
 		private string Decrypt(byte[] vcodeData) {
 			// Get the decipher key
 			byte[] key = GetKey();
@@ -219,17 +224,22 @@ namespace TriggersTools.CatSystem2 {
 			// Copy the V_CODE to the new buffer, so we don't override the original resource
 			Array.Copy(vcodeData, vcodeBuffer, vcodeData.Length);
 			// Decrypt the V_CODE buffer
-#if !NATIVE_BLOWFISH
 			if (blowfish == null)
 				InitializeBlowfish();
 			blowfish.Decrypt(vcodeBuffer);
-#else
-			byte[] key = GetKey();
-			Asmodean.DecryptVCode(key, key.Length, vcodeBuffer, vcodeBuffer.Length);
-#endif
 			// Null-terminate the V_CODE character string
 			return vcodeBuffer.ToNullTerminatedString(CatUtils.ShiftJIS);
 		}
+
+		#endregion
+
+		#region ToString Override
+
+		/// <summary>
+		///  Gets the string representation of the V_CODEs.
+		/// </summary>
+		/// <returns>The string representation of the V_CODEs.</returns>
+		public override string ToString() => $"V_CODE=\"{VCode}\" V_CODE2={VCode2}";
 
 		#endregion
 	}

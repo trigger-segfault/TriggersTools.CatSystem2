@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using TriggersTools.CatSystem2.Patcher;
 using TriggersTools.CatSystem2.Patcher.Patches;
 using TriggersTools.SharpUtils.IO;
-//using Ionic.Zlib;
 using System.Diagnostics;
 using TriggersTools.Resources.Dialog;
 using TriggersTools.Resources.Menu;
@@ -26,6 +25,219 @@ namespace TriggersTools.CatSystem2.Testing {
 		[DllImport("kernel32", SetLastError = true, CharSet = CharSet.Unicode)]
 		public static extern IntPtr LoadLibrary(string lpFileName);
 		static void Main(string[] args) {
+			var screen = ScreenScript.Extract(@"C:\Users\Onii-chan\Source\C#\TriggersTools\CatSystem2\samples\CatTesting\bin\Debug\fcgview.fes");
+			var screen2 = ScreenScript.Extract(@"C:\Programs\Tools\CatSystem2_v401\system\fes\cgview.fes");
+			//SceneScript.DecompileToFile(@)
+			string vc2 = string.Empty;
+			Stopwatch watchNative = new Stopwatch();
+			Stopwatch watchManaged = new Stopwatch();
+			Stopwatch watchManaged2 = new Stopwatch();
+			VCodes vcodes = VCodes.Load(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)\Grisaia2.bin.bak");
+			/*using (var stream = File.OpenRead("config.fes")) {
+				byte[] dat = new byte[20];
+				stream.Position = stream.Length - 1;
+				BinaryReader reader = new BinaryReader(stream);
+				Console.WriteLine(stream.Read(dat, 0, dat.Length));
+				Console.WriteLine(stream.Read(dat, 0, dat.Length));
+				stream.Position = stream.Length - 1;
+				reader.ReadUInt16();
+				Console.ReadLine();
+			}*/
+			vc2 = vcodes.VCode2;
+			/*for (int i = 0; i < 100000; i++) {
+				CatDebug.NativeBlowfish = true;
+				watchNative.Start();
+				vc2 = vcodes.VCode2;
+				watchNative.Stop();
+				CatDebug.NativeBlowfish = false;
+				CatDebug.ManagedBlowfishRound = true;
+				watchManaged.Start();
+				vc2 = vcodes.VCode2;
+				watchManaged.Stop();
+				CatDebug.ManagedBlowfishRound = false;
+				watchManaged2.Start();
+				vc2 = vcodes.VCode2;
+				watchManaged2.Stop();
+			}
+			Console.WriteLine(watchNative.ElapsedMilliseconds);
+			Console.WriteLine(watchManaged.ElapsedMilliseconds);
+			Console.WriteLine(watchManaged2.ElapsedMilliseconds);*/
+
+			string kajitsuDir = @"C:\Programs\Games\Frontwing\The Fruit of Grisaia";
+			string kajitsuExe = "Grisaia.exe";
+			VCodes kajitsoVCodes = VCodes.Load(Path.Combine(kajitsuDir, kajitsuExe));
+			string hg3Key = "bg15n_d.hg3";
+			KifintLookup images = KifintArchive.LoadLookup(KifintType.Image, kajitsuDir, kajitsoVCodes.VCode2);
+			Stopwatch watch1 = new Stopwatch();
+			Stopwatch watch2 = new Stopwatch();
+			Directory.CreateDirectory("hg3");
+			CatDebug.SpeedTestHgx = true;
+			CatDebug.NativeBlowfish = true;
+			//var entr = images[hg3Key];
+			Stopwatch w1 = new Stopwatch();
+			Stopwatch w2 = new Stopwatch();
+			using (KifintStream kifintStream = new KifintStream()) {
+				int index = 0;
+				foreach (var entry in images.Take(25)) {
+					//if (entry.Length < 100000)
+					//	continue;
+					if (entry.Extension != ".hg3")
+						continue;
+					//if (entry.FileNameWithoutExtension != "yum011a")
+					//	continue;
+					//if (index % 25 == 0)
+					//	Console.Write($"\r{index}");
+					//index++;
+
+					//int loops = 1;// Math.Max(Math.Min(2000, 5 * 26000000 / entry.Length), 5);
+					//Console.WriteLine($"{entry} Loops={loops}");
+
+					CatDebug.StreamExtract = false;
+					//w1.Start();
+					//for (int i = 0; i < loops; i++)
+						entry.ExtractHgxAndImages(kifintStream, "hg3", HgxOptions.None);//.CopyTo(Stream.Null);
+																						//w1.Stop();
+																						//Console.WriteLine($"Extract: {w.ElapsedMilliseconds}ms");
+
+					CatDebug.StreamExtract = true;
+					//w2.Start();
+					//for (int i = 0; i < loops; i++)
+						entry.ExtractHgxAndImages(kifintStream, "hg3", HgxOptions.None);//.CopyTo(Stream.Null);
+					//w2.Stop();
+					//Console.WriteLine($" Stream: {w.ElapsedMilliseconds}ms");
+					//Console.WriteLine();
+					//Thread.Sleep(1000);
+				}
+				foreach (var entry in images) {
+					//if (entry.Length < 100000)
+					//	continue;
+					if (entry.Extension != ".hg3")
+						continue;
+					//if (entry.FileNameWithoutExtension != "yum011a")
+					//	continue;
+					if (index % 25 == 0)
+						Console.Write($"\r{index}");
+					index++;
+
+					int loops = 1;// Math.Max(Math.Min(2000, 5 * 26000000 / entry.Length), 5);
+								  //Console.WriteLine($"{entry} Loops={loops}");
+
+					CatDebug.StreamExtract = false;
+					w1.Start();
+					//for (int i = 0; i < loops; i++)
+						entry.ExtractHgxAndImages(kifintStream, "hg3", HgxOptions.None);//.CopyTo(Stream.Null);
+					w1.Stop();
+					//Console.WriteLine($"Extract: {w.ElapsedMilliseconds}ms");
+
+					CatDebug.StreamExtract = true;
+					w2.Start();
+					//for (int i = 0; i < loops; i++)
+						entry.ExtractHgxAndImages(kifintStream, "hg3", HgxOptions.None);//.CopyTo(Stream.Null);
+					w2.Stop();
+					//Console.WriteLine($" Stream: {w.ElapsedMilliseconds}ms");
+					//Console.WriteLine();
+					//Thread.Sleep(1000);
+				}
+				Console.WriteLine($"\r{index}");
+				Console.WriteLine($"Extract: {w1.ElapsedMilliseconds}ms");
+				Console.WriteLine($" Stream: {w2.ElapsedMilliseconds}ms");
+			}
+			/*for (int j = 0; j < 4; j++) {
+				CatDebug.ManagedBlowfishRound = true;
+				watch1.Reset();
+				watch2.Reset();
+				for (int i = 0; i < 6; i++) {
+					watch1.Start();
+					imageLookup[hg3Key].ExtractHg3AndImages("hg3", HgxOptions.None);
+					watch1.Stop();
+					watch2.Start();
+					using (var stream = KifintArchive.ExtractToStream(new KifintStream(), imageLookup[hg3Key]))
+						HgxImage.ExtractImages(stream, hg3Key, "hg3", HgxOptions.None);
+					watch2.Stop();
+				}
+				Console.WriteLine(watch1.ElapsedMilliseconds);
+				Console.WriteLine(watch2.ElapsedMilliseconds);
+				CatDebug.ManagedBlowfishRound = false;
+				watch1.Reset();
+				watch2.Reset();
+				for (int i = 0; i < 6; i++) {
+					watch1.Start();
+					imageLookup[hg3Key].ExtractHg3AndImages("hg3", HgxOptions.None);
+					watch1.Stop();
+					watch2.Start();
+					using (var stream = KifintArchive.ExtractToStream(new KifintStream(), imageLookup[hg3Key]))
+						HgxImage.ExtractImages(stream, hg3Key, "hg3", HgxOptions.None);
+					watch2.Stop();
+				}
+				Console.WriteLine(watch1.ElapsedMilliseconds);
+				Console.WriteLine(watch2.ElapsedMilliseconds);
+			}*/
+			images = null;
+			Console.ReadLine();
+
+			using (KifintStream kifintStream = new KifintStream()) {
+				KifintLookup movies;
+
+				//CatDebug.NativeBlowfish = true;
+				CatDebug.ManagedBlowfishRound = true;
+				movies = KifintArchive.LoadLookup(KifintType.Movie, @"C:\Programs\Games\Frontwing\Labyrinth of Grisaia", vc2);
+				GC.Collect();
+				watchNative.Restart();
+				foreach (KifintEntry movie in movies) {
+					//movie.ExtractToFile(kifintStream, "mov.mpg");
+					movie.ExtractToBytes(kifintStream);
+				}
+				Console.WriteLine(watchNative.ElapsedMilliseconds);
+
+				//CatDebug.NativeBlowfish = true;
+				CatDebug.ManagedBlowfishRound = false;
+				movies = KifintArchive.LoadLookup(KifintType.Movie, @"C:\Programs\Games\Frontwing\Labyrinth of Grisaia", vc2);
+				GC.Collect();
+				watchNative.Restart();
+				foreach (KifintEntry movie in movies) {
+					//movie.ExtractToFile(kifintStream, "mov.mpg");
+					movie.ExtractToBytes(kifintStream);
+				}
+				Console.WriteLine(watchNative.ElapsedMilliseconds);
+
+				//CatDebug.NativeBlowfish = false;
+				CatDebug.ManagedBlowfishRound = false;
+				movies = KifintArchive.LoadLookup(KifintType.Movie, @"C:\Programs\Games\Frontwing\Labyrinth of Grisaia", vc2);
+				GC.Collect();
+				watchManaged.Restart();
+				foreach (KifintEntry movie in movies) {
+					//movie.ExtractToFile(kifintStream, "mov.mpg");
+					movie.ExtractToBytes(kifintStream);
+				}
+				Console.WriteLine(watchManaged.ElapsedMilliseconds);
+
+				/*CatDebug.NativeBlowfish = true;
+				movies = KifintArchive.LoadLookup(KifintType.Movie, @"C:\Programs\Games\Frontwing\Labyrinth of Grisaia", vc2);
+				GC.Collect();
+				watchNative.Restart();
+				foreach (KifintEntry movie in movies) {
+					using (var fs = File.Create("mov.mpg"))
+						KifintArchive.ExtractToStream(kifintStream, movie, fs);
+				}
+				Console.WriteLine(watchNative.ElapsedMilliseconds);
+
+				CatDebug.NativeBlowfish = false;
+				movies = KifintArchive.LoadLookup(KifintType.Movie, @"C:\Programs\Games\Frontwing\Labyrinth of Grisaia", vc2);
+				GC.Collect();
+				watchManaged.Restart();
+				foreach (KifintEntry movie in movies) {
+					using (var fs = File.Create("mov.mpg"))
+						KifintArchive.ExtractToStream(kifintStream, movie, fs);
+				}
+				Console.WriteLine(watchManaged.ElapsedMilliseconds);
+				GC.Collect();*/
+
+			}
+			GC.Collect();
+			GC.WaitForPendingFinalizers();
+			GC.Collect();
+			Console.WriteLine("FINISHED");
+			Console.ReadLine();
 			Random random = new Random();
 			const int rngLength = 1024 * 64;
 			byte[] rngBytesOrigin = new byte[rngLength];
@@ -382,7 +594,7 @@ namespace TriggersTools.CatSystem2.Testing {
 				zt = ms.ToArray();
 			}*/
 			//File.WriteAllBytes("zt2.zt", zt);
-			var ztpackage = ZtPackage.ExtractAndSaveFiles("zt.zt", "ztout");
+			var ztpackage = ZtPackage.ExtractFiles("zt.zt", "ztout");
 			Environment.Exit(0);
 			/*using (FileStream fs = File.Create("out.zt")) {
 				long offset = 0x100000194;

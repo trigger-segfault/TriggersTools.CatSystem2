@@ -13,7 +13,7 @@ namespace TriggersTools.CatSystem2 {
 		#region Constants
 
 		/// <summary>
-		///  Gets the file name used as a decryption key.
+		///  The file name of the KIFINT entry used as a blowfish decryption key.
 		/// </summary>
 		public const string KeyFileName = "__key__.dat";
 
@@ -67,7 +67,10 @@ namespace TriggersTools.CatSystem2 {
 				if (entries[i].FileName == KeyFileName) {
 					fileKey = MersenneTwister.GenRand(entries[i].Length);
 					decrypt = true;
-					blowfish = new Blowfish(fileKey);
+					if (!CatDebug.NativeBlowfish)
+						blowfish = new BlowfishManaged(fileKey);
+					else
+						blowfish = new BlowfishNative(fileKey);
 					keyIndex = i;
 					break;
 				}
@@ -86,11 +89,7 @@ namespace TriggersTools.CatSystem2 {
 					// Apply the extra offset to be decrypted
 					entries[i].Offset += i;
 					// Decrypt the entry's length and offset
-#if !NATIVE_BLOWFISH
 					blowfish.Decrypt(ref entries[i].Info);
-#else
-					Asmodean.DecryptEntry(ref entry.Info, fileKey);
-#endif
 
 					progress.EntryName = entries[i].FileName;
 					if (i % ProgressThreshold == 0 || i + 1 == hdr.EntryCount)
@@ -157,7 +156,10 @@ namespace TriggersTools.CatSystem2 {
 				if (entries[i].FileName == KeyFileName) {
 					fileKey = MersenneTwister.GenRand(entries[i].Length);
 					decrypt = true;
-					blowfish = new Blowfish(fileKey);
+					if (!CatDebug.NativeBlowfish)
+						blowfish = new BlowfishManaged(fileKey);
+					else
+						blowfish = new BlowfishNative(fileKey);
 					keyIndex = i;
 					break;
 				}
@@ -212,11 +214,7 @@ namespace TriggersTools.CatSystem2 {
 				// Apply the extra offset to be decrypted
 				entry.Offset += i;
 				// Decrypt the entry's length and offset
-#if !NATIVE_BLOWFISH
 				blowfish.Decrypt(ref entry.Info);
-#else
-				Asmodean.DecryptEntry(ref entry.Info, fileKey);
-#endif
 
 				progress.EntryName = entry.FileName;
 				if (i % ProgressThreshold == 0 || i + 1 == hdr.EntryCount)
@@ -225,11 +223,7 @@ namespace TriggersTools.CatSystem2 {
 				// Goto the entry's decrypted offset, read the buffer, then decrypt it
 				inStream.Position = entry.Offset;
 				byte[] buffer = reader.ReadBytes(entry.Length);
-#if !NATIVE_BLOWFISH
-				blowfish.Decrypt(buffer, (entry.Length / 8) * 8);
-#else
-				Asmodean.DecryptData(buffer, entry.Length, fileKey);
-#endif
+				blowfish.Decrypt(buffer, entry.Length & ~7);
 
 				// Move to the entry's offset in the output stream and write the buffer
 				outStream.Position = entry.Offset;

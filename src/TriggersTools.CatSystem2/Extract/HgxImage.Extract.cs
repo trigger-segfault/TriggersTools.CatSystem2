@@ -71,61 +71,73 @@ namespace TriggersTools.CatSystem2 {
 
 		#endregion
 	}
-	partial class KifintEntry {
-		#region ExtractHg3
+	partial class KifintEntryExtensions {
+		#region ExtractHgx
 
 		/// <summary>
-		///  Extracts the HG-3 image information from the KIFINT entry and saves all images to the output
+		///  Extracts the HG-X image information from the KIFINT entry and saves all images to the output
 		///  <paramref name="outputDir"/>.
 		/// </summary>
+		/// <param name="entry">The entry to extract from.</param>
 		/// <param name="outputDir">The output directory to save the images to.</param>
 		/// <param name="options">The options for manipulating the image during extraction.</param>
 		/// <returns>The extracted <see cref="HgxImage"/> information.</returns>
 		/// 
 		/// <exception cref="ArgumentNullException">
-		///  <paramref name="outputDir"/> is null.
+		///  <paramref name="entry"/> or <paramref name="outputDir"/> is null.
 		/// </exception>
-		public HgxImage ExtractHg3AndImages(string outputDir, HgxOptions options) {
-			using (MemoryStream ms = ExtractToStream())
-				return HgxImage.ExtractImages(ms, FileName, outputDir, options);
+		public static HgxImage ExtractHgxAndImages(this KifintEntry entry, string outputDir, HgxOptions options) {
+			if (entry == null) throw new ArgumentNullException(nameof(entry));
+			using (var stream = entry.ExtractToStream())
+				return HgxImage.ExtractImages(stream, entry.FileName, outputDir, options);
 		}
 		/// <summary>
-		///  Extracts the HG-3 image information from the KIFINT entry's open KIFINT archive stream and saves all
+		///  Extracts the HG-X image information from the KIFINT entry's open KIFINT archive stream and saves all
 		///  images to the output <paramref name="outputDir"/>.
 		/// </summary>
+		/// <param name="entry">The entry to extract from.</param>
 		/// <param name="kifintStream">The stream to the open KIFINT archive.</param>
 		/// <param name="outputDir">The output directory to save the images to.</param>
 		/// <param name="options">The options for manipulating the image during extraction.</param>
 		/// <returns>The extracted <see cref="HgxImage"/> information.</returns>
 		/// 
 		/// <exception cref="ArgumentNullException">
-		///  <paramref name="kifintStream"/> or <paramref name="outputDir"/> is null.
+		///  <paramref name="entry"/>, <paramref name="kifintStream"/>, or <paramref name="outputDir"/> is null.
 		/// </exception>
-		public HgxImage ExtractHg3AndImages(KifintStream kifintStream, string outputDir, HgxOptions options) {
-			using (MemoryStream ms = ExtractToStream(kifintStream))
-				return HgxImage.ExtractImages(ms, FileName, outputDir, options);
+		public static HgxImage ExtractHgxAndImages(this KifintEntry entry, KifintStream kifintStream, string outputDir, HgxOptions options) {
+			if (entry == null) throw new ArgumentNullException(nameof(entry));
+			using (var stream = entry.ExtractToStream(kifintStream))
+				return HgxImage.ExtractImages(stream, entry.FileName, outputDir, options);
 		}
 		/// <summary>
-		///  Extracts the HG-3 image information ONLY and does not extract the actual images.
+		///  Extracts the HG-X image information ONLY and does not extract the actual images.
 		/// </summary>
+		/// <param name="entry">The entry to extract from.</param>
 		/// <returns>The extracted <see cref="HgxImage"/> information.</returns>
-		public HgxImage ExtractHg3() {
-			using (MemoryStream ms = ExtractToStream())
-				return HgxImage.Extract(ms, FileName);
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="entry"/> is null.
+		/// </exception>
+		public static HgxImage ExtractHgx(this KifintEntry entry) {
+			if (entry == null) throw new ArgumentNullException(nameof(entry));
+			using (var stream = entry.ExtractToStream())
+				return HgxImage.Extract(stream, entry.FileName);
 		}
 		/// <summary>
-		///  Extracts the HG-3 image information ONLY from open KIFINT archive stream and does not extract the actual
+		///  Extracts the HG-X image information ONLY from open KIFINT archive stream and does not extract the actual
 		///  images.
 		/// </summary>
+		/// <param name="entry">The entry to extract from.</param>
 		/// <param name="kifintStream">The stream to the open KIFINT archive.</param>
 		/// <returns>The extracted <see cref="HgxImage"/> information.</returns>
 		/// 
 		/// <exception cref="ArgumentNullException">
-		///  <paramref name="kifintStream"/> is null.
+		///  <paramref name="entry"/> or <paramref name="kifintStream"/> is null.
 		/// </exception>
-		public HgxImage ExtractHg3(KifintStream kifintStream) {
-			using (MemoryStream ms = ExtractToStream(kifintStream))
-				return HgxImage.Extract(ms, FileName);
+		public static HgxImage ExtractHgx(this KifintEntry entry, KifintStream kifintStream) {
+			if (entry == null) throw new ArgumentNullException(nameof(entry));
+			using (var stream = entry.ExtractToStream(kifintStream))
+				return HgxImage.Extract(stream, entry.FileName);
 		}
 
 		#endregion

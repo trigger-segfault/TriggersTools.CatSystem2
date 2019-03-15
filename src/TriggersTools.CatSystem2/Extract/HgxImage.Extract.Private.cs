@@ -13,11 +13,7 @@ using ReturnCode = TriggersTools.CatSystem2.Utils.Asmodean.ReturnCode;
 
 namespace TriggersTools.CatSystem2 {
 	partial class HgxImage {
-		#region Static Properties
-
-		internal static Stopwatch ProcessImageWatch { get; } = new Stopwatch();
-
-		#endregion
+		#region ExtractInternal
 
 		private static HgxImage ExtractInternal(Stream stream, string fileName, string outputDir, HgxOptions options) {
 			BinaryReader reader = new BinaryReader(stream);
@@ -28,12 +24,23 @@ namespace TriggersTools.CatSystem2 {
 					return ExtractHg3Internal(hdr, reader, fileName, outputDir, options);
 				if (hdr.Signature == HGXHDR.ExpectedHg2Signature)
 					return ExtractHg2Internal(hdr, reader, fileName, outputDir, options);
-			} catch (EndOfStreamException ex) {
+			} catch (ArgumentNullException) {
+				// This exception shouldn't be triggered by failure to read the file, so
+				// we'll throw it as an error as itself because it's not supposed to happen.
+				throw;
+			} catch (NullReferenceException) {
+				// This exception shouldn't be triggered by failure to read the file, so
+				// we'll throw it as an error as itself because it's not supposed to happen.
+				throw;
+			} catch (Exception ex) {
 				throw new HgxException(ex);
-			}
+			} /*catch (EndOfStreamException ex) {
+				throw new HgxException(ex);
+			}*/
 			throw new UnexpectedFileTypeException($"{HGXHDR.ExpectedHg2Signature} or {HGXHDR.ExpectedHg3Signature}");
 		}
 
+		#endregion
 
 		#region ThrowHelpers
 
@@ -84,10 +91,10 @@ namespace TriggersTools.CatSystem2 {
 
 			byte[] rgbaBuffer;
 
-			if (CatUtils.SpeedTestHgx)
-				ProcessImageWatch.Start();
+			if (CatDebug.SpeedTestHgx)
+				CatDebug.HgxWatch.Start();
 
-			if (!CatUtils.NativeHgx) {
+			if (!CatDebug.NativeHgx) {
 				rgbaBuffer = ProcessImageManaged(
 					dataBuffer,
 					cmdBuffer,
@@ -152,8 +159,8 @@ namespace TriggersTools.CatSystem2 {
 				}
 			}
 
-			if (CatUtils.SpeedTestHgx)
-				ProcessImageWatch.Stop();
+			if (CatDebug.SpeedTestHgx)
+				CatDebug.HgxWatch.Stop();
 
 			return rgbaBuffer;
 		}

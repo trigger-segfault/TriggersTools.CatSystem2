@@ -4,10 +4,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using TriggersTools.CatSystem2.Attributes;
 using TriggersTools.CatSystem2.Structs;
 using TriggersTools.CatSystem2.Utils;
+using TriggersTools.IO;
 using TriggersTools.SharpUtils.Enums;
 using TriggersTools.SharpUtils.Exceptions;
 using TriggersTools.SharpUtils.IO;
@@ -338,131 +340,9 @@ namespace TriggersTools.CatSystem2 {
 		}
 
 		#endregion
-
-		#region Extract (Unused)
-		/*#region ExtractToFile
-
-		/// <summary>
-		///  Extracts the KIFINT entry file from the the entry's KIFINT archive and saves it to the output
-		///  <paramref name="filePath"/>.
-		/// </summary>
-		/// <param name="entry">The KIFINT entry used to locate the file.</param>
-		/// <param name="filePath">The path to save the file to.</param>
-		/// 
-		/// <exception cref="ArgumentNullException">
-		///  <paramref name="entry"/> or <paramref name="filePath"/> is null.
-		/// </exception>
-		public static void ExtractToFile(KifintEntry entry, string filePath) {
-			using (KifintStream kifintStream = new KifintStream())
-				ExtractToFile(kifintStream, entry, filePath);
-		}
-		/// <summary>
-		///  Extracts the KIFINT entry file from the the entry's open KIFINT archive stream and saves it to the output
-		///  <paramref name="filePath"/>.
-		/// </summary>
-		/// <param name="kifintStream">The stream to the open KIFINT archive.</param>
-		/// <param name="entry">The KIFINT entry used to locate the file.</param>
-		/// <param name="filePath">The path to save the file to.</param>
-		/// 
-		/// <exception cref="ArgumentNullException">
-		///  <paramref name="kifintStream"/>, <paramref name="entry"/>, or <paramref name="filePath"/> is null.
-		/// </exception>
-		public static void ExtractToFile(KifintStream kifintStream, KifintEntry entry, string filePath) {
-			if (filePath == null)
-				throw new ArgumentNullException(nameof(filePath));
-			File.WriteAllBytes(filePath, Extract(kifintStream, entry));
-		}
-
-		#endregion
-
-		#region ExtractToDirectory
-
-		/// <summary>
-		///  Extracts the KIFINT entry file from the the entry's KIFINT archive and saves it to the output
-		///  <paramref name="directory"/>.
-		/// </summary>
-		/// <param name="entry">The KIFINT entry used to locate the file.</param>
-		/// <param name="directory">
-		///  The directory to save the file to. The file name will be <see cref="KifintEntry.FileName"/>.
-		/// </param>
-		/// 
-		/// <exception cref="ArgumentNullException">
-		///  <paramref name="entry"/> or <paramref name="directory"/> is null.
-		/// </exception>
-		public static void ExtractToDirectory(KifintEntry entry, string directory) {
-			using (KifintStream kifintStream = new KifintStream())
-				ExtractToDirectory(kifintStream, entry, directory);
-		}
-		/// <summary>
-		///  Extracts the KIFINT entry file from the the entry's open KIFINT archive stream and saves it to the output
-		///  <paramref name="directory"/>.
-		/// </summary>
-		/// <param name="kifintStream">The stream to the open KIFINT archive.</param>
-		/// <param name="entry">The KIFINT entry used to locate the file.</param>
-		/// <param name="directory">
-		///  The directory to save the file to. The file name will be <see cref="KifintEntry.FileName"/>.
-		/// </param>
-		/// 
-		/// <exception cref="ArgumentNullException">
-		///  <paramref name="kifintStream"/>, <paramref name="entry"/>, or <paramref name="directory"/> is null.
-		/// </exception>
-		public static void ExtractToDirectory(KifintStream kifintStream, KifintEntry entry, string directory) {
-			if (entry == null)
-				throw new ArgumentNullException(nameof(entry));
-			if (directory == null)
-				throw new ArgumentNullException(nameof(directory));
-			File.WriteAllBytes(Path.Combine(directory, entry.FileName), Extract(kifintStream, entry));
-		}
-
-		#endregion
-
-		#region ExtractToStream
-
-		/// <summary>
-		///  Extracts the KIFINT entry file from the the entry's KIFINT archive and returns a stream.
-		/// </summary>
-		/// <param name="entry">The KIFINT entry to open the KIFINT archive from and locate the file.</param>
-		/// <returns>A stream of the extracted KIFINT entry's file data.</returns>
-		/// 
-		/// <exception cref="ArgumentNullException">
-		///  <paramref name="entry"/> is null.
-		/// </exception>
-		internal static MemoryStream ExtractToStream(KifintEntry entry) {
-			using (KifintStream kifintStream = new KifintStream())
-				return ExtractToStream(kifintStream, entry);
-		}
-		/// <summary>
-		///  Extracts the KIFINT entry file from the the entry's KIFINT archive and returns a stream.
-		/// </summary>
-		/// <param name="kifintStream">The stream to the open KIFINT archive.</param>
-		/// <param name="entry">The KIFINT entry used to locate the file.</param>
-		/// <returns>A stream of the extracted KIFINT entry's file data.</returns>
-		/// 
-		/// <exception cref="ArgumentNullException">
-		///  <paramref name="kifintStream"/> or <paramref name="entry"/> is null.
-		/// </exception>
-		internal static MemoryStream ExtractToStream(KifintStream kifintStream, KifintEntry entry) {
-			return new MemoryStream(Extract(kifintStream, entry));
-		}
-
-		#endregion*/
-		#endregion
-
+		
 		#region Extract
-
-		/// <summary>
-		///  Extracts the KIFINT entry file from the the entry's KIFINT archive.
-		/// </summary>
-		/// <param name="entry">The KIFINT entry to open the KIFINT archive from and locate the file.</param>
-		/// <returns>A byte array containing the extracted KIFINT entry's file data.</returns>
-		/// 
-		/// <exception cref="ArgumentNullException">
-		///  <paramref name="entry"/> is null.
-		/// </exception>
-		public static byte[] Extract(KifintEntry entry) {
-			using (KifintStream kifintStream = new KifintStream())
-				return Extract(kifintStream, entry);
-		}
+		
 		/// <summary>
 		///  Extracts the KIFINT entry file from the the entry's KIFINT archive.
 		/// </summary>
@@ -473,7 +353,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="kifintStream"/> or <paramref name="entry"/> is null.
 		/// </exception>
-		public static byte[] Extract(KifintStream kifintStream, KifintEntry entry) {
+		internal static byte[] ExtractToBytes(KifintStream kifintStream, KifintEntry entry) {
 			if (kifintStream == null)
 				throw new ArgumentNullException(nameof(kifintStream));
 			if (entry == null)
@@ -485,14 +365,53 @@ namespace TriggersTools.CatSystem2 {
 			byte[] buffer = reader.ReadBytes(entry.Length);
 
 			if (kifint.IsEncrypted) {
-				kifint.blowfish = kifint.blowfish ?? new Blowfish(kifint.FileKey);
-#if !NATIVE_BLOWFISH
-				kifint.blowfish.Decrypt(buffer, (entry.Length / 8) * 8);
-#else
-				Asmodean.DecryptData(buffer, entry.Length, kifint.FileKey);
-#endif
+				kifint.Blowfish.Decrypt(buffer, entry.Length & ~7);
 			}
 			return buffer;
+		}
+		/// <summary>
+		///  Extracts the KIFINT entry to a fixed stream of <paramref name="kifintStream"/>.
+		/// </summary>
+		/// <param name="kifintStream">The stream to the open KIFINT archive.</param>
+		/// <param name="entry">The KIFINT entry used to locate the file.</param>
+		/// <param name="leaveOpen">
+		///  True if the KIFINT archive stream should be left open even after closing the returned stream.
+		/// </param>
+		/// <returns>
+		///  A fixed stream containing the data of the decrypted entry. This stream must always be disposed of, because
+		///  it's not guaranteed to be a fixed stream of <paramref name="kifintStream"/>. This is the case when the
+		///  length is small enough for extracting bytes to be more efficient.
+		/// </returns>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="kifintStream"/> or <paramref name="entry"/> is null.
+		/// </exception>
+		internal static Stream ExtractToStream(KifintStream kifintStream, KifintEntry entry, bool leaveOpen) {
+			if (kifintStream == null)
+				throw new ArgumentNullException(nameof(kifintStream));
+			if (entry == null)
+				throw new ArgumentNullException(nameof(entry));
+			var kifint = entry.Kifint;
+
+			// Smaller streams will be faster as reading a big chunk of data all at once.
+			if (kifint.IsEncrypted && entry.Length < 131072 * 2) { // Some arbitrary power of 2 cutoff length
+				try {
+					return new MemoryStream(ExtractToBytes(kifintStream, entry));
+				} finally {
+					// We need to make sure the the stream is closed by us if we're not
+					// relying on the fixed streams to close the KIFINT archive stream.
+					if (!leaveOpen)
+						kifintStream.Close();
+				}
+			}
+
+			kifintStream.Open(kifint);
+			kifintStream.Position = entry.Offset;
+
+			if (kifint.IsEncrypted) {
+				return new BlowfishInputStream(kifint.Blowfish, kifintStream, entry.Length, leaveOpen);
+			}
+			return new FixedStream(kifintStream, entry.Length, leaveOpen);
 		}
 
 		#endregion

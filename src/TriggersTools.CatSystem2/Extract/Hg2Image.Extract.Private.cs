@@ -10,7 +10,7 @@ using TriggersTools.SharpUtils.IO;
 
 namespace TriggersTools.CatSystem2 {
 	partial class HgxImage {
-		#region ExtractHg2
+		#region ExtractHg2Internal
 
 		private static HgxImage ExtractHg2Internal(HGXHDR hdr, BinaryReader reader, string fileName, string outputDir,
 			HgxOptions options)
@@ -71,7 +71,7 @@ namespace TriggersTools.CatSystem2 {
 
 			byte[] pixelBuffer = ProcessImage(reader, img.Width, img.Height, img.DepthBits, img.Data);
 
-			if (!CatUtils.SpeedTestHgx) {
+			if (!CatDebug.SpeedTestHgx) {
 				// This image type is normally flipped, so reverse the option
 				options ^= HgxOptions.Flip;
 				WritePng(pixelBuffer, img, options, pngFile);

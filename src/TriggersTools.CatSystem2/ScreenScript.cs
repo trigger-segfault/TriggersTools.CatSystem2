@@ -60,7 +60,7 @@ namespace TriggersTools.CatSystem2 {
 		///  Gets the string representation of the screen script.
 		/// </summary>
 		/// <returns>The string representation of the screen script.</returns>
-		public override string ToString() => $"Screen: \"{FileName}\" Lines={Count}";
+		public override string ToString() => $"Screen \"{FileName}\" Lines={Count}";
 
 		#endregion
 

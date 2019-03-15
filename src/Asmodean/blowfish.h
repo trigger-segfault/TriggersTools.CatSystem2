@@ -6,33 +6,33 @@
 
 
 //modified by Fuyin 2014/5/2
-#include <stdio.h>
-#include <Windows.h>
+#pragma once
 
-#define MAXKEYBYTES 	56		// 448 bits max
+#ifndef BLOWFISH_H
+#define BLOWFISH_H
+
+#include "asmodean.h"
+
+#define MAXKEYbyteS 	56		// 448 bits max
 #define NPASS           16		// SBox passes
-
-#define DWORD  		unsigned long
-#define WORD  		unsigned short
-#define BYTE  		unsigned char
 
 class Blowfish {
 private:
-	DWORD       PArray[18];
-	DWORD       SBoxes[4][256];
-	void 		Blowfish_encipher(DWORD *xl, DWORD *xr);
-	void 		Blowfish_decipher(DWORD *xl, DWORD *xr);
+	uint32		PArray[18];
+	uint32		SBoxes[4 * 256];
+	void 		Blowfish_encipher(uint32* xl, uint32* xr);
+	void 		Blowfish_decipher(uint32* xl, uint32* xr);
 
 public:
 	Blowfish();
-	void 		Initialize(BYTE key[], int keybytes);
-	DWORD		GetOutputLength(DWORD lInputLong);
-	DWORD		Encode(BYTE * pInput, BYTE * pOutput, DWORD lSize);
-	void		Decode(BYTE * pInput, BYTE * pOutput, DWORD lSize);
+	void 		Initialize(byte key[], int keybytes);
+	uint32		GetOutputLength(uint32 lInputLong);
+	uint32		Encode(byte* pInput, byte* pOutput, uint32 lSize);
+	void		Decode(byte* pInput, byte* pOutput, uint32 lSize);
 
-	void Set_Key(BYTE key[], int keybytes);
-	DWORD Encrypt(BYTE * pInput, DWORD lSize);
-	void Decrypt(BYTE * pInput, DWORD lSize);
+	void		Set_Key(byte* key, int keybytes);
+	uint32		Encrypt(byte* pInput, uint32 lSize);
+	void		Decrypt(byte* pInput, uint32 lSize);
 };
 
 // choose a byte order for your hardware
@@ -40,8 +40,8 @@ public:
 
 #ifdef ORDER_DCBA  	// DCBA - little endian - intel
 union aword {
-	DWORD dword;
-	BYTE byte[4];
+	uint32 dword;
+	byte byte[4];
 	struct {
 		unsigned int byte3 : 8;
 		unsigned int byte2 : 8;
@@ -53,8 +53,8 @@ union aword {
 
 #ifdef ORDER_ABCD  	// ABCD - big endian - motorola
 union aword {
-	DWORD dword;
-	BYTE byte[4];
+	uint32 dword;
+	byte byte[4];
 	struct {
 		unsigned int byte0 : 8;
 		unsigned int byte1 : 8;
@@ -66,8 +66,8 @@ union aword {
 
 #ifdef ORDER_BADC  	// BADC - vax
 union aword {
-	DWORD dword;
-	BYTE byte[4];
+	uint32 dword;
+	byte byte[4];
 	struct {
 		unsigned int byte1 : 8;
 		unsigned int byte0 : 8;
@@ -80,14 +80,14 @@ union aword {
 
 // blowfish.h2  header file containing random number tables
 
-static DWORD bf_P[NPASS + 2] = {
+static uint32 bf_P[NPASS + 2] = {
 	0x243f6a88, 0x85a308d3, 0x13198a2e, 0x03707344,
 	0xa4093822, 0x299f31d0, 0x082efa98, 0xec4e6c89,
 	0x452821e6, 0x38d01377, 0xbe5466cf, 0x34e90c6c,
 	0xc0ac29b7, 0xc97c50dd, 0x3f84d5b5, 0xb5470917,
 	0x9216d5d9, 0x8979fb1b,
 };
-static DWORD bf_S[4][256] = {
+static uint32 bf_S[4][256] = {
 	0xd1310ba6, 0x98dfb5ac, 0x2ffd72db, 0xd01adfb7,
 	0xb8e1afed, 0x6a267e96, 0xba7c9045, 0xf12c7f99,
 	0x24a19947, 0xb3916cf7, 0x0801f2e2, 0x858efc16,
@@ -346,5 +346,4 @@ static DWORD bf_S[4][256] = {
 	0xb74e6132, 0xce77e25b, 0x578fdfe3, 0x3ac372e6,
 };
 
-
-
+#endif /* BLOWFISH_H */

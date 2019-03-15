@@ -1,41 +1,45 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
-using TriggersTools.CatSystem2.Structs;
 using Newtonsoft.Json;
+using TriggersTools.CatSystem2.Structs;
 using TriggersTools.CatSystem2.Utils;
-using System.Collections.Immutable;
 
 namespace TriggersTools.CatSystem2 {
 	/// <summary>
-	///  A loaded and cached KIFINT archive.
+	///  Information on a KIFINT archive that is carried around with KIFINT entries so that they do not reference the
+	///  entire archive.
 	/// </summary>
-	public sealed partial class KifintArchive : IReadOnlyCollection<KifintEntry> {
+	public sealed class KifintArchiveInfo {
 		#region Fields
 
 		/// <summary>
 		///  Gets the file path to the KIFINT archive.
 		/// </summary>
-		public string FilePath { get; private set; }
+		public string FilePath { get; internal set; }
 		/// <summary>
 		///  Gets the file key used for decryption. Null if there is no encryption.
 		/// </summary>
-		public uint FileKey { get; private set; }
+		public uint FileKey { get; internal set; }
 		/// <summary>
 		///  Gets if the KIFINT archive requires decryption when accessing a file.
 		/// </summary>
-		public bool IsEncrypted { get; private set; }
-		/// <summary>
-		///  Gets the list of entries in the KIFINT archive.
-		/// </summary>
-		public IReadOnlyDictionary<string, KifintEntry> Entries { get; private set; }
+		public bool IsEncrypted { get; internal set; }
 		/// <summary>
 		///  Gets the type associated with this archive.
 		/// </summary>
-		public KifintType ArchiveType { get; private set; }
+		public KifintType ArchiveType { get; internal set; }
+		/// <summary>
+		///  Gets the number of cached entries in the KIFINT archive.
+		/// </summary>
+		public int Count { get; internal set; }
+		/// <summary>
+		///  The weak reference to the KIFINT archive for this KIFINT archive information.
+		/// </summary>
+		private WeakReference<KifintArchive> archive;
 		/// <summary>
 		///  The blowfish cipher seeded with the file key.
 		/// </summary>
@@ -54,6 +58,109 @@ namespace TriggersTools.CatSystem2 {
 		/// </summary>
 		public string FileNameWithoutExtension => Path.GetFileNameWithoutExtension(FilePath);
 		/// <summary>
+		///  Gets the weak reference to the KIFINT archive for this KIFINT archive information.
+		///  Returns null if the KIFINT archive has been collected.
+		/// </summary>
+		public KifintArchive Archive {
+			get {
+				archive.TryGetTarget(out KifintArchive kifint);
+				return kifint;
+			}
+			internal set => archive = new WeakReference<KifintArchive>(value);
+		}
+		/// <summary>
+		///  Gets the blowfish cipher seeded with the file key.
+		/// </summary>
+		internal Blowfish Blowfish {
+			get {
+				if (blowfish == null) {
+					if (CatDebug.NativeBlowfish)
+						blowfish = new BlowfishNative(FileKey);
+					else
+						blowfish = new BlowfishManaged(FileKey);
+				}
+				return blowfish;
+			}
+			set => blowfish = value;
+		}
+
+		#endregion
+	}
+	/// <summary>
+	///  A loaded and cached KIFINT archive.
+	/// </summary>
+	public sealed partial class KifintArchive : IReadOnlyCollection<KifintEntry> {
+		#region Fields
+
+		/// <summary>
+		///  Gets the KIFINT archive info which can be used as a reference to the archive without referencing it.
+		/// </summary>
+		public KifintArchiveInfo Info { get; } = new KifintArchiveInfo();
+		/// <summary>
+		///  The collection of entries in the KIFINT archive.
+		/// </summary>
+		private IReadOnlyDictionary<string, KifintEntry> entries;
+
+		#endregion
+
+		#region Properties
+
+		/// <summary>
+		///  Gets the file path to the KIFINT archive.
+		/// </summary>
+		public string FilePath { //get; private set; }
+			get => Info.FilePath;
+			private set => Info.FilePath = value;
+		}
+		/// <summary>
+		///  Gets the file key used for decryption. Null if there is no encryption.
+		/// </summary>
+		public uint FileKey { //get; private set; }
+			get => Info.FileKey;
+			private set => Info.FileKey = value;
+		}
+		/// <summary>
+		///  Gets if the KIFINT archive requires decryption when accessing a file.
+		/// </summary>
+		public bool IsEncrypted { //get; private set; }
+			get => Info.IsEncrypted;
+			private set => Info.IsEncrypted = value;
+		}
+		/// <summary>
+		///  Gets the collection of entries in the KIFINT archive.
+		/// </summary>
+		public IReadOnlyDictionary<string, KifintEntry> Entries { //get; private set; }
+			get => entries;
+			private set {
+				entries = value;
+				Info.Count = entries?.Count ?? 0;
+			}
+		}
+		/// <summary>
+		///  Gets the type associated with this archive.
+		/// </summary>
+		public KifintType ArchiveType { //get; private set; }
+			get => Info.ArchiveType;
+			private set => Info.ArchiveType = value;
+		}
+		/// <summary>
+		///  Gets the blowfish cipher seeded with the file key.
+		/// </summary>
+		private Blowfish Blowfish { //get; set; }
+			get => Info.Blowfish;
+			set => Info.Blowfish = value;
+		}
+		/// <summary>
+		///  Gets the file name of the KIFINT archive.
+		/// </summary>
+		public string FileName => Info.FileName;
+		//public string FileName => Path.GetFileName(FilePath);
+		/// <summary>
+		///  Gets the file name of the KIFINT archive without the extension.
+		/// </summary>
+		public string FileNameWithoutExtension => Info.FileNameWithoutExtension;
+		//public string FileNameWithoutExtension => Path.GetFileNameWithoutExtension(FilePath);
+		/// <summary>
 		///  Gets the number of cached entries in the KIFINT archive.
 		/// </summary>
 		public int Count => Entries.Count;
@@ -65,7 +172,10 @@ namespace TriggersTools.CatSystem2 {
 		/// <summary>
 		///  Constructs an unassigned KIFINT archive for use with <see cref="Read"/>.
 		/// </summary>
-		private KifintArchive() { }
+		private KifintArchive() {
+			// Make sure to keep a weak reference to this archive
+			Info.Archive = this;
+		}
 		/// <summary>
 		///  Constructs a cached KIFINT archive with the specified path, entries, and file key.
 		/// </summary>
@@ -83,13 +193,21 @@ namespace TriggersTools.CatSystem2 {
 			ArchiveType = type;
 			Dictionary<string, KifintEntry> entries = new Dictionary<string, KifintEntry>(kifEntries.Length);
 			foreach (var kifEntry in kifEntries) {
-				string fileName = kifEntry.FileName;
+				KifintEntry entry = new KifintEntry(kifEntry, this);
+				if (entry.FileName != KeyFileName)
+					entries.Add(entry.FileName, entry);
+				/*string fileName = kifEntry.FileName;
 				if (fileName != KeyFileName) {
 					entries.Add(fileName, new KifintEntry(fileName, kifEntry, this));
-				}
+				}*/
 			}
 			Entries = entries.ToImmutableDictionary();
-			this.blowfish = blowfish;
+			Blowfish = blowfish;
+
+			// Make sure to set the copy of the count 
+			Info.Count = entries.Count;
+			// Make sure to keep a weak reference to this archive
+			Info.Archive = this;
 		}
 
 		#endregion
@@ -227,7 +345,7 @@ namespace TriggersTools.CatSystem2 {
 		///  Gets the string representation of the KIFINT archive.
 		/// </summary>
 		/// <returns>The string representation of the KIFINT archive.</returns>
-		public override string ToString() => $"Kifint: \"{FileName}\" Type={ArchiveType} Count={Count}";
+		public override string ToString() => $"KifintArchive \"{FileName}\" Type={ArchiveType} Entries={Count}";
 
 		#endregion
 
@@ -239,7 +357,18 @@ namespace TriggersTools.CatSystem2 {
 		/// <returns>The KIFINT archive's entry enumerator.</returns>
 		public IEnumerator<KifintEntry> GetEnumerator() => Entries.Values.GetEnumerator();
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-		
+
+		#endregion
+
+		#region Casting
+
+		/// <summary>
+		///  Casts the KIFINT archive to the contained KIFINT archive information that does not reference the entry
+		///  collection.
+		/// </summary>
+		/// <param name="kifint">The KIFINT archive to cast.</param>
+		public static implicit operator KifintArchiveInfo(KifintArchive kifint) => kifint?.Info;
+
 		#endregion
 	}
 }

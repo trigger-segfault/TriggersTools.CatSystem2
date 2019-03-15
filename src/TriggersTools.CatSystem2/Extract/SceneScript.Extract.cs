@@ -124,29 +124,37 @@ namespace TriggersTools.CatSystem2 {
 
 		#endregion
 	}
-	partial class KifintEntry {
+	partial class KifintEntryExtensions {
 		#region ExtractScene
 
 		/// <summary>
 		///  Extracts the CST scene script from the entry.
 		/// </summary>
+		/// <param name="entry">The entry to extract from.</param>
 		/// <returns>The extracted scene script.</returns>
-		public SceneScript ExtractScene(KifintEntry entry) {
-			using (MemoryStream ms = ExtractToStream())
-				return SceneScript.Extract(ms, FileName);
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="entry"/> is null.
+		/// </exception>
+		public static SceneScript ExtractScene(this KifintEntry entry) {
+			if (entry == null) throw new ArgumentNullException(nameof(entry));
+			using (var stream = entry.ExtractToStream())
+				return SceneScript.Extract(stream, entry.FileName);
 		}
 		/// <summary>
 		///  Extracts the CST scene script from the open KIFINT archive stream.
 		/// </summary>
+		/// <param name="entry">The entry to extract from.</param>
 		/// <param name="kifintStream">The stream to the open KIFINT archive.</param>
 		/// <returns>The extracted scene script.</returns>
 		/// 
 		/// <exception cref="ArgumentNullException">
-		///  <paramref name="kifintStream"/> is null.
+		///  <paramref name="entry"/> or <paramref name="kifintStream"/> is null.
 		/// </exception>
-		public SceneScript ExtractScene(KifintStream kifintStream) {
-			using (MemoryStream ms = ExtractToStream(kifintStream))
-				return SceneScript.Extract(ms, FileName);
+		public static SceneScript ExtractScene(this KifintEntry entry, KifintStream kifintStream) {
+			if (entry == null) throw new ArgumentNullException(nameof(entry));
+			using (var stream = entry.ExtractToStream(kifintStream))
+				return SceneScript.Extract(stream, entry.FileName);
 		}
 
 		#endregion

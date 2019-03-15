@@ -18,7 +18,7 @@ namespace TriggersTools.CatSystem2.Structs {
 		/// </summary>
 		public int Unknown;
 		/// <summary>
-		///  The length of this file entry after the header.
+		///  The length of this file entry after this header.
 		/// </summary>
 		public int Length;
 

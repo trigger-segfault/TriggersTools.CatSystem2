@@ -87,24 +87,21 @@ namespace TriggersTools.CatSystem2 {
 		/// <exception cref="Win32Exception">
 		///  An error occurred during loading of the V_CODE resources.
 		/// </exception>
-		public static void FindVCodes(string exeFile, out string vcode, out string vcode2, out byte[] key) {
-			VCodes vcodes = VCodes.Load(exeFile);
+		public static void FindVCodes(string exeFile, out string vcode, out string vcode2) {
+			VCodes vcodes = Load(exeFile);
 			vcode = vcodes.VCode;
 			vcode2 = vcodes.VCode2;
-			key = vcodes.KeyCode;
 		}
 
-		public static bool TryFindVCodes(string exeFile, out string vcode, out string vcode2, out byte[] key) {
+		public static bool TryFindVCodes(string exeFile, out string vcode, out string vcode2) {
 			try {
-				VCodes vcodes = VCodes.Load(exeFile);
+				VCodes vcodes = Load(exeFile);
 				vcode = vcodes.VCode;
 				vcode2 = vcodes.VCode2;
-				key = vcodes.KeyCode;
 				return true;
 			} catch {
 				vcode = default;
 				vcode2 = default;
-				key = null;
 				return false;
 			}
 		}

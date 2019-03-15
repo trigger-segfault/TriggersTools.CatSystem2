@@ -3,7 +3,7 @@ using TriggersTools.SharpUtils.Text;
 
 namespace TriggersTools.CatSystem2.Structs {
 	/// <summary>
-	///  The header for an ANM animation file.
+	///  The header for an ANM animation script.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential, Pack = 1, Size = 12, CharSet = CharSet.Ansi)]
 	internal struct ANMHDR {
@@ -28,9 +28,9 @@ namespace TriggersTools.CatSystem2.Structs {
 		/// </summary>
 		public int Unknown;
 		/// <summary>
-		///  The number of frame entries in the animation.
+		///  The number of script lines in the animation script.
 		/// </summary>
-		public int FrameCount;
+		public int LineCount;
 
 		#endregion
 
@@ -54,18 +54,18 @@ namespace TriggersTools.CatSystem2.Structs {
 		#endregion
 	}
 	/// <summary>
-	///  The frame entry in an ANM animation file.
+	///  The script line in an ANM animation script.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential, Pack = 1, Size = 68, CharSet = CharSet.Ansi)]
-	internal struct ANMFRAME {
+	internal struct ANMLINE {
 		#region Fields
 
 		/// <summary>
-		///  The type of the command for this frame.
+		///  The type of the command for this script line.
 		/// </summary>
 		public int Type;
 		/// <summary>
-		///  The parameters for the command.
+		///  The parameters for the script line.
 		/// </summary>
 		[MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
 		public ANMPARAM[] Parameters;
@@ -75,13 +75,16 @@ namespace TriggersTools.CatSystem2.Structs {
 		#region ToString Override
 
 		/// <summary>
-		///  Gets the string representation of the ANM frame.
+		///  Gets the string representation of the ANM animation script line.
 		/// </summary>
-		/// <returns>The ANM frame's string representation.</returns>
+		/// <returns>The ANM animation script line's string representation.</returns>
 		public override string ToString() => $"{Type} {string.Join(" ", Parameters)}";
 
 		#endregion
 	}
+	/// <summary>
+	///  A single parameter for a ANM animation script line.
+	/// </summary>
 	[StructLayout(LayoutKind.Sequential, Pack = 1, Size = 8)]
 	internal struct ANMPARAM {
 		#region Fields
@@ -102,9 +105,9 @@ namespace TriggersTools.CatSystem2.Structs {
 		#region ToString Override
 
 		/// <summary>
-		///  Gets the string representation of the ANM parameters.
+		///  Gets the string representation of the ANM parameter.
 		/// </summary>
-		/// <returns>The ANM parameters's string representation.</returns>
+		/// <returns>The ANM parameter's string representation.</returns>
 		public override string ToString() => (IsVariable ? $"@{Value}" : $"{Value}");
 
 		#endregion

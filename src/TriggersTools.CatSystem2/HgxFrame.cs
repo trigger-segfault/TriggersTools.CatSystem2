@@ -204,8 +204,13 @@ namespace TriggersTools.CatSystem2 {
 			Type = frameInfo.CpType?.Type;
 			Mode = frameInfo.ImgMode?.Mode;
 		}
-		internal HgxFrame(Hg2FrameInfo frameInfo, HgxImage hg3Image) {
-			HgxImage = hg3Image;
+		/// <summary>
+		///  Constructs an HG-2 frame with the specified frame info.
+		/// </summary>
+		/// <param name="frameInfo">The frame information.</param>
+		/// <param name="hg2Image">The HG-2 image containing this frame.</param>
+		internal HgxFrame(Hg2FrameInfo frameInfo, HgxImage hg2Image) {
+			HgxImage = hg2Image;
 			Attributes = Array.Empty<Hg3Attribute>();
 			HG2IMG img = frameInfo.Img;
 			HG2IMG_BASE? imgEx = frameInfo.ImgBase;

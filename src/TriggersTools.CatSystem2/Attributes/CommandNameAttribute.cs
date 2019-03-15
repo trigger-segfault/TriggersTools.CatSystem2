@@ -7,7 +7,7 @@ namespace TriggersTools.CatSystem2.Attributes {
 	///  An attribute that specifieds the output command name to use for an enum field.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Field)]
-	internal sealed class CommandNameAttribute : Attribute {
+	internal class CommandNameAttribute : Attribute {
 		#region Properties
 
 		/// <summary>

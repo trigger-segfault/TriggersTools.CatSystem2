@@ -127,7 +127,10 @@ namespace TriggersTools.CatSystem2 {
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="kifint"/> is null.
 		/// </exception>
-		internal void Merge(KifintArchive kifint) {
+		/// <exception cref="InvalidOperationException">
+		///  This lookup already contains <see cref="kifint"/>.
+		/// </exception>
+		public void Merge(KifintArchive kifint) {
 			if (kifint == null)
 				throw new ArgumentNullException(nameof(kifint));
 			if (kifints.Contains(kifint))
@@ -348,7 +351,7 @@ namespace TriggersTools.CatSystem2 {
 		///  Gets the string representation of the KIFINT lookup.
 		/// </summary>
 		/// <returns>The string representation of the KIFINT lookup.</returns>
-		public override string ToString() => $"KifintLookup: Type={ArchiveType} Count={Count}";
+		public override string ToString() => $"KifintLookup Type={ArchiveType} Count={Count}";
 
 		#endregion
 

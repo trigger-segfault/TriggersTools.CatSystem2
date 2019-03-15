@@ -9,14 +9,14 @@ using System.Collections.Immutable;
 
 namespace TriggersTools.CatSystem2 {
 	/// <summary>
-	///  An animation loaded from an ANM animation file.
+	///  An animation loaded from an ANM animation script.
 	/// </summary>
 	[JsonObject]
-	public sealed partial class Animation : IReadOnlyCollection<AnimationFrame> {
+	public sealed partial class Animation : IReadOnlyCollection<AnimationLine> {
 		#region Fields
 
 		/// <summary>
-		///  Gets the file name for the ANM animation file.
+		///  Gets the file name for the ANM animation script.
 		/// </summary>
 		[JsonProperty("file_name")]
 		public string FileName { get; private set; }
@@ -26,20 +26,20 @@ namespace TriggersTools.CatSystem2 {
 		[JsonProperty("unknown")]
 		public int Unknown { get; private set; }
 		/// <summary>
-		///  Gets the whole list of frames for the animation. Include control frames.
+		///  Gets the whole list of lines for the animation script.
 		/// </summary>
-		[JsonProperty("frames")]
-		public IReadOnlyList<AnimationFrame> Frames { get; private set; }
+		[JsonProperty("lines")]
+		public IReadOnlyList<AnimationLine> Lines { get; private set; }
 
 		#endregion
 
 		#region Properties
 
 		/// <summary>
-		///  Gets the number of frames in the animation.
+		///  Gets the number of script lines in the animation.
 		/// </summary>
 		[JsonIgnore]
-		public int Count => Frames.Count;
+		public int Count => Lines.Count;
 		/// <summary>
 		///  Gets the name of the file for loading the <see cref="Animation"/> data.
 		/// </summary>
@@ -51,22 +51,22 @@ namespace TriggersTools.CatSystem2 {
 		#region Constructors
 
 		/// <summary>
-		///  Constructs an unassigned ANM animation for use with loading via <see cref="Newtonsoft.Json"/>.
+		///  Constructs an unassigned ANM animation script for use with loading via <see cref="Newtonsoft.Json"/>.
 		/// </summary>
 		public Animation() { }
 		/// <summary>
-		///  Constructs an ANM animation with the specified file name, header, and frames.
+		///  Constructs an ANM animation script with the specified file name, header, and script lines.
 		/// </summary>
 		/// <param name="fileName">The file name of the ANM animation with the .anm extension.</param>
 		/// <param name="hdr">The ANMHDR containing extra information on the ANM animation.</param>
-		/// <param name="frames">The ANMFRM struct array containing frame information.</param>
-		private Animation(string fileName, ANMHDR hdr, ANMFRAME[] frames) {
+		/// <param name="lines">The ANMFRM struct array containing script line information.</param>
+		private Animation(string fileName, ANMHDR hdr, ANMLINE[] lines) {
 			FileName = Path.GetFileName(fileName);
 			Unknown = hdr.Unknown;
-			AnimationFrame[] newFrames = new AnimationFrame[frames.Length];
-			for (int i = 0; i < frames.Length; i++)
-				newFrames[i] = new AnimationFrame(frames[i]);
-			Frames = newFrames.ToImmutableArray();
+			AnimationLine[] newLines = new AnimationLine[lines.Length];
+			for (int i = 0; i < lines.Length; i++)
+				newLines[i] = new AnimationLine(lines[i]);
+			Lines = newLines.ToImmutableArray();
 		}
 
 		#endregion
@@ -138,17 +138,17 @@ namespace TriggersTools.CatSystem2 {
 		///  Gets the string representation of the ANM animation.
 		/// </summary>
 		/// <returns>The ANM animation's string representation.</returns>
-		public override string ToString() => $"Anm: \"{FileName}\" Count={Frames.Count}";
+		public override string ToString() => $"Animation \"{FileName}\" Lines={Lines.Count}";
 
 		#endregion
 
 		#region IEnumerable Implementation
 
 		/// <summary>
-		///  Gets the enumerator for the animation's frames.
+		///  Gets the enumerator for the animation script's lines.
 		/// </summary>
-		/// <returns>The animation's frame enumerator.</returns>
-		public IEnumerator<AnimationFrame> GetEnumerator() => Frames.GetEnumerator();
+		/// <returns>The animation script's line enumerator.</returns>
+		public IEnumerator<AnimationLine> GetEnumerator() => Lines.GetEnumerator();
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
 		#endregion

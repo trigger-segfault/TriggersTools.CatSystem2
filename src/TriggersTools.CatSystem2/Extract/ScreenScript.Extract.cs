@@ -61,29 +61,37 @@ namespace TriggersTools.CatSystem2 {
 
 		#endregion
 	}
-	partial class KifintEntry {
+	partial class KifintEntryExtensions {
 		#region ExtractScreen
 
 		/// <summary>
 		///  Extracts the FES screen script from the entry.
 		/// </summary>
+		/// <param name="entry">The entry to extract from.</param>
 		/// <returns>The extracted screen script.</returns>
-		public ScreenScript ExtractScreen(KifintEntry entry) {
-			using (MemoryStream ms = ExtractToStream())
-				return ScreenScript.Extract(ms, FileName);
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="entry"/> is null.
+		/// </exception>
+		public static ScreenScript ExtractScreen(this KifintEntry entry) {
+			if (entry == null) throw new ArgumentNullException(nameof(entry));
+			using (var stream = entry.ExtractToStream())
+				return ScreenScript.Extract(stream, entry.FileName);
 		}
 		/// <summary>
 		///  Extracts the FES screen script from the open KIFINT archive stream.
 		/// </summary>
+		/// <param name="entry">The entry to extract from.</param>
 		/// <param name="kifintStream">The stream to the open KIFINT archive.</param>
 		/// <returns>The extracted screen script.</returns>
 		/// 
 		/// <exception cref="ArgumentNullException">
-		///  <paramref name="kifintStream"/> is null.
+		///  <paramref name="entry"/> or <paramref name="kifintStream"/> is null.
 		/// </exception>
-		public ScreenScript ExtractScreen(KifintStream kifintStream) {
-			using (MemoryStream ms = ExtractToStream(kifintStream))
-				return ScreenScript.Extract(ms, FileName);
+		public static ScreenScript ExtractScreen(this KifintEntry entry, KifintStream kifintStream) {
+			if (entry == null) throw new ArgumentNullException(nameof(entry));
+			using (var stream = entry.ExtractToStream(kifintStream))
+				return ScreenScript.Extract(stream, entry.FileName);
 		}
 
 		#endregion

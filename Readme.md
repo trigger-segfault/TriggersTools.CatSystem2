@@ -21,6 +21,7 @@ A library for extracting resources from, decompiling scripts from, and working w
 * **[Japanese Command Prompt](https://github.com/trigger-death/jpcmd)**
 * **[marcussacana's CatSceneEditor](https://github.com/marcussacana/CatSceneEditor)**
 * **[FuckGalEngine/CatSystem2](https://github.com/Inori/FuckGalEngine/tree/master/CatSystem2)**
+* **[chinesize/CatSystem2](https://github.com/regomne/chinesize/tree/master/CatSystem2)**
 * **[Doddler's Kamikaze Tools](http://www.doddlercon.com/main/?p=120)**
 * **[asmodean's exkifint & hgx2bmp](http://asmodean.reverse.net/pages/exkifint.html)**
 * **[ClrPlus.Windows.PeBinary.ResourceLib](https://github.com/perpetual-motion/clrplus/tree/master/Windows.PeBinary/ResourceLib)**

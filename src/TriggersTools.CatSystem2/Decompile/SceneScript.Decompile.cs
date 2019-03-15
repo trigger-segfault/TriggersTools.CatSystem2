@@ -187,40 +187,50 @@ namespace TriggersTools.CatSystem2 {
 
 		#endregion
 	}
-	partial class KifintEntry {
+	partial class KifintEntryExtensions {
 		#region DecompileScene
 
 		/// <summary>
 		///  Loads and decompiles the CST scene script entry and returns the script as a string.
 		/// </summary>
+		/// <param name="entry">The entry to extract from.</param>
 		/// <returns>The decompiled script.</returns>
-		public string DecompileScene() {
-			using (MemoryStream stream = ExtractToStream())
-				return SceneScript.Decompile(stream, FileName);
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="entry"/> is null.
+		/// </exception>
+		public static string DecompileScene(this KifintEntry entry) {
+			if (entry == null) throw new ArgumentNullException(nameof(entry));
+			using (var stream = entry.ExtractToStream())
+				return SceneScript.Decompile(stream, entry.FileName);
 		}
 		/// <summary>
 		///  Loads and decompiles the CST scene script entry and outputs it to the specified file.
 		/// </summary>
+		/// <param name="entry">The entry to extract from.</param>
 		/// <param name="outFile">The output file to write the decompiled script to.</param>
 		/// 
 		/// <exception cref="ArgumentNullException">
-		///  <paramref name="outFile"/> is null.
+		///  <paramref name="entry"/> or <paramref name="outFile"/> is null.
 		/// </exception>
-		public void DecompileSceneToFile(string outFile) {
-			using (MemoryStream stream = ExtractToStream())
-				SceneScript.DecompileToFile(stream, FileName, outFile);
+		public static void DecompileSceneToFile(this KifintEntry entry, string outFile) {
+			if (entry == null) throw new ArgumentNullException(nameof(entry));
+			using (var stream = entry.ExtractToStream())
+				SceneScript.DecompileToFile(stream, entry.FileName, outFile);
 		}
 		/// <summary>
 		///  Loads and decompiles the CST scene script entry and outputs it to the specified stream.
 		/// </summary>
+		/// <param name="entry">The entry to extract from.</param>
 		/// <param name="outStream">The output stream to write the decompiled script to.</param>
 		/// 
 		/// <exception cref="ArgumentNullException">
-		///  <paramref name="outStream"/> is null.
+		///  <paramref name="entry"/> or <paramref name="outStream"/> is null.
 		/// </exception>
-		public void DecompileSceneToStream(Stream outStream) {
-			using (MemoryStream stream = ExtractToStream())
-				SceneScript.DecompileToStream(stream, FileName, outStream);
+		public static void DecompileSceneToStream(this KifintEntry entry, Stream outStream) {
+			if (entry == null) throw new ArgumentNullException(nameof(entry));
+			using (var stream = entry.ExtractToStream())
+				SceneScript.DecompileToStream(stream, entry.FileName, outStream);
 		}
 
 		#endregion
@@ -230,41 +240,49 @@ namespace TriggersTools.CatSystem2 {
 		/// <summary>
 		///  Loads and decompiles the CST scene script entry and returns the script as a string.
 		/// </summary>
+		/// <param name="entry">The entry to extract from.</param>
 		/// <param name="kifintStream">The stream to the open KIFINT archive.</param>
 		/// <returns>The decompiled script.</returns>
 		/// 
 		/// <exception cref="ArgumentNullException">
-		///  <paramref name="kifintStream"/> is null.
+		///  <paramref name="entry"/> or <paramref name="kifintStream"/> is null.
 		/// </exception>
-		public string DecompileScene(KifintStream kifintStream) {
-			using (MemoryStream stream = ExtractToStream(kifintStream))
-				return SceneScript.Decompile(stream, FileName);
+		public static string DecompileScene(this KifintEntry entry, KifintStream kifintStream) {
+			if (entry == null) throw new ArgumentNullException(nameof(entry));
+			using (var stream = entry.ExtractToStream(kifintStream))
+				return SceneScript.Decompile(stream, entry.FileName);
 		}
 		/// <summary>
 		///  Loads and decompiles the CST scene script entry and outputs it to the specified file.
 		/// </summary>
+		/// <param name="entry">The entry to extract from.</param>
 		/// <param name="kifintStream">The stream to the open KIFINT archive.</param>
 		/// <param name="outFile">The output file to write the decompiled script to.</param>
 		/// 
 		/// <exception cref="ArgumentNullException">
-		///  <paramref name="kifintStream"/> or <paramref name="outFile"/> is null.
+		///  <paramref name="entry"/>, <paramref name="kifintStream"/>, or <paramref name="outFile"/> is null.
 		/// </exception>
-		public void DecompileSceneToFile(KifintStream kifintStream, string outFile) {
-			using (MemoryStream stream = ExtractToStream())
-				SceneScript.DecompileToFile(stream, FileName, outFile);
+		public static void DecompileSceneToFile(this KifintEntry entry, KifintStream kifintStream, string outFile) {
+			if (entry == null) throw new ArgumentNullException(nameof(entry));
+			using (var stream = entry.ExtractToStream(kifintStream))
+				SceneScript.DecompileToFile(stream, entry.FileName, outFile);
 		}
 		/// <summary>
 		///  Loads and decompiles the CST scene script entry and outputs it to the specified stream.
 		/// </summary>
+		/// <param name="entry">The entry to extract from.</param>
+		/// <param name="kifintStream">The stream to the open KIFINT archive.</param>
 		/// <param name="outStream">The output stream to write the decompiled script to.</param>
 		/// 
-		/// <param name="kifintStream">The stream to the open KIFINT archive.</param>
 		/// <exception cref="ArgumentNullException">
-		///  <paramref name="kifintStream"/> or <paramref name="outStream"/> is null.
+		///  <paramref name="entry"/>, <paramref name="kifintStream"/>, or <paramref name="outStream"/> is null.
 		/// </exception>
-		public void DecompileSceneToStream(KifintStream kifintStream, Stream outStream) {
-			using (MemoryStream stream = ExtractToStream())
-				SceneScript.DecompileToStream(stream, FileName, outStream);
+		public static void DecompileSceneToStream(this KifintEntry entry, KifintStream kifintStream,
+			Stream outStream)
+		{
+			if (entry == null) throw new ArgumentNullException(nameof(entry));
+			using (var stream = entry.ExtractToStream(kifintStream))
+				SceneScript.DecompileToStream(stream, entry.FileName, outStream);
 		}
 
 		#endregion

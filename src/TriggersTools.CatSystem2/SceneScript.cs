@@ -72,6 +72,11 @@ namespace TriggersTools.CatSystem2 {
 			Lines = newLines.ToImmutableArray();
 		}
 
+		public SceneScript(string fileName, IEnumerable<ISceneLine> lines) {
+			FileName = fileName;
+			Lines = lines.ToImmutableArray();
+		}
+
 		#endregion
 
 		/*#region Public Helpers
@@ -98,7 +103,7 @@ namespace TriggersTools.CatSystem2 {
 		///  Gets the string representation of the scene script.
 		/// </summary>
 		/// <returns>The string representation of the scene script.</returns>
-		public override string ToString() => $"Scene: \"{FileName}\" Lines={Count}";
+		public override string ToString() => $"Scene \"{FileName}\" Lines={Count}";
 
 		#endregion
 

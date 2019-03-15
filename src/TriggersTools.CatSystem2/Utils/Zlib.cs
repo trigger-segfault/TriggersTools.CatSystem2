@@ -10,7 +10,12 @@ using TriggersTools.SharpUtils.Exceptions;
 using TriggersTools.SharpUtils.IO;
 
 namespace TriggersTools.CatSystem2.Utils {
-	internal class ZlibException : Exception {
+#if DEBUG_LIBRARY
+	public
+#else
+	internal
+#endif
+	class ZlibException : Exception {
 
 		public ZlibException(string message) : base(message) { }
 		public ZlibException(string message, Exception innerException) : base(message, innerException) { }
@@ -37,7 +42,12 @@ namespace TriggersTools.CatSystem2.Utils {
 	/// <summary>
 	///  A static class for zlib1.dll native methods.
 	/// </summary>
-	internal static class Zlib {
+#if DEBUG_LIBRARY
+	public
+#else
+	internal
+#endif
+	static class Zlib {
 		#region Static Constructors
 		
 		static Zlib() {

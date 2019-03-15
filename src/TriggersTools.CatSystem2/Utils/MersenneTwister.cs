@@ -4,7 +4,12 @@ namespace TriggersTools.CatSystem2.Utils {
 	/// <summary>
 	///  A random number generation method used by <see cref="KifintArchive"/>.
 	/// </summary>
-	internal sealed class MersenneTwister {
+#if DEBUG_LIBRARY
+	public
+#else
+	internal
+#endif
+	sealed class MersenneTwister {
 		#region Constants
 
 		private const int N = 624;

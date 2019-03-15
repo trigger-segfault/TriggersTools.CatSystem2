@@ -23,7 +23,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;DEBUG_LIBRARY</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -32,7 +32,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;DEBUG_LIBRARY</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -65,7 +65,6 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Collections.Immutable, Version=1.2.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
   </ItemGroup>
@@ -73,12 +72,13 @@
     <Compile Include="Animation.cs" />
     <Compile Include="Attributes\AnimationCommandAttribute.cs" />
     <Compile Include="CatCompiler.cs" />
+    <Compile Include="CatDebug.cs" />
     <Compile Include="Decompile\Animation.Decompile.cs" />
     <Compile Include="Decompile\SceneScript.HumanReadable.cs" />
     <Compile Include="Exceptions\ExtractException.cs" />
     <Compile Include="Exceptions\HgxException.cs" />
     <Compile Include="Extract\Animation.Extract.cs" />
-    <Compile Include="AnimationFrame.cs" />
+    <Compile Include="AnimationLine.cs" />
     <Compile Include="Attributes\CommandNameAttribute.cs" />
     <Compile Include="CatUtils.cs" />
     <Compile Include="Extract\Hg2Image.Extract.Private.cs" />
@@ -99,14 +99,14 @@
     <Compile Include="HgxType.cs" />
     <Compile Include="Json\JsonColorConverter.cs" />
     <Compile Include="Json\JsonStringEnumConverter.cs" />
+    <Compile Include="Scenes\Commands\ChoiceCommand.cs" />
+    <Compile Include="Scenes\Commands\MesdrawCommand.cs" />
+    <Compile Include="Scenes\Commands\NovelCommand.cs" />
     <Compile Include="Scenes\ScenePage.cs" />
     <Compile Include="Scenes\SceneLineType.cs" />
     <Compile Include="SceneScript.cs" />
     <Compile Include="Decompile\SceneScript.Decompile.cs" />
     <Compile Include="Extract\SceneScript.Extract.cs" />
-    <None Include="VCode.cs" />
-    <None Include="VCodes - Copy.cs" />
-    <Compile Include="SceneScriptBuilder.cs" />
     <Compile Include="Scenes\Commands\Abstract\SceneCommandBase.cs" />
     <Compile Include="Scenes\Commands\GenericCommand.cs" />
     <Compile Include="Scenes\Commands\Abstract\SoundCommand.cs" />
@@ -122,8 +122,12 @@
     <Compile Include="Scenes\SceneName.cs" />
     <Compile Include="Scenes\SceneMessage.cs" />
     <Compile Include="Scenes\StringToken.cs" />
+    <Compile Include="Utils\BlowfishOutputStream.cs" />
+    <Compile Include="Utils\BlowfishInputStream.cs" />
+    <Compile Include="Utils\BlowfishManaged.cs" />
+    <Compile Include="Utils\BlowfishManaged.SBlocks.cs" />
+    <Compile Include="Utils\BlowfishNative.cs" />
     <Compile Include="Utils\Blowfish.cs" />
-    <Compile Include="Utils\Blowfish.SBlocks.cs" />
     <Compile Include="VCodes.Find.cs" />
     <Compile Include="VCodes.cs" />
     <Compile Include="ZtEntry.cs" />
@@ -163,11 +167,16 @@
     <Compile Include="Utils\Asmodean.cs" />
     <Compile Include="Utils\Zlib.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="VCodeOld.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="DotNetZip">
+      <Version>1.13.3</Version>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="System.Collections.Immutable">
+      <Version>1.5.0</Version>
     </PackageReference>
     <PackageReference Include="TriggersTools.Build.CopyrightYear">
       <Version>1.0.0</Version>

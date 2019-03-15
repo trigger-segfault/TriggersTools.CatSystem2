@@ -12,8 +12,8 @@ using TriggersTools.SharpUtils.IO;
 
 namespace TriggersTools.CatSystem2 {
 	partial class HgxImage {
-		#region ExtractHg3
-		
+		#region ExtractHg3Internal
+
 		private static HgxImage ExtractHg3Internal(HGXHDR hdr, BinaryReader reader, string fileName, string outputDir,
 			HgxOptions options)
 		{
@@ -40,7 +40,7 @@ namespace TriggersTools.CatSystem2 {
 
 				HG3STDINFO stdInfo = reader.ReadUnmanaged<HG3STDINFO>();
 				frameInfos.Add(frameInfo = new Hg3FrameInfo(frameHdr, stdInfo));
-				
+				HG3TAG previousTag;
 				while (tag.OffsetNext != 0) {
 					tag = reader.ReadUnmanaged<HG3TAG>();
 
@@ -75,6 +75,7 @@ namespace TriggersTools.CatSystem2 {
 					else {
 						Trace.WriteLine($"UNKNOWN TAG: \"{signature}\"");
 					}
+					previousTag = tag;
 
 					stream.Position = position + tag.Length;
 				}
@@ -126,7 +127,7 @@ namespace TriggersTools.CatSystem2 {
 			
 			byte[] pixelBuffer = ProcessImage(reader, std.Width, std.Height, std.DepthBits, img.Data);
 
-			if (!CatUtils.SpeedTestHgx) {
+			if (!CatDebug.SpeedTestHgx) {
 				// This image type is normally flipped, so reverse the option
 				options ^= HgxOptions.Flip;
 				WritePng(pixelBuffer, std, options, pngFile);
@@ -141,7 +142,7 @@ namespace TriggersTools.CatSystem2 {
 
 			byte[] buffer = reader.ReadBytes(tag.Length);
 
-			if (!CatUtils.SpeedTestHgx)
+			if (!CatDebug.SpeedTestHgx)
 				WriteJpegToPng(buffer, std, options, pngFile);
 		}
 		private static void ExtractHg3ImageAlpha(BinaryReader reader, Hg3FrameInfo frameInfo, HgxOptions options,
@@ -174,7 +175,7 @@ namespace TriggersTools.CatSystem2 {
 				}
 			}
 
-			if (!CatUtils.SpeedTestHgx)
+			if (!CatDebug.SpeedTestHgx)
 				WritePng(pixelBuffer, std, options, pngFile);
 		}
 		private static void ExtractHg3ImageJpegAlpha(BinaryReader reader, Hg3FrameInfo frameInfo, HgxOptions options,
@@ -191,7 +192,7 @@ namespace TriggersTools.CatSystem2 {
 
 			byte[] buffer = reader.ReadBytes(tag.Length);
 
-			if (!CatUtils.SpeedTestHgx)
+			if (!CatDebug.SpeedTestHgx)
 				WriteJpegAlphaMaskToPng(buffer, alphaBuffer, std, options, pngFile);
 		}
 

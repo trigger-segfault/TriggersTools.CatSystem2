@@ -6,7 +6,7 @@ namespace TriggersTools.CatSystem2 {
 	/// <summary>
 	///  A readonly collection for loaded and cached KIFINT lookups.
 	/// </summary>
-	public interface IKifintLookupCollection : IReadOnlyList<KifintLookup> {
+	public interface IReadOnlyKifintLookupCollection : IReadOnlyList<KifintLookup> {
 		#region Properties
 
 		/*/// <summary>
@@ -113,7 +113,7 @@ namespace TriggersTools.CatSystem2 {
 	/// <summary>
 	///  A mutable collection for loaded and cached KIFINT lookups.
 	/// </summary>
-	internal sealed class KifintLookupCollection : IKifintLookupCollection {
+	public sealed class KifintLookupCollection : IReadOnlyKifintLookupCollection {
 		#region Fields
 
 		private readonly List<KifintLookup> lookups = new List<KifintLookup>();
