@@ -151,11 +151,20 @@ namespace TriggersTools.CatSystem2 {
 			HG3STDINFO std = frameInfo.StdInfo;
 			HG3IMG_AL img = frameInfo.ImgAl.Data;
 			reader.BaseStream.Position = frameInfo.ImgAl.Offset;
-
-			byte[] alphaBuffer = Zlib.Decompress(reader, img.CompressedLength, img.DecompressedLength);
+			
+			// WGC handles bad alpha buffer errors gracefully, so we should too
+			byte[] alphaBuffer;
+			try {
+				alphaBuffer = Zlib.Decompress(reader, img.CompressedLength, img.DecompressedLength);
+			} catch (ZlibException ex) {
+				if (ex.Result == ZResult.DataError || ex.Result == ZResult.BufferError)
+					alphaBuffer = ex.OutputBuffer;
+				else
+					throw;
+			}
 
 			int depthBytes = (std.DepthBits + 7) / 8;
-			int stride = (std.Width * depthBytes + 3) / 4 * 4;
+			int stride = (std.Width * depthBytes + 3) & ~3;
 			int minStride = (std.Width * depthBytes);
 			int alphaStride = std.Width;
 			
@@ -186,7 +195,16 @@ namespace TriggersTools.CatSystem2 {
 			HG3TAG tag = frameInfo.ImgJpg.Tag;
 			reader.BaseStream.Position = frameInfo.ImgAl.Offset;
 
-			byte[] alphaBuffer = Zlib.Decompress(reader, img.CompressedLength, img.DecompressedLength);
+			// WGC handles bad alpha buffer errors gracefully, so we should too
+			byte[] alphaBuffer;
+			try {
+				alphaBuffer = Zlib.Decompress(reader, img.CompressedLength, img.DecompressedLength);
+			} catch (ZlibException ex) {
+				if (ex.Result == ZResult.DataError || ex.Result == ZResult.BufferError)
+					alphaBuffer = ex.OutputBuffer;
+				else
+					throw;
+			}
 
 			reader.BaseStream.Position = frameInfo.ImgJpg.Offset;
 

@@ -67,7 +67,7 @@ namespace TriggersTools.CatSystem2 {
 			HG2IMG img = frameInfo.Img;
 			reader.BaseStream.Position = frameInfo.Offset;
 			int depthBytes = (img.DepthBits + 7) / 8;
-			int stride = (img.Width * depthBytes + 3) / 4 * 4;
+			int stride = (img.Width * depthBytes + 3) & ~3;
 
 			byte[] pixelBuffer = ProcessImage(reader, img.Width, img.Height, img.DepthBits, img.Data);
 

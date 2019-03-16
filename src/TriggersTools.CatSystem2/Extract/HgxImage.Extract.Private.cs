@@ -72,7 +72,7 @@ namespace TriggersTools.CatSystem2 {
 			}
 
 			int depthBytes = (depthBits + 7) / 8;
-			int stride = (width * depthBytes + 3) / 4 * 4;
+			int stride = (width * depthBytes + 3) & ~3;
 			byte[] dataBuffer = Zlib.Decompress(reader, data.CompressedDataLength, data.DecompressedDataLength);
 			byte[] cmdBuffer = Zlib.Decompress(reader, data.CompressedCmdLength, data.DecompressedCmdLength);
 			
@@ -206,7 +206,7 @@ namespace TriggersTools.CatSystem2 {
 			if (!flip)
 				return;
 			int depthBytes = (depthBits + 7) / 8;
-			int stride = (width * depthBytes + 3) / 4 * 4;
+			int stride = (width * depthBytes + 3) & ~3;
 
 			// Vertically flip the buffer so its in the correct setup to load into Bitmap
 			byte[] strideBuffer = new byte[stride];
@@ -240,7 +240,7 @@ namespace TriggersTools.CatSystem2 {
 			try {
 				IntPtr scan0 = handle.AddrOfPinnedObject();
 				int depthBytes = (std.DepthBits + 7) / 8;
-				int stride = (std.Width * depthBytes + 3) / 4 * 4;
+				int stride = (std.Width * depthBytes + 3) & ~3;
 				PixelFormat format, expandFormat = PixelFormat.Format32bppArgb;
 				switch (std.DepthBits) {
 				case 24: format = PixelFormat.Format24bppRgb; break;
@@ -253,9 +253,9 @@ namespace TriggersTools.CatSystem2 {
 					using (var bitmap = new Bitmap(std.Width, std.Height, stride, format, scan0))
 					using (var bitmapExpand = new Bitmap(std.TotalWidth, std.TotalHeight, expandFormat))
 					using (Graphics g = Graphics.FromImage(bitmapExpand)) {
-						g.DrawImageUnscaled(bitmap, std.OffsetX, std.OffsetY);
 						if (options.HasFlag(HgxOptions.Flip))
-							bitmapExpand.RotateFlip(RotateFlipType.RotateNoneFlipY);
+							bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
+						g.DrawImageUnscaled(bitmap, std.OffsetX, std.OffsetY);
 						bitmapExpand.Save(pngFile, ImageFormat.Png);
 					}
 				}
@@ -287,7 +287,7 @@ namespace TriggersTools.CatSystem2 {
 			try {
 				IntPtr scan0 = handle.AddrOfPinnedObject();
 				int depthBytes = (std.DepthBits + 7) / 8;
-				int stride = (std.Width * depthBytes + 3) / 4 * 4;
+				int stride = (std.Width * depthBytes + 3) & ~3;
 				PixelFormat format, expandFormat = PixelFormat.Format32bppArgb;
 				switch (std.DepthBits) {
 				case 24: format = PixelFormat.Format24bppRgb; break;
@@ -300,9 +300,9 @@ namespace TriggersTools.CatSystem2 {
 					using (var bitmap = new Bitmap(std.Width, std.Height, stride, format, scan0))
 					using (var bitmapExpand = new Bitmap(std.TotalWidth, std.TotalHeight, expandFormat))
 					using (Graphics g = Graphics.FromImage(bitmapExpand)) {
-						g.DrawImageUnscaled(bitmap, std.OffsetX, std.OffsetY);
 						if (options.HasFlag(HgxOptions.Flip))
-							bitmapExpand.RotateFlip(RotateFlipType.RotateNoneFlipY);
+							bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
+						g.DrawImageUnscaled(bitmap, std.OffsetX, std.OffsetY);
 						bitmapExpand.Save(pngFile, ImageFormat.Png);
 					}
 				}
@@ -331,7 +331,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <param name="pngFile">The path to the file to save to.</param>
 		private static void WriteJpegToPng(byte[] buffer, HG3STDINFO std, HgxOptions options, string pngFile) {
 			int depthBytes = (std.DepthBits + 7) / 8;
-			int stride = (std.Width * depthBytes + 3) / 4 * 4;
+			int stride = (std.Width * depthBytes + 3) & ~3;
 			PixelFormat expandFormat = PixelFormat.Format32bppArgb;
 			// Do expansion here, and up to 32 bits if not 32 bits already.
 			bool expand = options.HasFlag(HgxOptions.Expand);
@@ -340,9 +340,9 @@ namespace TriggersTools.CatSystem2 {
 				using (var jpeg = (Bitmap) Image.FromStream(ms))
 				using (var bitmapExpand = new Bitmap(std.TotalWidth, std.TotalHeight, expandFormat))
 				using (Graphics g = Graphics.FromImage(bitmapExpand)) {
-					g.DrawImageUnscaled(jpeg, std.OffsetX, std.OffsetY);
 					if (options.HasFlag(HgxOptions.Flip))
-						bitmapExpand.RotateFlip(RotateFlipType.RotateNoneFlipY);
+						jpeg.RotateFlip(RotateFlipType.RotateNoneFlipY);
+					g.DrawImageUnscaled(jpeg, std.OffsetX, std.OffsetY);
 					bitmapExpand.Save(pngFile, ImageFormat.Png);
 				}
 			}
@@ -367,13 +367,16 @@ namespace TriggersTools.CatSystem2 {
 			HgxOptions options, string pngFile)
 		{
 			bool expand = options.HasFlag(HgxOptions.Expand);
+			expand = expand && (std.Width != std.TotalWidth || std.Height != std.TotalHeight);
 			int offsetX = (expand ? std.OffsetX : 0);
 			int offsetY = (expand ? std.OffsetY : 0);
 			int width   = (expand ? std.TotalWidth  : std.Width);
 			int height  = (expand ? std.TotalHeight : std.Height);
 
-			int depthBytes = (std.DepthBits + 7) / 8;
-			int stride = (expand ? std.TotalWidth : std.Width) * 4;
+			int depthBytes = 4;
+			int jpgStride = std.Width * depthBytes;
+			int stride = width * depthBytes;
+			int bufferSize = height * stride;
 			int alphaStride = std.Width;
 			BitmapData jpgData = null, bmpData = null;
 			using (var ms = new MemoryStream(buffer))
@@ -383,11 +386,20 @@ namespace TriggersTools.CatSystem2 {
 					Rectangle rect = new Rectangle(0, 0, std.Width, std.Height);
 					jpgData = jpeg.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 					bmpData = bitmap.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
-					int bufferSize = height * stride;
-					void* pJpg = jpgData.Scan0.ToPointer();
+					byte* pJpg = (byte*) jpgData.Scan0.ToPointer();
 					byte* pBmp = (byte*) bmpData.Scan0.ToPointer();
+
 					// Copy over the jpeg pixels first
-					Buffer.MemoryCopy(pJpg, pBmp, bufferSize, bufferSize);
+					if (expand) {
+						for (int y = 0; y < std.Height; y++) {
+							int src = y * jpgStride;
+							int dst = (y + offsetY) * stride + offsetX * depthBytes;
+							Buffer.MemoryCopy(pJpg + src, pBmp + dst, bufferSize, jpgStride);
+						}
+					}
+					else {
+						Buffer.MemoryCopy(pJpg, pBmp, bufferSize, bufferSize);
+					}
 
 					// Now apply the alpha to the pixels
 					for (int y = 0; y < std.Height; y++) {

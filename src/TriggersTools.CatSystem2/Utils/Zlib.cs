@@ -10,6 +10,29 @@ using TriggersTools.SharpUtils.Exceptions;
 using TriggersTools.SharpUtils.IO;
 
 namespace TriggersTools.CatSystem2.Utils {
+	/// <summary>
+	///  A result type that is returned from native Zlib compress and decompress functions.
+	///  This result states the error that occurred.
+	/// </summary>
+#if DEBUG_LIBRARY
+	public
+#else
+	internal
+#endif
+	enum ZResult : int {
+		OK = 0,
+		StreamEnd = 1,
+		NeedDictionary = 1,
+		IOError = -1,
+		StreamError = -2,
+		DataError = -3,
+		MemoryError = -4,
+		BufferError = -5,
+		VersionError = -6,
+	}
+	/// <summary>
+	///  An exception thrown during Zlib compression and decompression.
+	/// </summary>
 #if DEBUG_LIBRARY
 	public
 #else
@@ -17,22 +40,41 @@ namespace TriggersTools.CatSystem2.Utils {
 #endif
 	class ZlibException : Exception {
 
+		/// <summary>
+		///  The <see cref="ZResult"/> that was returned from the Zlib function.
+		/// </summary>
+		public ZResult Result { get; }
+		/// <summary>
+		///  The input buffer used in the Zlib function. Null if <see cref="Result"/> is <see cref="ZResult.OK"/>.
+		/// </summary>
+		public byte[] InputBuffer { get; }
+		/// <summary>
+		///  The resuling buffer used in the Zlib function. Null if <see cref="Result"/> is <see cref="ZResult.OK"/>.
+		/// </summary>
+		public byte[] OutputBuffer { get; }
+
 		public ZlibException(string message) : base(message) { }
 		public ZlibException(string message, Exception innerException) : base(message, innerException) { }
-		internal ZlibException(Zlib.ZResult result, bool compress) : base(ResultMessage(result, compress)) { }
+		internal ZlibException(ZResult result, bool compress, byte[] input, byte[] output)
+			: base(ResultMessage(result, compress))
+		{
+			Result = result;
+			InputBuffer = input;
+			OutputBuffer = output;
+		}
 
-		private static string ResultMessage(Zlib.ZResult result, bool compress) {
+		private static string ResultMessage(ZResult result, bool compress) {
 			if (compress) {
 				switch (result) {
-				case Zlib.ZResult.MemoryError: return "There was not enough memory to complete the Zlib compression!";
-				case Zlib.ZResult.BufferError: return "The Zlib compressed destination buffer was not large enough!";
+				case ZResult.MemoryError: return "There was not enough memory to complete the Zlib compression!";
+				case ZResult.BufferError: return "The Zlib compressed destination buffer was not large enough!";
 				}
 			}
 			else {
 				switch (result) {
-				case Zlib.ZResult.MemoryError: return "There was not enough memory to complete the Zlib decompression!";
-				case Zlib.ZResult.BufferError: return "The Zlib decompressed destination buffer was not large enough!";
-				case Zlib.ZResult.DataError: return "The Zlib compression data is corrupted or incomplete!";
+				case ZResult.MemoryError: return "There was not enough memory to complete the Zlib decompression!";
+				case ZResult.BufferError: return "The Zlib decompressed destination buffer was not large enough!";
+				case ZResult.DataError: return "The Zlib compression data is corrupted or incomplete!";
 				}
 			}
 			return $"Unhandled Zlib error status {result}!";
@@ -62,23 +104,7 @@ namespace TriggersTools.CatSystem2.Utils {
 		}
 
 		#endregion
-
-		#region ZStatus
-
-		internal enum ZResult : int {
-			OK = 0,
-			StreamEnd = 1,
-			NeedDictionary = 1,
-			IOError = -1,
-			StreamError = -2,
-			DataError = -3,
-			MemoryError = -4,
-			BufferError = -5,
-			VersionError = -6,
-		}
-
-		#endregion
-
+		
 		#region Native
 
 		/// <summary>
@@ -88,7 +114,7 @@ namespace TriggersTools.CatSystem2.Utils {
 		/// <returns>
 		///  An upper bound on the compressed size after calling Compress() on <see cref="srcLength"/> bytes.
 		/// </returns>
-		[DllImport("zlib1.dll", EntryPoint = "compressBound ", CallingConvention = CallingConvention.Cdecl)]
+		[DllImport("zlib1.dll", EntryPoint = "compressBound", CallingConvention = CallingConvention.Cdecl)]
 		public extern static int CompressBoundNative(
 			int srcLength);
 
@@ -147,7 +173,7 @@ namespace TriggersTools.CatSystem2.Utils {
 		///  A Zlib error occurred, or the resulting length was greater than <see cref="int.MaxValue"/>.
 		/// </exception>
 		public static int CompressedLength(byte[] decompressed) {
-			return DecompressedLength(decompressed, decompressed?.Length ?? 0);
+			return CompressedLength(decompressed, decompressed?.Length ?? 0);
 		}
 		/// <summary>
 		///  Gets the compressed length of the decompressed data and length.
@@ -171,16 +197,17 @@ namespace TriggersTools.CatSystem2.Utils {
 			if (decompressedLength < 0)
 				throw ArgumentOutOfRangeUtils.OutsideMin(nameof(decompressedLength), decompressedLength, 0, true);
 
-			int compressedLength = 0;
-			ZResult result = CompressNative(Array.Empty<byte>(), ref compressedLength, decompressed, decompressedLength);
-			if (result != ZResult.OK && result != ZResult.BufferError && result != ZResult.MemoryError)
-				throw new ZlibException(result, true);
+			int compressedLength = CompressedBounds(decompressedLength);
+			byte[] compressed = new byte[compressedLength];
+			ZResult result = CompressNative(compressed, ref compressedLength, decompressed, decompressedLength);
+			if (result != ZResult.OK)// && result != ZResult.BufferError)
+				throw new ZlibException(result, true, decompressed, compressed);
 
 			if (compressedLength < 0) {
 				throw new ZlibException($"Compressed length of {nameof(decompressedLength)} is greater " +
 					$"than {nameof(Int32)}.{nameof(int.MaxValue)}!");
 			}
-			return decompressedLength;
+			return compressedLength;
 		}
 
 		#endregion
@@ -226,8 +253,8 @@ namespace TriggersTools.CatSystem2.Utils {
 
 			int decompressedLength = 0;
 			ZResult result = UncompressNative(Array.Empty<byte>(), ref decompressedLength, compressed, compressedLength);
-			if (result != ZResult.OK && result != ZResult.BufferError && result != ZResult.MemoryError)
-				throw new ZlibException(result, false);
+			if (result != ZResult.OK && result != ZResult.BufferError)
+				throw new ZlibException(result, false, compressed, Array.Empty<byte>());
 
 			if (decompressedLength < 0) {
 				throw new ZlibException($"Decompressed length of {nameof(compressedLength)} is greater " +
@@ -324,7 +351,7 @@ namespace TriggersTools.CatSystem2.Utils {
 
 			ZResult result = CompressNative(compressed, ref compressedLength, decompressed, decompressedLength);
 			if (result != ZResult.OK)
-				throw new ZlibException(result, true);
+				throw new ZlibException(result, true, decompressed, compressed);
 		}
 
 		#endregion
@@ -522,7 +549,7 @@ namespace TriggersTools.CatSystem2.Utils {
 
 			ZResult result = UncompressNative(decompressed, ref decompressedLength, compressed, compressedLength);
 			if (result != ZResult.OK)
-				throw new ZlibException(result, false);
+				throw new ZlibException(result, false, compressed, decompressed);
 		}
 
 		#endregion
