@@ -7,8 +7,6 @@ A library for extracting resources from, decompiling scripts from, and working w
 
 See the **[CatSystem2 Documentation Wiki](https://github.com/trigger-death/TriggersTools.CatSystem2/wiki)** for ongoing documentation of CatSystem2 file specifications, undocumented features, debugging, decompiling scripts, and more.
 
-<p align="center"><b><a href="https://github.com/trigger-death/TriggersTools.CatSystem2/wiki"><img alt="CatSystem2 Documentation Wiki" src="https://i.imgur.com/PMmwsU7.png"></a></b></p>
-
 ## Features
 
 * Patches for translating CatSystem2 tools into English.
