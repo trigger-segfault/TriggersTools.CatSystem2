@@ -5,8 +5,6 @@
 
 A library for extracting resources from, decompiling scripts from, and working with the CatSystem2 visual novel game engine.
 
-See the **[CatSystem2 Wiki](https://github.com/trigger-death/TriggersTools.CatSystem2/wiki)** for ongoing documentation on CatSystem2 file specifications and undocumented features.
-
 ## Features
 
 * Patches for translating CatSystem2 tools into English.
@@ -14,9 +12,16 @@ See the **[CatSystem2 Wiki](https://github.com/trigger-death/TriggersTools.CatSy
 * Extracting images from HG-2 and HG-3 format. (Improved over asmodean's code)
 * Decompiling cst, fes, and anm scripts into a modifiable and compileable state.
 
+
 ### This is a Work in Progress.
 
 ![CatSystem2 English Debug Mode](https://i.imgur.com/r8g2vqJ.png)
+
+***
+
+See the **[CatSystem2 Documentation Wiki](https://github.com/trigger-death/TriggersTools.CatSystem2/wiki)** for ongoing documentation of CatSystem2 file specifications, undocumented features, debugging, decompiling scripts, and more.
+
+<p align="center"><b><a href="https://github.com/trigger-death/TriggersTools.CatSystem2/wiki"><img alt="CatSystem2 Documentation Wiki" src="https://i.imgur.com/PMmwsU7.png"></a></b></p>
 
 ## Other Projects/Tools of Note & Special Thanks
 
