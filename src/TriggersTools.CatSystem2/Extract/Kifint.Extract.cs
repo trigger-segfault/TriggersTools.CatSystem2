@@ -305,7 +305,7 @@ namespace TriggersTools.CatSystem2 {
 
 			KIFENTRY[] entries = reader.ReadUnmanagedArray<KIFENTRY>(hdr.EntryCount);
 
-			uint tocSeed = GenTocSeed(vcode2);
+			uint tocSeed = GenerateTocSeed(vcode2);
 			uint fileKey = 0;
 			bool decrypt = false;
 
