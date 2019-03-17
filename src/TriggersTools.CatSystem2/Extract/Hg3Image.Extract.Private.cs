@@ -30,10 +30,10 @@ namespace TriggersTools.CatSystem2 {
 				// NEW-NEW METHOD: We now know the next offset ahead
 				// of time from the HG3OFFSET we're going to read.
 				// Usually skips 0 bytes, otherwise usually 1-7 bytes.
-				//long startPosition = stream.Position;
 				startPosition = stream.Position;
 				frameHdr = reader.ReadUnmanaged<HG3FRAMEHDR>();
 
+				long tagStartPosition = stream.Position;
 				HG3TAG tag = reader.ReadUnmanaged<HG3TAG>();
 				if (!HG3STDINFO.HasTagSignature(tag.Signature))
 					throw new Exception("Expected \"stdinfo\" tag!");
@@ -42,9 +42,11 @@ namespace TriggersTools.CatSystem2 {
 				frameInfos.Add(frameInfo = new Hg3FrameInfo(frameHdr, stdInfo));
 				HG3TAG previousTag;
 				while (tag.OffsetNext != 0) {
+					stream.Position = tagStartPosition + tag.OffsetNext;
+					tagStartPosition = stream.Position;
 					tag = reader.ReadUnmanaged<HG3TAG>();
 
-					long position = stream.Position;
+					//long position = stream.Position;
 
 					string signature = tag.Signature;
 
@@ -77,7 +79,7 @@ namespace TriggersTools.CatSystem2 {
 					}
 					previousTag = tag;
 
-					stream.Position = position + tag.Length;
+					//stream.Position = position + tag.Length;
 				}
 			} while (frameHdr.OffsetNext != 0);
 

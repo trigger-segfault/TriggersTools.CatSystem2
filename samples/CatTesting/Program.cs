@@ -32,12 +32,14 @@ namespace TriggersTools.CatSystem2.Testing {
 			Directory.CreateDirectory(outputPath);
 			int hg3Index = 0;
 			Console.Write($"\r{hg3Index}");
-			var hg3Cs2Files = Directory.EnumerateFiles(rawPath, "*.hg3").SkipWhile(s => !s.EndsWith("click.hg3"));
+			HgxImage.Extract(@"C:\Programs\Tools\CatSystem2_v401\tool\img_flipped.hg3");
+			var hg3Cs2Files = Directory.EnumerateFiles(rawPath, "*.hg3");//.SkipWhile(s => !s.EndsWith("click.hg3"));
 			foreach (string file in hg3Cs2Files) {
 				Console.Write($"\r{hg3Index++}");
-				HgxImage hg3Image = HgxImage.ExtractImages(file, outputPath, HgxOptions.None);
-				hg3Image = HgxImage.ExtractImages(file, outputExpandPath, HgxOptions.Expand);
-				hg3Image.SaveJsonToDirectory(hg3Path);
+				HgxImage.Extract(file);
+				//HgxImage hg3Image = HgxImage.ExtractImages(file, outputPath, HgxOptions.None);
+				//hg3Image = HgxImage.ExtractImages(file, outputExpandPath, HgxOptions.Expand);
+				//hg3Image.SaveJsonToDirectory(hg3Path);
 			}
 			Console.WriteLine($"\r{hg3Index}");
 			Console.WriteLine("FINISHED");

@@ -384,23 +384,23 @@ namespace TriggersTools.CatSystem2.Structs {
 		#region Fields
 
 		/// <summary>
-		///  The x coordinate of the attribute.
+		///  The x coordinate of the attribute image.
 		/// </summary>
 		public int X;
 		/// <summary>
-		///  The y coordinate of the attribute.
+		///  The y coordinate of the attribute image.
 		/// </summary>
 		public int Y;
 		/// <summary>
-		///  The width coordinate of the attribute.
+		///  The width of the attribute image.
 		/// </summary>
 		public int Width;
 		/// <summary>
-		///  The height coordinate of the attribute.
+		///  The height of the attribute image.
 		/// </summary>
 		public int Height;
 		/// <summary>
-		///  The display color coordinate of the attribute.
+		///  The display color coordinate of the attribute image.
 		/// </summary>
 		public int Color;
 
