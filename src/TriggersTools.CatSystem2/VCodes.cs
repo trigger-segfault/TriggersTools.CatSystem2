@@ -2,8 +2,8 @@
 using System.Text;
 using Newtonsoft.Json;
 using TriggersTools.CatSystem2.Utils;
-using TriggersTools.Resources;
-using TriggersTools.Resources.Enumerations;
+using TriggersTools.Windows.Resources;
+using TriggersTools.Windows.Resources.Enumerations;
 using TriggersTools.SharpUtils.Text;
 
 namespace TriggersTools.CatSystem2 {

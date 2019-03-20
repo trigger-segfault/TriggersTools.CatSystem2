@@ -11,6 +11,10 @@ using TriggersTools.SharpUtils.Exceptions;
 using TriggersTools.SharpUtils.IO;
 using ReturnCode = TriggersTools.CatSystem2.Utils.Asmodean.ReturnCode;
 
+#if NET451
+using Buffer = TriggersTools.CatSystem2.Utils.BufferMemoryCopy;
+#endif
+
 namespace TriggersTools.CatSystem2 {
 	partial class HgxImage {
 		#region ExtractInternal

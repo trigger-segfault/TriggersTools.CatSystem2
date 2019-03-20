@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TriggersTools.Resources;
-using TriggersTools.Resources.Menu;
+using TriggersTools.Windows.Resources;
+using TriggersTools.Windows.Resources.Menu;
 
 namespace TriggersTools.CatSystem2.Patcher.Patches {
 	public class MenuStringsPatch : MenuResourcePatch {

@@ -3,6 +3,10 @@ using System.Runtime.CompilerServices;
 using TriggersTools.CatSystem2.Exceptions;
 using TriggersTools.CatSystem2.Utils;
 
+#if NET451
+using Buffer = TriggersTools.CatSystem2.Utils.BufferMemoryCopy;
+#endif
+
 namespace TriggersTools.CatSystem2 {
 	partial class HgxImage {
 		#region ProcessImageManaged
@@ -104,7 +108,6 @@ namespace TriggersTools.CatSystem2 {
 								if (unrleLeft < n || dataLeft < n)
 									throw new HgxException("dataBuffer, cmdBuffer, or unrleBuffer ran out of data!");
 								dataLeft -= n;
-
 								Buffer.MemoryCopy(data, pUnrleBuffer + i, unrleLeft, n);
 								data += n;
 							}

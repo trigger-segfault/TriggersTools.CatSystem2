@@ -252,9 +252,9 @@ namespace TriggersTools.CatSystem2.Utils {
 				throw ArgumentOutOfRangeUtils.OutsideMin(nameof(compressedLength), compressedLength, 0, true);
 
 			int decompressedLength = 0;
-			ZResult result = UncompressNative(Array.Empty<byte>(), ref decompressedLength, compressed, compressedLength);
+			ZResult result = UncompressNative(new byte[0], ref decompressedLength, compressed, compressedLength);
 			if (result != ZResult.OK && result != ZResult.BufferError)
-				throw new ZlibException(result, false, compressed, Array.Empty<byte>());
+				throw new ZlibException(result, false, compressed, new byte[0]);
 
 			if (decompressedLength < 0) {
 				throw new ZlibException($"Decompressed length of {nameof(compressedLength)} is greater " +

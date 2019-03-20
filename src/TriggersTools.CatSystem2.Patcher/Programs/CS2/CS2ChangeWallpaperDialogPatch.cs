@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TriggersTools.CatSystem2.Patcher.Patches;
-using TriggersTools.Resources.Dialog;
+using TriggersTools.Windows.Resources.Dialog;
 
 namespace TriggersTools.CatSystem2.Patcher.Programs.CS2 {
 	internal sealed class CS2ChangeWallpaperDialogPatch : DialogResourcePatch {

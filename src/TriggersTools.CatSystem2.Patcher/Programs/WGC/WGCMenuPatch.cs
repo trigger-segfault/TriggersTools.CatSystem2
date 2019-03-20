@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TriggersTools.CatSystem2.Patcher.Patches;
-using TriggersTools.Resources.Menu;
+using TriggersTools.Windows.Resources.Menu;
 
 namespace TriggersTools.CatSystem2.Patcher.Programs.WGC {
 	internal sealed class WGCMenuPatch : MenuResourcePatch {

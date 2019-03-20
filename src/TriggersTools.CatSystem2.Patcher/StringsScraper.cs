@@ -11,10 +11,10 @@ using TriggersTools.SharpUtils.IO;
 using TriggersTools.SharpUtils.Mathematics;
 using TriggersTools.SharpUtils.Text;
 using TriggersTools.CatSystem2.Patcher.Patches;
-using TriggersTools.Resources.Dialog;
-using TriggersTools.Resources.Menu;
-using TriggersTools.Resources.StringTable;
-using TriggersTools.Resources;
+using TriggersTools.Windows.Resources.Dialog;
+using TriggersTools.Windows.Resources.Menu;
+using TriggersTools.Windows.Resources.StringTable;
+using TriggersTools.Windows.Resources;
 using System.Collections.Immutable;
 
 namespace TriggersTools.CatSystem2.Patcher {
