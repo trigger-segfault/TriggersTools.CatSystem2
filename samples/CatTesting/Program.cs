@@ -17,10 +17,10 @@ using TriggersTools.Resources.Menu;
 using TriggersTools.Resources;
 using Newtonsoft.Json;*/
 //using TriggersTools.CatSystem2.Patcher.Programs.CS2;
+using Newtonsoft.Json;
 using TriggersTools.CatSystem2.Scenes;
 using TriggersTools.CatSystem2.Scenes.Commands;
 using TriggersTools.CatSystem2;
-using Newtonsoft.Json;
 
 namespace TriggersTools.CatSystem2.Testing {
 	class JsonTest {
