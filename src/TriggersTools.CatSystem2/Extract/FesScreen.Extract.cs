@@ -10,19 +10,19 @@ using TriggersTools.SharpUtils.Exceptions;
 using TriggersTools.SharpUtils.IO;
 
 namespace TriggersTools.CatSystem2 {
-	partial class ScreenScript {
+	partial class FesScreen {
 		#region Extract
 
 		/// <summary>
 		///  Extracts the scene script information.
 		/// </summary>
 		/// <param name="fesFile">The file path to the FES screen script file.</param>
-		/// <returns>The extracted <see cref="ScreenScript"/> information.</returns>
+		/// <returns>The extracted <see cref="FesScreen"/> information.</returns>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="fesFile"/> is null.
 		/// </exception>
-		public static ScreenScript Extract(string fesFile) {
+		public static FesScreen Extract(string fesFile) {
 			using (var stream = File.OpenRead(fesFile))
 				return Extract(stream, fesFile);
 		}
@@ -31,7 +31,7 @@ namespace TriggersTools.CatSystem2 {
 		/// </summary>
 		/// <param name="stream">The stream to extract the screen script from.</param>
 		/// <param name="fileName">The path or name of the screen script file being extracted.</param>
-		/// <returns>The extracted <see cref="ScreenScript"/> information.</returns>
+		/// <returns>The extracted <see cref="FesScreen"/> information.</returns>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="stream"/> or <paramref name="fileName"/> is null.
@@ -39,7 +39,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <exception cref="ObjectDisposedException">
 		///  The <paramref name="stream"/> is closed.
 		/// </exception>
-		public static ScreenScript Extract(Stream stream, string fileName) {
+		public static FesScreen Extract(Stream stream, string fileName) {
 			BinaryReader reader = new BinaryReader(stream);
 			FESHDR hdr = reader.ReadUnmanaged<FESHDR>();
 
@@ -56,7 +56,7 @@ namespace TriggersTools.CatSystem2 {
 			using (StreamReader sr = new StreamReader(ms, CatUtils.ShiftJIS))
 				lines = sr.ReadLinesToEnd();
 			
-			return new ScreenScript(fileName, lines);
+			return new FesScreen(fileName, lines);
 		}
 
 		#endregion
@@ -73,10 +73,10 @@ namespace TriggersTools.CatSystem2 {
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="entry"/> is null.
 		/// </exception>
-		public static ScreenScript ExtractScreen(this KifintEntry entry) {
+		public static FesScreen ExtractScreen(this KifintEntry entry) {
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream())
-				return ScreenScript.Extract(stream, entry.FileName);
+				return FesScreen.Extract(stream, entry.FileName);
 		}
 		/// <summary>
 		///  Extracts the FES screen script from the open KIFINT archive stream.
@@ -88,10 +88,10 @@ namespace TriggersTools.CatSystem2 {
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="entry"/> or <paramref name="kifintStream"/> is null.
 		/// </exception>
-		public static ScreenScript ExtractScreen(this KifintEntry entry, KifintStream kifintStream) {
+		public static FesScreen ExtractScreen(this KifintEntry entry, KifintStream kifintStream) {
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream(kifintStream))
-				return ScreenScript.Extract(stream, entry.FileName);
+				return FesScreen.Extract(stream, entry.FileName);
 		}
 
 		#endregion

@@ -43,7 +43,7 @@ namespace TriggersTools.CatSystem2 {
 		private static ZtPackage ExtractInternal(Stream stream, string fileName, string outputDir) {
 			BinaryReader reader = new BinaryReader(stream);
 
-			long lastStartPosition = stream.Position;
+			long startPosition = stream.Position;
 			ZTENTRYHDR entryHdr = new ZTENTRYHDR();
 			ZTENTRY entry;
 
@@ -51,8 +51,8 @@ namespace TriggersTools.CatSystem2 {
 			List<ZTENTRY> fileEntries = new List<ZTENTRY>();
 
 			do {
-				stream.Position = lastStartPosition + entryHdr.OffsetNext;
-				lastStartPosition = stream.Position;
+				stream.Position = startPosition + entryHdr.OffsetNext;
+				startPosition = stream.Position;
 
 				entryHdr = reader.ReadUnmanaged<ZTENTRYHDR>();
 				entry = reader.ReadUnmanaged<ZTENTRY>();

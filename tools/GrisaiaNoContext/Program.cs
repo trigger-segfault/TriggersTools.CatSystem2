@@ -10,7 +10,7 @@ using TriggersTools.CatSystem2.Scenes;
 using TriggersTools.CatSystem2.Scenes.Commands;
 using TriggersTools.CatSystem2.Scenes.Commands.Sounds;
 
-namespace GrisaiaNoContext {
+namespace TriggersTools.CatSystem2.GrisaiaNoContext {
 	class Program {
 
 		public static readonly string TmpDir = Path.Combine(AppContext.BaseDirectory, "tmp");
@@ -31,7 +31,7 @@ namespace GrisaiaNoContext {
 			return Path.Combine(GetArchiveCompileDir(info.Entry.Kifint), Path.ChangeExtension(info.Entry.FileName, ".txt"));
 		}
 		public static void SaveSceneTxt(KeyValuePair<SceneInfo, List<ISceneLine>> pair) {
-			new SceneScript(pair.Key.Script.FileName, pair.Value).DecompileToFile(GetSceneCompilePath(pair.Key));
+			new CstScene(pair.Key.Script.FileName, pair.Value).DecompileToFile(GetSceneCompilePath(pair.Key));
 			//File.WriteAllText(GetSceneCompilePath(pair.Key), )
 		}
 

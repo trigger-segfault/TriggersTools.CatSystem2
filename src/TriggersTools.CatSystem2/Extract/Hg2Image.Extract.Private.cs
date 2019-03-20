@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -16,26 +17,18 @@ namespace TriggersTools.CatSystem2 {
 			HgxOptions options)
 		{
 			Stream stream = reader.BaseStream;
+			
 			List<Hg2FrameInfo> frameInfos = new List<Hg2FrameInfo>();
 			Hg2FrameInfo frameInfo = null;
-
-			bool hasBase = hdr.Type == 0x25;
-
-			HG2IMG img;
-			HG2IMG_BASE? imgBase;
+			long startPosition = stream.Position;
 
 			do {
-				long startPosition = stream.Position;
-				img = reader.ReadUnmanaged<HG2IMG>();
-				if (hasBase)
-					imgBase = reader.ReadUnmanaged<HG2IMG_BASE>();
-				else
-					imgBase = null;
+				stream.Position = startPosition + (frameInfo?.Img.OffsetNext ?? 0);
+				startPosition = stream.Position;
 
-				frameInfos.Add(new Hg2FrameInfo(stream, img, imgBase));
-
-				stream.Position = startPosition + img.OffsetNext;
-			} while (img.OffsetNext != 0);
+				frameInfo = ReadHg2FrameInfo(reader, hdr, false);
+				frameInfos.Add(frameInfo);
+			} while (frameInfo.Img.OffsetNext != 0);
 
 			HgxImage hg2Image = new HgxImage(Path.GetFileName(fileName), hdr, frameInfos.ToArray(), options);
 			if (outputDir != null) {
@@ -47,6 +40,32 @@ namespace TriggersTools.CatSystem2 {
 			}
 
 			return hg2Image;
+		}
+
+		private static Hg2FrameInfo ReadHg2FrameInfo(BinaryReader reader, HGXHDR hdr, bool frameOnly) {
+			Stream stream = reader.BaseStream;
+			long frameOffset = reader.BaseStream.Position;
+
+			HG2IMG img = reader.ReadUnmanaged<HG2IMG>();
+			HG2IMG_BASE? imgBase = null;
+			if (hdr.Type == 0x25) {
+				if (frameOnly)
+					stream.Position += HG2IMG_BASE.CbSize;
+				else
+					imgBase = reader.ReadUnmanaged<HG2IMG_BASE>();
+			}
+
+			return new Hg2FrameInfo(reader.BaseStream, img, imgBase, frameOffset);
+		}
+
+		private static void ExtractHg2ImageFromFrame(Stream stream, HgxFrame frame, string pngFile, HgxOptions options) {
+			BinaryReader reader = new BinaryReader(stream);
+			stream.Position = frame.FrameOffset;
+
+			HGXHDR hdr = new HGXHDR { Type = frame.HgxImage.Type };
+			Hg2FrameInfo frameInfo = ReadHg2FrameInfo(reader, hdr, true);
+
+			ExtractHg2Image(reader, frameInfo, options, pngFile);
 		}
 
 		#endregion

@@ -13,7 +13,7 @@ namespace TriggersTools.CatSystem2.Utils {
 	/// <summary>
 	///  A static class for asmodean.dll native methods.
 	/// </summary>
-#if DEBUG_LIBRARY
+#if CAT_DEBUG
 	public
 #else
 	internal

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using TriggersTools.CatSystem2.Scenes;
 
 namespace TriggersTools.CatSystem2 {
-	partial class SceneScript {
+	partial class CstScene {
 		#region Decompile (From File)
 
 		/// <summary>
@@ -202,7 +202,7 @@ namespace TriggersTools.CatSystem2 {
 		public static string DecompileScene(this KifintEntry entry) {
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream())
-				return SceneScript.Decompile(stream, entry.FileName);
+				return CstScene.Decompile(stream, entry.FileName);
 		}
 		/// <summary>
 		///  Loads and decompiles the CST scene script entry and outputs it to the specified file.
@@ -216,7 +216,7 @@ namespace TriggersTools.CatSystem2 {
 		public static void DecompileSceneToFile(this KifintEntry entry, string outFile) {
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream())
-				SceneScript.DecompileToFile(stream, entry.FileName, outFile);
+				CstScene.DecompileToFile(stream, entry.FileName, outFile);
 		}
 		/// <summary>
 		///  Loads and decompiles the CST scene script entry and outputs it to the specified stream.
@@ -230,7 +230,7 @@ namespace TriggersTools.CatSystem2 {
 		public static void DecompileSceneToStream(this KifintEntry entry, Stream outStream) {
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream())
-				SceneScript.DecompileToStream(stream, entry.FileName, outStream);
+				CstScene.DecompileToStream(stream, entry.FileName, outStream);
 		}
 
 		#endregion
@@ -250,7 +250,7 @@ namespace TriggersTools.CatSystem2 {
 		public static string DecompileScene(this KifintEntry entry, KifintStream kifintStream) {
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream(kifintStream))
-				return SceneScript.Decompile(stream, entry.FileName);
+				return CstScene.Decompile(stream, entry.FileName);
 		}
 		/// <summary>
 		///  Loads and decompiles the CST scene script entry and outputs it to the specified file.
@@ -265,7 +265,7 @@ namespace TriggersTools.CatSystem2 {
 		public static void DecompileSceneToFile(this KifintEntry entry, KifintStream kifintStream, string outFile) {
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream(kifintStream))
-				SceneScript.DecompileToFile(stream, entry.FileName, outFile);
+				CstScene.DecompileToFile(stream, entry.FileName, outFile);
 		}
 		/// <summary>
 		///  Loads and decompiles the CST scene script entry and outputs it to the specified stream.
@@ -282,7 +282,7 @@ namespace TriggersTools.CatSystem2 {
 		{
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream(kifintStream))
-				SceneScript.DecompileToStream(stream, entry.FileName, outStream);
+				CstScene.DecompileToStream(stream, entry.FileName, outStream);
 		}
 
 		#endregion

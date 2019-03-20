@@ -11,15 +11,15 @@ using TriggersTools.CatSystem2.Scenes;
 using TriggersTools.CatSystem2.Scenes.Commands;
 using TriggersTools.CatSystem2.Scenes.Commands.Sounds;
 
-namespace GrisaiaNoContext {
+namespace TriggersTools.CatSystem2.GrisaiaNoContext {
 	public class SceneInfo {
 		public KifintEntry Entry { get; }
-		public SceneScript Script { get; }
+		public CstScene Script { get; }
 		public IReadOnlyList<Message> Messages { get; }
 		public IReadOnlyList<Choice> Choices { get; }
 		//public IReadOnlyList<NovelRange> NovelRanges { get; set; }
 
-		public SceneInfo(KifintEntry entry, SceneScript script) {
+		public SceneInfo(KifintEntry entry, CstScene script) {
 			Entry = entry;
 			Script = script;
 			//List<NovelRange> novelRanges = new List<NovelRange>();

@@ -14,7 +14,7 @@ namespace TriggersTools.CatSystem2 {
 	///  A CatSystem2 engine scene script CST file.
 	/// </summary>
 	[JsonObject]
-	public sealed partial class SceneScript : IReadOnlyCollection<ISceneLine> {
+	public sealed partial class CstScene : IReadOnlyCollection<ISceneLine> {
 		#region Fields
 
 		/// <summary>
@@ -58,13 +58,13 @@ namespace TriggersTools.CatSystem2 {
 		/// <summary>
 		///  Constructs an unassigned scene script for use with loading via <see cref="Newtonsoft.Json"/>.
 		/// </summary>
-		public SceneScript() { }
+		private CstScene() { }
 		/// <summary>
 		///  Constructs the CST scene script from the specified file name and lines.
 		/// </summary>
 		/// <param name="fileName">The file name of the CST scene script with the .cst extension.</param>
 		/// <param name="lines">The SCENELINE struct array containing the scene line commands.</param>
-		internal SceneScript(string fileName, SCRIPTLINE[] lines) {
+		internal CstScene(string fileName, SCRIPTLINE[] lines) {
 			FileName = Path.GetFileName(fileName);
 			ISceneLine[] newLines = new ISceneLine[lines.Length];
 			for (int i = 0; i < lines.Length; i++)
@@ -72,7 +72,7 @@ namespace TriggersTools.CatSystem2 {
 			Lines = newLines.ToImmutableArray();
 		}
 
-		public SceneScript(string fileName, IEnumerable<ISceneLine> lines) {
+		public CstScene(string fileName, IEnumerable<ISceneLine> lines) {
 			FileName = fileName;
 			Lines = lines.ToImmutableArray();
 		}
@@ -121,7 +121,7 @@ namespace TriggersTools.CatSystem2 {
 		#region Private Classes
 
 		/// <summary>
-		///  A string line in a <see cref="SceneScript"/> file.
+		///  A string line in a <see cref="CstScene"/> file.
 		/// </summary>
 		private sealed class SceneLine {
 			#region Fields

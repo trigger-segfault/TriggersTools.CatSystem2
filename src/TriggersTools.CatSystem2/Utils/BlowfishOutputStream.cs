@@ -16,8 +16,8 @@ namespace TriggersTools.CatSystem2.Utils {
 	/// <summary>
 	///  An output stream for encrypting blowfish data as it's written. This does NOT support seeking.
 	/// </summary>
-#if DEBUG_LIBRARY
-		public
+#if CAT_DEBUG
+	public
 #else
 	internal
 #endif

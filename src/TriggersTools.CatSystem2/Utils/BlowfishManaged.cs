@@ -15,7 +15,7 @@ namespace TriggersTools.CatSystem2.Utils {
 	/// <summary>
 	///  A managed implementation of the Blowfish encryption algorithm.
 	/// </summary>
-#if DEBUG_LIBRARY
+#if CAT_DEBUG
 	public
 #else
 	internal

@@ -230,28 +230,34 @@ namespace TriggersTools.CatSystem2 {
 		///  Extracts the KIFINT entry and saves it to <paramref name="directory"/>/<see cref="FileName"/>.
 		/// </summary>
 		/// <param name="directory">The directory to save the decrypted entry to.</param>
+		/// <returns>The file path to the KIFINT entry.</returns>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="directory"/> is null.
 		/// </exception>
-		public void ExtractToDirectory(string directory) {
+		public string ExtractToDirectory(string directory) {
 			if (directory == null)
 				throw new ArgumentNullException(nameof(directory));
-			ExtractToFile(Path.Combine(directory, FileName));
+			string filePath = Path.Combine(directory, FileName);
+			ExtractToFile(filePath);
+			return filePath;
 		}
 		/// <summary>
 		///  Extracts the KIFINT entry and saves it to <paramref name="directory"/>/<see cref="FileName"/>.
 		/// </summary>
 		/// <param name="kifintStream">The stream to the open KIFINT archive.</param>
 		/// <param name="directory">The directory to save the decrypted entry to.</param>
+		/// <returns>The file path to the KIFINT entry.</returns>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="kifintStream"/> or <paramref name="directory"/> is null.
 		/// </exception>
-		public void ExtractToDirectory(KifintStream kifintStream, string directory) {
+		public string ExtractToDirectory(KifintStream kifintStream, string directory) {
 			if (directory == null)
 				throw new ArgumentNullException(nameof(directory));
-			ExtractToFile(kifintStream, Path.Combine(directory, FileName));
+			string filePath = Path.Combine(directory, FileName);
+			ExtractToFile(kifintStream, filePath);
+			return filePath;
 		}
 
 		#endregion

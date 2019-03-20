@@ -3,46 +3,67 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace TriggersTools.CatSystem2 {
-	partial class Animation {
+	partial class FesScreen {
+		#region Constants
+
+		/// <summary>
+		///  Gets the header types that should always have a indent level of zero.
+		/// </summary>
+		private static readonly IReadOnlyList<string> FlatHeaders = new string[] {
+			"OBJECT",
+			"KEYBLOCK",
+		};
+		private static readonly string LinePattern =
+			$@"^(?'hdr'#(?'flathdr'(?:{string.Join("|", FlatHeaders)})(?:[ \t]|$))?)" +
+			//@"|(?'if'if[ \t]*\(.+?\)[ \t]*(?'inline'.+)?$)" +
+			@"|(?'if'if[ \t]*\(.+\)[ \t]*$)" +
+			@"|(?'else'else[ \t]*$)" +
+			@"|(?'endif'endif[ \t]*$)";
+		private static readonly Regex LineRegex = new Regex(LinePattern, RegexOptions.IgnoreCase);
+
+		#endregion
+
 		#region Decompile (From File)
 
 		/// <summary>
-		///  Loads and decompiles the ANM animation script file and returns the script as a string.
+		///  Loads and decompiles the FES script script file and returns the script as a string.
 		/// </summary>
-		/// <param name="anmFile">The file path to the ANM animation script file to extract.</param>
+		/// <param name="fesFile">The file path to the FES script script file to extract.</param>
 		/// <returns>The decompiled script.</returns>
 		/// 
 		/// <exception cref="ArgumentNullException">
-		///  <paramref name="anmFile"/> is null.
+		///  <paramref name="fesFile"/> is null.
 		/// </exception>
-		public static string Decompile(string anmFile) {
-			return Extract(anmFile).Decompile();
+		public static string Decompile(string fesFile) {
+			return Extract(fesFile).Decompile();
 		}
 		/// <summary>
-		///  Loads and decompiles the ANM animation script file and outputs it to the specified file.
+		///  Loads and decompiles the FES script script file and outputs it to the specified file.
 		/// </summary>
-		/// <param name="anmFile">The file path to the ANM animation script file to extract.</param>
+		/// <param name="fesFile">The file path to the FES script script file to extract.</param>
 		/// <param name="outFile">The output file to write the decompiled script to.</param>
 		/// 
 		/// <exception cref="ArgumentNullException">
-		///  <paramref name="anmFile"/> or <paramref name="outFile"/> is null.
+		///  <paramref name="fesFile"/> or <paramref name="outFile"/> is null.
 		/// </exception>
-		public static void DecompileToFile(string anmFile, string outFile) {
-			Extract(anmFile).DecompileToFile(outFile);
+		public static void DecompileToFile(string fesFile, string outFile) {
+			Extract(fesFile).DecompileToFile(outFile);
 		}
 		/// <summary>
-		///  Loads and decompiles the ANM animation script file and outputs it to the specified stream.
+		///  Loads and decompiles the FES script script file and outputs it to the specified stream.
 		/// </summary>
-		/// <param name="anmFile">The file path to the ANM animation script file to extract.</param>
+		/// <param name="fesFile">The file path to the FES script script file to extract.</param>
 		/// <param name="outStream">The output stream to write the decompiled script to.</param>
 		/// 
 		/// <exception cref="ArgumentNullException">
-		///  <paramref name="anmFile"/> or <paramref name="outStream"/> is null.
+		///  <paramref name="fesFile"/> or <paramref name="outStream"/> is null.
 		/// </exception>
-		public static void DecompileToStream(string anmFile, Stream outStream) {
-			Extract(anmFile).DecompileToStream(outStream);
+		public static void DecompileToStream(string fesFile, Stream outStream) {
+			Extract(fesFile).DecompileToStream(outStream);
 		}
 
 		#endregion
@@ -50,10 +71,10 @@ namespace TriggersTools.CatSystem2 {
 		#region Decompile (From Stream)
 
 		/// <summary>
-		///  Loads and decompiles the ANM animation script stream and returns the script as a string.
+		///  Loads and decompiles the FES script script stream and returns the script as a string.
 		/// </summary>
-		/// <param name="stream">The stream to extract the animation script from.</param>
-		/// <param name="fileName">The path or name of the animation script file being extracted.</param>
+		/// <param name="stream">The stream to extract the script script from.</param>
+		/// <param name="fileName">The path or name of the script script file being extracted.</param>
 		/// <returns>The decompiled script.</returns>
 		/// 
 		/// <exception cref="ArgumentNullException">
@@ -63,10 +84,10 @@ namespace TriggersTools.CatSystem2 {
 			return Extract(stream, fileName).Decompile();
 		}
 		/// <summary>
-		///  Loads and decompiles the ANM animation script stream and outputs it to the specified file.
+		///  Loads and decompiles the FES script script stream and outputs it to the specified file.
 		/// </summary>
-		/// <param name="stream">The stream to extract the animation script from.</param>
-		/// <param name="fileName">The path or name of the animation script file being extracted.</param>
+		/// <param name="stream">The stream to extract the script script from.</param>
+		/// <param name="fileName">The path or name of the script script file being extracted.</param>
 		/// <param name="outFile">The output file to write the decompiled script to.</param>
 		/// 
 		/// <exception cref="ArgumentNullException">
@@ -76,10 +97,10 @@ namespace TriggersTools.CatSystem2 {
 			Extract(inStream, fileName).DecompileToFile(outFile);
 		}
 		/// <summary>
-		///  Loads and decompiles the ANM animation script stream and outputs it to the specified stream.
+		///  Loads and decompiles the FES script script stream and outputs it to the specified stream.
 		/// </summary>
-		/// <param name="stream">The stream to extract the animation script from.</param>
-		/// <param name="fileName">The path or name of the animation script file being extracted.</param>
+		/// <param name="stream">The stream to extract the script script from.</param>
+		/// <param name="fileName">The path or name of the script script file being extracted.</param>
 		/// <param name="outStream">The output stream to write the decompiled script to.</param>
 		/// 
 		/// <exception cref="ArgumentNullException">
@@ -94,7 +115,7 @@ namespace TriggersTools.CatSystem2 {
 		#region Decompile (Instance)
 
 		/// <summary>
-		///  Decompiles the ANM animation script and returns the script as a string.
+		///  Decompiles the FES script script and returns the script as a string.
 		/// </summary>
 		/// <returns>The decompiled script.</returns>
 		public string Decompile() {
@@ -104,7 +125,7 @@ namespace TriggersTools.CatSystem2 {
 			}
 		}
 		/// <summary>
-		///  Decompiles the ANM animation script and outputs it to the specified file.
+		///  Decompiles the FES script script and outputs it to the specified file.
 		/// </summary>
 		/// <param name="outFile">The output file to write the decompiled script to.</param>
 		/// 
@@ -116,7 +137,7 @@ namespace TriggersTools.CatSystem2 {
 				DecompileInternal(writer);
 		}
 		/// <summary>
-		///  Decompiles the ANM animation script and outputs it to the specified stream.
+		///  Decompiles the FES script script and outputs it to the specified stream.
 		/// </summary>
 		/// <param name="outStream">The output stream to write the decompiled script to.</param>
 		/// 
@@ -133,85 +154,44 @@ namespace TriggersTools.CatSystem2 {
 		#region Decompile (Internal)
 
 		/// <summary>
-		///  Decompiles the ANM animation script and writes it to the text writer.
+		///  Decompiles the FES screen script and writes it to the text writer.
 		/// </summary>
 		/// <param name="writer">The text writer to write the decompiled script to.</param>
 		private void DecompileInternal(TextWriter writer) {
-			Dictionary<int, string> labelMap = GetLabelMap();
+			bool isFlat = false; // Forces the tag level to be zero
+			int level = 1; // The indent level of the text
 
 			for (int i = 0; i < Count; i++) {
-				AnimationLine frame = Lines[i];
+				string line = Lines[i];
+				Match match = LineRegex.Match(line);
+				if (match.Groups["hdr"].Success) {
+					if (i != 0)
+						writer.WriteLine();
+					writer.WriteLine(line);
+					isFlat = match.Groups["flathdr"].Success;
+				}
+				else {
+					if (match.Groups["endif"].Success || match.Groups["else"].Success)
+						level = Math.Max(1, level - 1);
 
-				// Append a label name if there's a label at this index.
-				if (labelMap.TryGetValue(i, out string labelName))
-					writer.WriteLine($"#{labelName}");
+					if (!isFlat)
+						writer.Write(new string('\t', level));
+					writer.WriteLine(line);
 
-				// Are we a type of jump that is able to display a label instead of the normal variable?
-				bool isLabelJump = frame.Type.IsJump() && !frame.Parameters[frame.Count - 1].IsVariable;
-				// Is the last parameter a duplicate range and unwanted?
-				bool removeLastParam = frame.IsDuplicateRange;// || isLabelJump;
-				var parameters = frame.Parameters.Take(frame.IsDuplicateRange ? frame.Count - 1 : frame.Count)
-												 .Select((p, j) => (j == frame.Count - 1 && isLabelJump ?
-																	labelMap[p.Value] : p.ToString()));
-
-				string command = frame.Type.GetCommand();
-				writer.WriteLine($"\t{(command != null ? $"{command} " : "")}{string.Join(" ", parameters)}");
+					if (match.Groups["if"].Success || match.Groups["else"].Success)
+						level++;
+				}
 			}
 			writer.Flush();
 		}
 
 		#endregion
-
-		#region Decompile (Helpers)
-
-		/// <summary>
-		///  Gets the map of goto indecies to label name.
-		/// </summary>
-		/// <param name="animation">The animation to get the labels for.</param>
-		/// <returns>A dictionary of indecies and label names.</returns>
-		/// 
-		/// <exception cref="ArgumentNullException">
-		///  <paramref name="animation"/> is null.
-		/// </exception>
-		private Dictionary<int, string> GetLabelMap() {
-			Dictionary<int, string> labelMap = new Dictionary<int, string>();
-			foreach (AnimationLine frame in Lines) {
-				if (frame.Type.IsJump()) {
-					AnimationParameter param = frame.Parameters[frame.Count - 1];
-					if (!param.IsVariable)
-						labelMap[param.Value] = null;
-				}
-			}
-			int labelIndex = 0;
-			foreach (int index in labelMap.Keys.OrderBy(i => i)) {
-				labelMap[index] = FormatLabel(labelIndex++);
-			}
-			return labelMap;
-		}
-		/// <summary>
-		///  Formats a label name based on the order of appearance of the label (or its index).
-		/// </summary>
-		/// <param name="labelIndex">The index of the label in the list of appearing labels.</param>
-		/// <returns>The name of the label without a prefixed '#'.</returns>
-		private static string FormatLabel(int labelIndex) {
-			const char startChar = 'a';
-			if (labelIndex < 26)
-				return $"label_{(char) (startChar + labelIndex)}";
-			string alpha = string.Empty;
-			while (labelIndex != 0) {
-				alpha = $"{(char) (startChar + labelIndex)}{alpha}";
-				labelIndex /= 26;
-			}
-			return $"label_{alpha}";
-		}
-		
-		#endregion
 	}
 	partial class KifintEntryExtensions {
-		#region DecompileAnimation
+		#region DecompileScreen
 
 		/// <summary>
-		///  Loads and decompiles the ANM animation script entry and returns the script as a string.
+		///  Loads and decompiles the FES screen script entry and returns the script as a string.
 		/// </summary>
 		/// <param name="entry">The entry to extract from.</param>
 		/// <returns>The decompiled script.</returns>
@@ -219,13 +199,13 @@ namespace TriggersTools.CatSystem2 {
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="entry"/> is null.
 		/// </exception>
-		public static string DecompileAnimation(this KifintEntry entry) {
+		public static string DecompileScreen(this KifintEntry entry) {
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream())
-				return Animation.Decompile(stream, entry.FileName);
+				return FesScreen.Decompile(stream, entry.FileName);
 		}
 		/// <summary>
-		///  Loads and decompiles the ANM animation script entry and outputs it to the specified file.
+		///  Loads and decompiles the FES screen script entry and outputs it to the specified file.
 		/// </summary>
 		/// <param name="entry">The entry to extract from.</param>
 		/// <param name="outFile">The output file to write the decompiled script to.</param>
@@ -233,13 +213,13 @@ namespace TriggersTools.CatSystem2 {
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="entry"/> or <paramref name="outFile"/> is null.
 		/// </exception>
-		public static void DecompileAnimationToFile(this KifintEntry entry, string outFile) {
+		public static void DecompileScreenToFile(this KifintEntry entry, string outFile) {
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream())
-				Animation.DecompileToFile(stream, entry.FileName, outFile);
+				FesScreen.DecompileToFile(stream, entry.FileName, outFile);
 		}
 		/// <summary>
-		///  Loads and decompiles the ANM animation script entry and outputs it to the specified stream.
+		///  Loads and decompiles the FES screen script entry and outputs it to the specified stream.
 		/// </summary>
 		/// <param name="entry">The entry to extract from.</param>
 		/// <param name="outStream">The output stream to write the decompiled script to.</param>
@@ -247,18 +227,18 @@ namespace TriggersTools.CatSystem2 {
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="entry"/> or <paramref name="outStream"/> is null.
 		/// </exception>
-		public static void DecompileAnimationToStream(this KifintEntry entry, Stream outStream) {
+		public static void DecompileScreenToStream(this KifintEntry entry, Stream outStream) {
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream())
-				Animation.DecompileToStream(stream, entry.FileName, outStream);
+				FesScreen.DecompileToStream(stream, entry.FileName, outStream);
 		}
 
 		#endregion
 
-		#region DecompileAnimation (KifintStream)
+		#region DecompileScreen (KifintStream)
 
 		/// <summary>
-		///  Loads and decompiles the ANM animation script entry and returns the script as a string.
+		///  Loads and decompiles the FES screen script entry and returns the script as a string.
 		/// </summary>
 		/// <param name="entry">The entry to extract from.</param>
 		/// <param name="kifintStream">The stream to the open KIFINT archive.</param>
@@ -267,13 +247,13 @@ namespace TriggersTools.CatSystem2 {
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="entry"/> or <paramref name="kifintStream"/> is null.
 		/// </exception>
-		public static string DecompileAnimation(this KifintEntry entry, KifintStream kifintStream) {
+		public static string DecompileScreen(this KifintEntry entry, KifintStream kifintStream) {
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream(kifintStream))
-				return Animation.Decompile(stream, entry.FileName);
+				return FesScreen.Decompile(stream, entry.FileName);
 		}
 		/// <summary>
-		///  Loads and decompiles the ANM animation script entry and outputs it to the specified file.
+		///  Loads and decompiles the FES screen script entry and outputs it to the specified file.
 		/// </summary>
 		/// <param name="entry">The entry to extract from.</param>
 		/// <param name="kifintStream">The stream to the open KIFINT archive.</param>
@@ -282,15 +262,13 @@ namespace TriggersTools.CatSystem2 {
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="entry"/>, <paramref name="kifintStream"/>, or <paramref name="outFile"/> is null.
 		/// </exception>
-		public static void DecompileAnimationToFile(this KifintEntry entry, KifintStream kifintStream,
-			string outFile)
-		{
+		public static void DecompileScreenToFile(this KifintEntry entry, KifintStream kifintStream, string outFile) {
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream(kifintStream))
-				Animation.DecompileToFile(stream, entry.FileName, outFile);
+				FesScreen.DecompileToFile(stream, entry.FileName, outFile);
 		}
 		/// <summary>
-		///  Loads and decompiles the ANM animation script entry and outputs it to the specified stream.
+		///  Loads and decompiles the FES screen script entry and outputs it to the specified stream.
 		/// </summary>
 		/// <param name="entry">The entry to extract from.</param>
 		/// <param name="kifintStream">The stream to the open KIFINT archive.</param>
@@ -299,12 +277,12 @@ namespace TriggersTools.CatSystem2 {
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="entry"/>, <paramref name="kifintStream"/>, or <paramref name="outStream"/> is null.
 		/// </exception>
-		public static void DecompileAnimationToStream(this KifintEntry entry, KifintStream kifintStream,
+		public static void DecompileScreenToStream(this KifintEntry entry, KifintStream kifintStream,
 			Stream outStream)
 		{
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream(kifintStream))
-				Animation.DecompileToStream(stream, entry.FileName, outStream);
+				FesScreen.DecompileToStream(stream, entry.FileName, outStream);
 		}
 
 		#endregion

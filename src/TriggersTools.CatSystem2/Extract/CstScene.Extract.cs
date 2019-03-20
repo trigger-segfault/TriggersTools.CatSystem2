@@ -8,19 +8,19 @@ using TriggersTools.SharpUtils.Exceptions;
 using TriggersTools.SharpUtils.IO;
 
 namespace TriggersTools.CatSystem2 {
-	partial class SceneScript {
+	partial class CstScene {
 		#region Extract
 
 		/// <summary>
 		///  Extracts the scene script information.
 		/// </summary>
 		/// <param name="cstFile">The file path to the CST scene script file to extract.</param>
-		/// <returns>The extracted <see cref="SceneScript"/> information.</returns>
+		/// <returns>The extracted <see cref="CstScene"/> information.</returns>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="cstFile"/> is null.
 		/// </exception>
-		public static SceneScript Extract(string cstFile) {
+		public static CstScene Extract(string cstFile) {
 			using (var stream = File.OpenRead(cstFile))
 				return Extract(stream, cstFile);
 		}
@@ -29,7 +29,7 @@ namespace TriggersTools.CatSystem2 {
 		/// </summary>
 		/// <param name="stream">The stream to extract the scene script from.</param>
 		/// <param name="fileName">The path or name of the scene script file being extracted.</param>
-		/// <returns>The extracted <see cref="SceneScript"/> information.</returns>
+		/// <returns>The extracted <see cref="CstScene"/> information.</returns>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="stream"/> or <paramref name="fileName"/> is null.
@@ -37,7 +37,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <exception cref="ObjectDisposedException">
 		///  The <paramref name="stream"/> is closed.
 		/// </exception>
-		public static SceneScript Extract(Stream stream, string fileName) {
+		public static CstScene Extract(Stream stream, string fileName) {
 			BinaryReader reader = new BinaryReader(stream);
 			CATSCENEHDR hdr = reader.ReadUnmanaged<CATSCENEHDR>();
 
@@ -54,7 +54,7 @@ namespace TriggersTools.CatSystem2 {
 			using (var ms = new MemoryStream(scriptData))
 				lines = ReadScript(ms);
 
-			return new SceneScript(fileName, lines);
+			return new CstScene(fileName, lines);
 		}
 
 		#endregion
@@ -136,10 +136,10 @@ namespace TriggersTools.CatSystem2 {
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="entry"/> is null.
 		/// </exception>
-		public static SceneScript ExtractScene(this KifintEntry entry) {
+		public static CstScene ExtractScene(this KifintEntry entry) {
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream())
-				return SceneScript.Extract(stream, entry.FileName);
+				return CstScene.Extract(stream, entry.FileName);
 		}
 		/// <summary>
 		///  Extracts the CST scene script from the open KIFINT archive stream.
@@ -151,10 +151,10 @@ namespace TriggersTools.CatSystem2 {
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="entry"/> or <paramref name="kifintStream"/> is null.
 		/// </exception>
-		public static SceneScript ExtractScene(this KifintEntry entry, KifintStream kifintStream) {
+		public static CstScene ExtractScene(this KifintEntry entry, KifintStream kifintStream) {
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream(kifintStream))
-				return SceneScript.Extract(stream, entry.FileName);
+				return CstScene.Extract(stream, entry.FileName);
 		}
 
 		#endregion

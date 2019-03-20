@@ -60,7 +60,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <summary>
 		///  Constructs an unassigned HG-3 attribute for use with loading via <see cref="Newtonsoft.Json"/>.
 		/// </summary>
-		public Hg3Attribute() { }
+		private Hg3Attribute() { }
 		/// <summary>
 		///  Constructs an HG-3 attribute with the specified Id and <see cref="HG3ATS"/>.
 		/// </summary>

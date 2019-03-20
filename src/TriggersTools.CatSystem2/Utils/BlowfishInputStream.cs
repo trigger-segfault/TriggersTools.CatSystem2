@@ -11,7 +11,7 @@ namespace TriggersTools.CatSystem2.Utils {
 	/// <summary>
 	///  An input stream for decrypting blowfish data as it's read.
 	/// </summary>
-#if DEBUG_LIBRARY
+#if CAT_DEBUG
 	public
 #else
 	internal

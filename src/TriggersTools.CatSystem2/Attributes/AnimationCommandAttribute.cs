@@ -3,7 +3,7 @@ using TriggersTools.SharpUtils.Exceptions;
 
 namespace TriggersTools.CatSystem2.Attributes {
 	/// <summary>
-	///  An attribute that specified information about an <see cref="AnimationLineType"/> command.
+	///  An attribute that specified information about an <see cref="AnmLineType"/> command.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Field)]
 	internal sealed class AnimationCommandAttribute : CommandNameAttribute {

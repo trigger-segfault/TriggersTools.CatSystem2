@@ -43,7 +43,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <summary>
 		///  Constructs an unassigned ZT package for use with loading via <see cref="Newtonsoft.Json"/>.
 		/// </summary>
-		public ZtPackage() { }
+		private ZtPackage() { }
 		/// <summary>
 		///  Constructs an ZT package with the specified file name, header, and script lines.
 		/// </summary>

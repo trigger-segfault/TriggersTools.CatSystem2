@@ -46,7 +46,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <summary>
 		///  Constructs an unassigned ZT package file entry for use with loading via <see cref="Newtonsoft.Json"/>.
 		/// </summary>
-		public ZtEntry() { }
+		private ZtEntry() { }
 		internal ZtEntry(ZTENTRYHDR hdr, ZTENTRY entry) {
 			FileName = entry.FileName;
 			Length = entry.DecompressedLength;

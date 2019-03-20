@@ -29,14 +29,29 @@ namespace TriggersTools.CatSystem2 {
 
 		#region Fields
 
+		/// <summary>
+		///  The resource container. Only needed if you plan on overwritting the V_CODEs.
+		/// </summary>
 		[JsonIgnore]
 		private readonly ResourceInfo resInfo;
+		/// <summary>
+		///  The resource data for KEY_CODE.
+		/// </summary>
 		[JsonIgnore]
 		private readonly GenericResource keyCodeRes;
+		/// <summary>
+		///  The resource data for V_CODE.
+		/// </summary>
 		[JsonIgnore]
 		private readonly GenericResource vcodeRes;
+		/// <summary>
+		///  The resource data for V_CODE2.
+		/// </summary>
 		[JsonIgnore]
 		private readonly GenericResource vcode2Res;
+		/// <summary>
+		///  The blowfish cipher. We keep this around because setting the key is very expensive.
+		/// </summary>
 		[JsonIgnore]
 		private Blowfish blowfish;
 

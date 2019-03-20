@@ -4,7 +4,7 @@ namespace TriggersTools.CatSystem2.Utils {
 	/// <summary>
 	///  A random number generation method used by <see cref="KifintArchive"/>.
 	/// </summary>
-#if DEBUG_LIBRARY
+#if CAT_DEBUG
 	public
 #else
 	internal

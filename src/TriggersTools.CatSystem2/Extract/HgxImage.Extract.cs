@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 
 namespace TriggersTools.CatSystem2 {
@@ -70,6 +71,14 @@ namespace TriggersTools.CatSystem2 {
 		}
 
 		#endregion
+
+		internal static void ExtractImage(Stream stream, HgxFrame frame, string pngFile, HgxOptions options) {
+			switch (frame.HgxType) {
+			case HgxFormat.Hg2: ExtractHg2ImageFromFrame(stream, frame, pngFile, options); break;
+			case HgxFormat.Hg3: ExtractHg3ImageFromFrame(stream, frame, pngFile, options); break;
+			default: throw new InvalidOperationException($"{nameof(HgxFrame.HgxType)} is not valid!");
+			}
+		}
 	}
 	partial class KifintEntryExtensions {
 		#region ExtractHgx

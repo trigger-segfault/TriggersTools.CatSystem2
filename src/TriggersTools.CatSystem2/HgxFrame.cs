@@ -7,6 +7,7 @@ using System.Linq;
 using TriggersTools.SharpUtils.Collections;
 using TriggersTools.SharpUtils.Enums;
 using System.Collections.Immutable;
+using System.IO;
 
 namespace TriggersTools.CatSystem2 {
 	/// <summary>
@@ -25,7 +26,7 @@ namespace TriggersTools.CatSystem2 {
 		///  Gets the HG-X type of the image.
 		/// </summary>
 		[JsonIgnore]
-		public HgxType HgxType => HgxImage?.HgxType ?? HgxType.None;
+		public HgxFormat HgxType => HgxImage?.Format ?? HgxFormat.None;
 		/// <summary>
 		///  Gets the file name of the image with the .hg3 extension.
 		/// </summary>
@@ -99,6 +100,12 @@ namespace TriggersTools.CatSystem2 {
 		/// </summary>
 		[JsonProperty("imgmode")]
 		public int? Mode { get; private set; }
+
+		/// <summary>
+		///  Gets the file offset to the frame data.
+		/// </summary>
+		[JsonProperty("frame_offset")]
+		internal long FrameOffset { get; private set; }
 
 		/// <summary>
 		///  Gets the display attributes for the image.
@@ -179,7 +186,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <summary>
 		///  Constructs an unassigned HG-X frame for use with loading via <see cref="Newtonsoft.Json"/>.
 		/// </summary>
-		public HgxFrame() { }
+		private HgxFrame() { }
 		/// <summary>
 		///  Constructs an HG-3 frame with the specified frame info.
 		/// </summary>
@@ -203,6 +210,7 @@ namespace TriggersTools.CatSystem2 {
 			BaseY = stdInfo.BaseY;
 			Type = frameInfo.CpType?.Type;
 			Mode = frameInfo.ImgMode?.Mode;
+			FrameOffset = frameInfo.FrameOffset;
 		}
 		/// <summary>
 		///  Constructs an HG-2 frame with the specified frame info.
@@ -227,6 +235,7 @@ namespace TriggersTools.CatSystem2 {
 			BaseY = imgEx?.BaseY ?? 0;
 			Type = null;
 			Mode = null;
+			FrameOffset = frameInfo.FrameOffset;
 		}
 
 		#endregion
@@ -287,6 +296,55 @@ namespace TriggersTools.CatSystem2 {
 			if (attribute == null)
 				throw new ArgumentNullException(nameof(attribute));
 			return Attributes.IndexOf(attribute);
+		}
+
+		#endregion
+
+		#region ExtractImage
+
+		/// <summary>
+		///  Extracts the HG-X frame's image to the specified output directory as a PNG file.
+		/// </summary>
+		/// <param name="stream">The stream to the HG-X file.</param>
+		/// <param name="outputDir">The output directory to save the image to.</param>
+		/// <param name="options">The options for manipulating the image during extraction.</param>
+		/// <returns>The file path to the extracted PNG.</returns>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="stream"/> or <paramref name="outputDir"/> is null.
+		/// </exception>
+		/// <exception cref="ObjectDisposedException">
+		///  <paramref name="stream"/> is closed.
+		/// </exception>
+		public string ExtractImageToDirectory(Stream stream, string outputDir, HgxOptions options) {
+			if (stream == null)
+				throw new ArgumentNullException(nameof(stream));
+			if (outputDir == null)
+				throw new ArgumentNullException(nameof(outputDir));
+			string pngFile = GetFrameFilePath(outputDir, false);
+			ExtractImageToFile(stream, pngFile, options);
+			return pngFile;
+		}
+		/// <summary>
+		///  Extracts the HG-X frame's image to the specified output PNG file.
+		/// </summary>
+		/// <param name="stream">The stream to the HG-X file.</param>
+		/// <param name="pngFile">The PNG file path to save the image to.</param>
+		/// <param name="options">The options for manipulating the image during extraction.</param>
+		/// <returns>The file path to the extracted PNG.</returns>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="stream"/> or <paramref name="pngFile"/> is null.
+		/// </exception>
+		/// <exception cref="ObjectDisposedException">
+		///  <paramref name="stream"/> is closed.
+		/// </exception>
+		public void ExtractImageToFile(Stream stream, string pngFile, HgxOptions options) {
+			if (stream == null)
+				throw new ArgumentNullException(nameof(stream));
+			if (pngFile == null)
+				throw new ArgumentNullException(nameof(pngFile));
+			HgxImage.ExtractImage(stream, this, pngFile, options);
 		}
 
 		#endregion

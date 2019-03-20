@@ -19,6 +19,10 @@ namespace TriggersTools.CatSystem2.Structs {
 		///  Gets the position to extract the image at.
 		/// </summary>
 		public long Offset { get; }
+		/// <summary>
+		///  Gets the position to read the frame info at.
+		/// </summary>
+		public long FrameOffset { get; }
 
 		#endregion
 
@@ -30,9 +34,11 @@ namespace TriggersTools.CatSystem2.Structs {
 		/// </summary>
 		/// <param name="stream">The stream to get the current position from.</param>
 		/// <param name="img">The basic image data.</param>
-		/// <param name="data">The optional image's base information.</param>
-		public Hg2FrameInfo(Stream stream, HG2IMG img, HG2IMG_BASE? imgBase) {
+		/// <param name="frameOffset">The position to read the frame info at.</param>
+		public Hg2FrameInfo(Stream stream, HG2IMG img, HG2IMG_BASE? imgBase, long frameOffset) {
 			Img = img;
+			ImgBase = imgBase;
+			FrameOffset = frameOffset;
 		}
 
 		#endregion

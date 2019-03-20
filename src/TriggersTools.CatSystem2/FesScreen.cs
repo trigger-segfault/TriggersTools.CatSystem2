@@ -10,7 +10,7 @@ namespace TriggersTools.CatSystem2 {
 	///  A CatSystem2 engine screen script FES file.
 	/// </summary>
 	[JsonObject]
-	public partial class ScreenScript : IReadOnlyCollection<string> {
+	public partial class FesScreen : IReadOnlyCollection<string> {
 		#region Fields
 
 		/// <summary>
@@ -41,13 +41,13 @@ namespace TriggersTools.CatSystem2 {
 		/// <summary>
 		///  Constructs an unassigned screen script for use with loading via <see cref="Newtonsoft.Json"/>.
 		/// </summary>
-		public ScreenScript() { }
+		private FesScreen() { }
 		/// <summary>
 		///  Constructs the FES screen script from the specified file name and lines.
 		/// </summary>
 		/// <param name="fileName">The file name of the FES screen script with the .fes extension.</param>
 		/// <param name="lines">The string array containing the screen line commands.</param>
-		internal ScreenScript(string fileName, string[] lines) {
+		internal FesScreen(string fileName, string[] lines) {
 			FileName = Path.GetFileName(fileName);
 			Lines = lines.ToImmutableArray();
 		}

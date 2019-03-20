@@ -10,7 +10,7 @@ namespace TriggersTools.CatSystem2 {
 	///  Debug configuration settings for the CatSystem2 library.
 	///  All default configuration settings besides SpeedTests are set for fastest processing.
 	/// </summary>
-#if DEBUG_LIBRARY
+#if CAT_DEBUG
 	public
 #else
 	internal

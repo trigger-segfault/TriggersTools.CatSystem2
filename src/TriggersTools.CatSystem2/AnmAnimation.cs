@@ -12,7 +12,7 @@ namespace TriggersTools.CatSystem2 {
 	///  An animation loaded from an ANM animation script.
 	/// </summary>
 	[JsonObject]
-	public sealed partial class Animation : IReadOnlyCollection<AnimationLine> {
+	public sealed partial class AnmAnimation : IReadOnlyCollection<AnmLine> {
 		#region Fields
 
 		/// <summary>
@@ -29,7 +29,7 @@ namespace TriggersTools.CatSystem2 {
 		///  Gets the whole list of lines for the animation script.
 		/// </summary>
 		[JsonProperty("lines")]
-		public IReadOnlyList<AnimationLine> Lines { get; private set; }
+		public IReadOnlyList<AnmLine> Lines { get; private set; }
 
 		#endregion
 
@@ -41,7 +41,7 @@ namespace TriggersTools.CatSystem2 {
 		[JsonIgnore]
 		public int Count => Lines.Count;
 		/// <summary>
-		///  Gets the name of the file for loading the <see cref="Animation"/> data.
+		///  Gets the name of the file for loading the <see cref="AnmAnimation"/> data.
 		/// </summary>
 		[JsonIgnore]
 		public string JsonFileName => GetJsonFileName(FileName);
@@ -53,19 +53,19 @@ namespace TriggersTools.CatSystem2 {
 		/// <summary>
 		///  Constructs an unassigned ANM animation script for use with loading via <see cref="Newtonsoft.Json"/>.
 		/// </summary>
-		public Animation() { }
+		private AnmAnimation() { }
 		/// <summary>
 		///  Constructs an ANM animation script with the specified file name, header, and script lines.
 		/// </summary>
 		/// <param name="fileName">The file name of the ANM animation with the .anm extension.</param>
 		/// <param name="hdr">The ANMHDR containing extra information on the ANM animation.</param>
 		/// <param name="lines">The ANMFRM struct array containing script line information.</param>
-		private Animation(string fileName, ANMHDR hdr, ANMLINE[] lines) {
+		private AnmAnimation(string fileName, ANMHDR hdr, ANMLINE[] lines) {
 			FileName = Path.GetFileName(fileName);
 			Unknown = hdr.Unknown;
-			AnimationLine[] newLines = new AnimationLine[lines.Length];
+			AnmLine[] newLines = new AnmLine[lines.Length];
 			for (int i = 0; i < lines.Length; i++)
-				newLines[i] = new AnimationLine(lines[i]);
+				newLines[i] = new AnmLine(lines[i]);
 			Lines = newLines.ToImmutableArray();
 		}
 
@@ -76,7 +76,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <summary>
 		///  Gets the file name for the JSON ANM animation information.
 		/// </summary>
-		/// <param name="fileName">The base file name of the <see cref="Animation"/>.</param>
+		/// <param name="fileName">The base file name of the <see cref="AnmAnimation"/>.</param>
 		/// <returns>The file name of the JSON ANM animation information.</returns>
 		public static string GetJsonFileName(string fileName) {
 			return Path.ChangeExtension(Path.GetFileNameWithoutExtension(fileName) + "+anm", ".json");
@@ -84,8 +84,8 @@ namespace TriggersTools.CatSystem2 {
 		/// <summary>
 		///  Gets the file path for the JSON ANM animation information.
 		/// </summary>
-		/// <param name="directory">The directory of the <see cref="Animation"/>.</param>
-		/// <param name="fileName">The base file name of the <see cref="Animation"/>.</param>
+		/// <param name="directory">The directory of the <see cref="AnmAnimation"/>.</param>
+		/// <param name="fileName">The base file name of the <see cref="AnmAnimation"/>.</param>
 		/// <returns>The file path of the JSON ANM animation information.</returns>
 		public static string GetJsonFilePath(string directory, string fileName) {
 			return Path.Combine(directory, GetJsonFileName(fileName));
@@ -107,13 +107,13 @@ namespace TriggersTools.CatSystem2 {
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="directory"/> or <paramref name="fileName"/> is null.
 		/// </exception>
-		public static Animation FromJsonDirectory(string directory, string fileName) {
+		public static AnmAnimation FromJsonDirectory(string directory, string fileName) {
 			if (directory == null)
 				throw new ArgumentNullException(nameof(directory));
 			if (fileName == null)
 				throw new ArgumentNullException(nameof(fileName));
 			string jsonFile = Path.Combine(directory, GetJsonFileName(fileName));
-			return JsonConvert.DeserializeObject<Animation>(File.ReadAllText(jsonFile));
+			return JsonConvert.DeserializeObject<AnmAnimation>(File.ReadAllText(jsonFile));
 		}
 		/// <summary>
 		///  Serializes the ANM animation to a json file in the specified directory.
@@ -148,7 +148,7 @@ namespace TriggersTools.CatSystem2 {
 		///  Gets the enumerator for the animation script's lines.
 		/// </summary>
 		/// <returns>The animation script's line enumerator.</returns>
-		public IEnumerator<AnimationLine> GetEnumerator() => Lines.GetEnumerator();
+		public IEnumerator<AnmLine> GetEnumerator() => Lines.GetEnumerator();
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
 		#endregion

@@ -14,7 +14,7 @@ namespace TriggersTools.CatSystem2.Utils {
 	///  A result type that is returned from native Zlib compress and decompress functions.
 	///  This result states the error that occurred.
 	/// </summary>
-#if DEBUG_LIBRARY
+#if CAT_DEBUG
 	public
 #else
 	internal
@@ -33,7 +33,7 @@ namespace TriggersTools.CatSystem2.Utils {
 	/// <summary>
 	///  An exception thrown during Zlib compression and decompression.
 	/// </summary>
-#if DEBUG_LIBRARY
+#if CAT_DEBUG
 	public
 #else
 	internal
@@ -84,7 +84,7 @@ namespace TriggersTools.CatSystem2.Utils {
 	/// <summary>
 	///  A static class for zlib1.dll native methods.
 	/// </summary>
-#if DEBUG_LIBRARY
+#if CAT_DEBUG
 	public
 #else
 	internal
@@ -94,7 +94,7 @@ namespace TriggersTools.CatSystem2.Utils {
 		
 		static Zlib() {
 			string arch = (Environment.Is64BitProcess ? "x64" : "x86");
-			string path = Path.Combine(CatUtils.TempDir, arch);
+			string path = Path.Combine(CatUtils.NativeDllExtractPath, arch);
 			Directory.CreateDirectory(path);
 
 			// Load the embedded zlib1 dll

@@ -31,7 +31,7 @@ namespace TriggersTools.CatSystem2.Utils {
 	///  A native wrapper for the Blowfish encryption algorithm using asmodean.dll.
 	/// </summary>
 	[StructLayout(LayoutKind.Explicit)]
-#if DEBUG_LIBRARY
+#if CAT_DEBUG
 	public
 #else
 	internal

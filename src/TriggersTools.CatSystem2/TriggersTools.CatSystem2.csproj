@@ -22,13 +22,13 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-    <DefineConstants>TRACE;DEBUG;DEBUG_LIBRARY</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;CAT_DEBUG</DefineConstants>
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <DefineConstants>TRACE;DEBUG_LIBRARY</DefineConstants>
+    <DefineConstants>TRACE;CAT_DEBUG</DefineConstants>
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <WarningLevel>2</WarningLevel>

@@ -86,6 +86,15 @@ namespace TriggersTools.CatSystem2.Structs {
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	internal struct HG2IMG_BASE {
+		#region Constants
+
+		/// <summary>
+		///  The size of this structure in bytes.
+		/// </summary>
+		public static readonly int CbSize = Marshal.SizeOf<HG2IMG_BASE>();
+
+		#endregion
+
 		#region Fields
 
 		/// <summary>

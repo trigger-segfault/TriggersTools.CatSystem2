@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TriggersTools.SharpUtils;
 using TriggersTools.SharpUtils.IO;
+using TriggersTools.Windows.Resources;
 
 namespace TriggersTools.CatSystem2 {
 	/// <summary>
@@ -19,7 +20,7 @@ namespace TriggersTools.CatSystem2 {
 		#region Constants
 
 		/// <summary>
-		///  Gets the Japanese encoding used for the CatSystem2 files.
+		///  Gets the Japanese encoding used for the CatSystem2 files (Shift JIS, codepage 932).
 		/// </summary>
 		public static Encoding ShiftJIS { get; } = Encoding.GetEncoding(932);
 
@@ -67,32 +68,37 @@ namespace TriggersTools.CatSystem2 {
 		/// </summary>
 		public static CatCompiler CompilerInstance { get; } = new CatCompiler();
 		/// <summary>
-		///  Gets the path to extract all native Dlls to, because they're a pain with NuGet packages.
+		///  The path to extract all native Dlls to, because they're a pain with NuGet packages.
 		/// </summary>
-		public static string DllExtractPath { get; set; } =
-			Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-
+		private static string nativeDllExtractPath = TempDir;//Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 
 		#endregion
 
 		#region Properties
 
 		/// <summary>
-		///  Gets or sets the path to ac.exe, which is used to compile <see cref="Animation"/>'s.
+		///  Gets or sets the path to extract all native Dlls to, because they're a pain with NuGet packages.
+		/// </summary>
+		public static string NativeDllExtractPath {
+			get => nativeDllExtractPath;
+			set => nativeDllExtractPath = value ?? throw new ArgumentNullException(nameof(NativeDllExtractPath));
+		}
+		/// <summary>
+		///  Gets or sets the path to ac.exe, which is used to compile <see cref="AnmAnimation"/>'s.
 		/// </summary>
 		public static string AcPath {
 			get => CompilerInstance.AcPath;
 			set => CompilerInstance.AcPath = value;
 		}
 		/// <summary>
-		///  Gets or sets the path to mc.exe, which is used to compile <see cref="SceneScript"/>'s.
+		///  Gets or sets the path to mc.exe, which is used to compile <see cref="CstScene"/>'s.
 		/// </summary>
 		public static string McPath {
 			get => CompilerInstance.McPath;
 			set => CompilerInstance.McPath = value;
 		}
 		/// <summary>
-		///  Gets or sets the path to fes.exe, which is used to compile <see cref="ScreenScript"/>'s.
+		///  Gets or sets the path to fes.exe, which is used to compile <see cref="FesScreen"/>'s.
 		/// </summary>
 		public static string FesPath {
 			get => CompilerInstance.FesPath;

@@ -33,15 +33,15 @@ namespace TriggersTools.CatSystem2 {
 		#region Fields
 
 		/// <summary>
-		///  Gets or sets the path to ac.exe, which is used to compile <see cref="Animation"/>'s.
+		///  Gets or sets the path to ac.exe, which is used to compile <see cref="AnmAnimation"/>'s.
 		/// </summary>
 		public string AcPath { get; set; } = "ac.exe";
 		/// <summary>
-		///  Gets or sets the path to mc.exe, which is used to compile <see cref="SceneScript"/>'s.
+		///  Gets or sets the path to mc.exe, which is used to compile <see cref="CstScene"/>'s.
 		/// </summary>
 		public string McPath { get; set; } = "mc.exe";
 		/// <summary>
-		///  Gets or sets the path to fes.exe, which is used to compile <see cref="ScreenScript"/>'s.
+		///  Gets or sets the path to fes.exe, which is used to compile <see cref="FesScreen"/>'s.
 		/// </summary>
 		public string FesPath { get; set; } = "fes.exe";
 

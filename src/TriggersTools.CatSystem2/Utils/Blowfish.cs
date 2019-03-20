@@ -15,7 +15,7 @@ namespace TriggersTools.CatSystem2.Utils {
 	///  <see cref="BlowfishManaged"/>.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
-#if DEBUG_LIBRARY
+#if CAT_DEBUG
 	public
 #else
 	internal

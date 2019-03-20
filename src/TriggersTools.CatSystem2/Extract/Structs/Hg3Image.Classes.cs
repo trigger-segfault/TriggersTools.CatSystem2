@@ -100,6 +100,10 @@ namespace TriggersTools.CatSystem2.Structs {
 		///  The image attributes that were found.
 		/// </summary>
 		public Dictionary<int, HG3ATS> Ats { get; } = new Dictionary<int, HG3ATS>();
+		/// <summary>
+		///  Gets the position to read the frame info at.
+		/// </summary>
+		public long FrameOffset { get; }
 
 		#endregion
 
@@ -110,9 +114,11 @@ namespace TriggersTools.CatSystem2.Structs {
 		/// </summary>
 		/// <param name="frameHdr">The header for the frame that contains the Id.</param>
 		/// <param name="stdInfo">The image dimensions and other specs.</param>
-		public Hg3FrameInfo(HG3FRAMEHDR frameHdr, HG3STDINFO stdInfo) {
+		/// <param name="frameOffset">The position to read the frame info at.</param>
+		public Hg3FrameInfo(HG3FRAMEHDR frameHdr, HG3STDINFO stdInfo, long frameOffset) {
 			Header = frameHdr;
 			StdInfo = stdInfo;
+			FrameOffset = frameOffset;
 		}
 
 		#endregion

@@ -12,7 +12,7 @@ namespace TriggersTools.CatSystem2 {
 	/// <summary>
 	///  The types of commands an ANM animation script line can have.
 	/// </summary>
-	public enum AnimationLineType {
+	public enum AnmLineType {
 		/// <summary>
 		///  The command displays an image.<para/>
 		///  <Format: code>[ID] [min] (max)</code>
@@ -123,36 +123,36 @@ namespace TriggersTools.CatSystem2 {
 		[AnimationCommand("sub", 2)]
 		Subtract = 17,
 	}
-	public static class AnimationLineTypeExtensions {
-		public static bool IsJump(this AnimationLineType type) {
-			return EnumInfo.GetAttribute<AnimationLineType, AnimationCommandAttribute>(type).IsJump;
+	public static class AnmLineTypeExtensions {
+		public static bool IsJump(this AnmLineType type) {
+			return EnumInfo.GetAttribute<AnmLineType, AnimationCommandAttribute>(type).IsJump;
 		}
-		public static int GetParameterCount(this AnimationLineType type) {
-			return EnumInfo.GetAttribute<AnimationLineType, AnimationCommandAttribute>(type).Count;
+		public static int GetParameterCount(this AnmLineType type) {
+			return EnumInfo.GetAttribute<AnmLineType, AnimationCommandAttribute>(type).Count;
 		}
-		public static bool IsRange(this AnimationLineType type) {
-			return EnumInfo.GetAttribute<AnimationLineType, AnimationCommandAttribute>(type).IsRange;
+		public static bool IsRange(this AnmLineType type) {
+			return EnumInfo.GetAttribute<AnmLineType, AnimationCommandAttribute>(type).IsRange;
 		}
-		public static string GetCommand(this AnimationLineType type) {
-			return EnumInfo.GetAttribute<AnimationLineType, AnimationCommandAttribute>(type).Command;
+		public static string GetCommand(this AnmLineType type) {
+			return EnumInfo.GetAttribute<AnmLineType, AnimationCommandAttribute>(type).Command;
 		}
 	}
 	/// <summary>
-	///  An animation script line used in an ANM file and the <see cref="Animation"/> class.
+	///  An animation script line used in an ANM file and the <see cref="AnmAnimation"/> class.
 	/// </summary>
-	public sealed class AnimationLine {
+	public sealed class AnmLine {
 		#region Fields
 		
 		/// <summary>
 		///  Gets the type of the animation script line command.
 		/// </summary>
 		[JsonProperty("type")]
-		public AnimationLineType Type { get; private set; }
+		public AnmLineType Type { get; private set; }
 		/// <summary>
 		///  Gets the parameters for the animation script line command.
 		/// </summary>
 		[JsonProperty("parameters")]
-		public IReadOnlyList<AnimationParameter> Parameters { get; private set; }
+		public IReadOnlyList<AnmParameter> Parameters { get; private set; }
 
 		#endregion
 
@@ -178,16 +178,16 @@ namespace TriggersTools.CatSystem2 {
 		/// <summary>
 		///  Constructs an unassigned animation script line for use with loading via <see cref="Newtonsoft.Json"/>.
 		/// </summary>
-		public AnimationLine() { }
+		public AnmLine() { }
 		/// <summary>
 		///  Constructs an animation script line with the specified file name and <see cref="ANMLINE"/>.
 		/// </summary>
 		/// <param name="line">The ANMFRAME struct containing script line information.</param>
-		internal AnimationLine(ANMLINE line) {
-			Type = (AnimationLineType) line.Type;
+		internal AnmLine(ANMLINE line) {
+			Type = (AnmLineType) line.Type;
 			int count = Type.GetParameterCount();
 			Parameters = line.Parameters.Take(count)
-							  .Select(p => new AnimationParameter(p))
+							  .Select(p => new AnmParameter(p))
 							  .ToImmutableArray();
 		}
 
@@ -210,7 +210,7 @@ namespace TriggersTools.CatSystem2 {
 	/// <summary>
 	///  A single parameter in an animation script line.
 	/// </summary>
-	public struct AnimationParameter : IEquatable<AnimationParameter> {
+	public struct AnmParameter : IEquatable<AnmParameter> {
 		#region Fields
 
 		/// <summary>
@@ -239,7 +239,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <exception cref="ArgumentOutOfRangeException">
 		///  <paramref name="isVariable"/> is true and <see cref="value"/> is less than 0 or greater than 63.
 		/// </exception>
-		public AnimationParameter(int value, bool isVariable) {
+		public AnmParameter(int value, bool isVariable) {
 			IsVariable = isVariable;
 			Value = value;
 			if (isVariable && value < 0 || value > 63) {
@@ -251,7 +251,7 @@ namespace TriggersTools.CatSystem2 {
 		///  Constructs the animation parameter from an <see cref="ANMPARAM"/> struct.
 		/// </summary>
 		/// <param name="param">The ANMPARAM struct information for the parameter.</param>
-		internal AnimationParameter(ANMPARAM param) {
+		internal AnmParameter(ANMPARAM param) {
 			IsVariable = param.IsVariable;
 			Value = param.Value;
 		}
@@ -276,7 +276,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <param name="obj">The object to check for equality.</param>
 		/// <returns>True if the object is an animation script parameter and is equal to this parameter.</returns>
 		public override bool Equals(object obj) {
-			if (obj is AnimationParameter param)
+			if (obj is AnmParameter param)
 				return Value == param.Value && IsVariable == param.IsVariable;
 			return false;
 		}
@@ -285,7 +285,7 @@ namespace TriggersTools.CatSystem2 {
 		/// </summary>
 		/// <param name="obj">The animation script parameter to check for equality.</param>
 		/// <returns>True if the animation script parameter and is equal to this parameter.</returns>
-		public bool Equals(AnimationParameter other) {
+		public bool Equals(AnmParameter other) {
 			return this == other;
 		}
 
@@ -293,10 +293,10 @@ namespace TriggersTools.CatSystem2 {
 
 		#region Operators
 
-		public static bool operator ==(AnimationParameter a, AnimationParameter b) {
+		public static bool operator ==(AnmParameter a, AnmParameter b) {
 			return a.Value == b.Value && a.IsVariable == b.IsVariable;
 		}
-		public static bool operator !=(AnimationParameter a, AnimationParameter b) {
+		public static bool operator !=(AnmParameter a, AnmParameter b) {
 			return a.Value != b.Value || a.IsVariable != b.IsVariable;
 		}
 

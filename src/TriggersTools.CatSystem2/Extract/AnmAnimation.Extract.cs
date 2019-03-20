@@ -5,7 +5,7 @@ using TriggersTools.SharpUtils.Exceptions;
 using TriggersTools.SharpUtils.IO;
 
 namespace TriggersTools.CatSystem2 {
-	partial class Animation {
+	partial class AnmAnimation {
 		#region Extract
 
 		/// <summary>
@@ -17,7 +17,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="anmFile"/> is null.
 		/// </exception>
-		public static Animation Extract(string anmFile) {
+		public static AnmAnimation Extract(string anmFile) {
 			using (var stream = File.OpenRead(anmFile))
 				return Extract(stream, anmFile);
 		}
@@ -34,7 +34,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <exception cref="ArgumentException">
 		///  The <paramref name="stream"/> is closed.
 		/// </exception>
-		public static Animation Extract(Stream stream, string fileName) {
+		public static AnmAnimation Extract(Stream stream, string fileName) {
 			if (fileName == null)
 				throw new ArgumentNullException(nameof(fileName));
 			BinaryReader reader = new BinaryReader(stream);
@@ -49,7 +49,7 @@ namespace TriggersTools.CatSystem2 {
 				frames[i] = reader.ReadUnmanaged<ANMLINE>();
 			}
 
-			return new Animation(Path.GetFileName(fileName), hdr, frames);
+			return new AnmAnimation(Path.GetFileName(fileName), hdr, frames);
 		}
 
 		#endregion
@@ -66,10 +66,10 @@ namespace TriggersTools.CatSystem2 {
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="entry"/> is null.
 		/// </exception>
-		public static Animation ExtractAnimation(this KifintEntry entry) {
+		public static AnmAnimation ExtractAnimation(this KifintEntry entry) {
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream())
-				return Animation.Extract(stream, entry.FileName);
+				return AnmAnimation.Extract(stream, entry.FileName);
 		}
 		/// <summary>
 		///  Extracts the ANM animation script from the open KIFINT archive stream.
@@ -81,10 +81,10 @@ namespace TriggersTools.CatSystem2 {
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="entry"/> or <paramref name="kifintStream"/> is null.
 		/// </exception>
-		public static Animation ExtractAnimation(this KifintEntry entry, KifintStream kifintStream) {
+		public static AnmAnimation ExtractAnimation(this KifintEntry entry, KifintStream kifintStream) {
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream(kifintStream))
-				return Animation.Extract(stream, entry.FileName);
+				return AnmAnimation.Extract(stream, entry.FileName);
 		}
 
 		#endregion

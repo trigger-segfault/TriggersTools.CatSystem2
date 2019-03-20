@@ -56,9 +56,9 @@ namespace TriggersTools.CatSystem2 {
 		/// <summary>
 		///  Gets the HG-X type of the image.
 		/// </summary>
-		[JsonProperty("hgx")]
+		[JsonProperty("format")]
 		[JsonConverter(typeof(JsonStringEnumConverter))]
-		public HgxType HgxType { get; private set; }
+		public HgxFormat Format { get; private set; }
 		/// <summary>
 		///  Gets the list of frames in the HG-X image.
 		/// </summary>
@@ -96,15 +96,15 @@ namespace TriggersTools.CatSystem2 {
 		/// </summary>
 		[JsonIgnore]
 		public string JsonFileName => HgxImage.GetJsonFileName(FileName);
-		
+
 		#endregion
-		
+
 		#region Constructors
 
 		/// <summary>
 		///  Constructs an unassigned HG-X image for use with loading via <see cref="Newtonsoft.Json"/>.
 		/// </summary>
-		public HgxImage() { }
+		private HgxImage() { }
 		/// <summary>
 		///  Constructs an HG-3 image with the specified file name, image index, <see cref="HG3STDINFO"/>, and
 		///  bitmap frames.
@@ -117,7 +117,7 @@ namespace TriggersTools.CatSystem2 {
 			Version = CurrentVersion;
 			FileName = fileName;
 			Type = hdr.Type;
-			HgxType = HgxType.Hg3;
+			Format = HgxFormat.Hg3;
 
 			Expanded = options.HasFlag(HgxOptions.Expand);
 			Flipped = options.HasFlag(HgxOptions.Flip);
@@ -138,7 +138,7 @@ namespace TriggersTools.CatSystem2 {
 			Version = CurrentVersion;
 			FileName = fileName;
 			Type = hdr.Type;
-			HgxType = HgxType.Hg2;
+			Format = HgxFormat.Hg2;
 
 			Expanded = options.HasFlag(HgxOptions.Expand);
 			Flipped = options.HasFlag(HgxOptions.Flip);
@@ -206,6 +206,38 @@ namespace TriggersTools.CatSystem2 {
 			if (frame == null)
 				throw new ArgumentNullException(nameof(frame));
 			return Frames.IndexOf(frame);
+		}
+
+		#endregion
+
+		#region ExtractImages
+
+		/// <summary>
+		///  Extracts the HG-X image's frames to the specified output directory as a PNG file.
+		/// </summary>
+		/// <param name="stream">The stream to the HG-X file.</param>
+		/// <param name="outputDir">The output directory to save the images to.</param>
+		/// <param name="options">The options for manipulating the image during extraction.</param>
+		/// <returns>The dictionary of Id/file path key value pairs to the extracted PNGs.</returns>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="stream"/> or <paramref name="outputDir"/> is null.
+		/// </exception>
+		/// <exception cref="ObjectDisposedException">
+		///  <paramref name="stream"/> is closed.
+		/// </exception>
+		public Dictionary<int, string> ExtractImages(Stream stream, string outputDir, HgxOptions options) {
+			if (stream == null)
+				throw new ArgumentNullException(nameof(stream));
+			if (outputDir == null)
+				throw new ArgumentNullException(nameof(outputDir));
+			Dictionary<int, string> pngFiles = new Dictionary<int, string>();
+			foreach (HgxFrame frame in frames) {
+				// Perform assignment instead of add because HG-X
+				// images can incorrectly contain duplicate IDs.
+				pngFiles[frame.Id] = frame.ExtractImageToDirectory(stream, outputDir, options);
+			}
+			return pngFiles;
 		}
 
 		#endregion
@@ -430,7 +462,7 @@ namespace TriggersTools.CatSystem2 {
 		///  Gets the string representation of the HG-X image.
 		/// </summary>
 		/// <returns>The string representation of the HG-X image.</returns>
-		public override string ToString() => $"{HgxType.ToDescription() ?? "HG-X"} Image \"{FileName}\" Frames={Count}";
+		public override string ToString() => $"{Format.ToDescription() ?? "HG-X"} Image \"{FileName}\" Frames={Count}";
 		
 		#endregion
 	}

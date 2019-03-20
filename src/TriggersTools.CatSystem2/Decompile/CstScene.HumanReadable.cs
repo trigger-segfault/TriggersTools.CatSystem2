@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using TriggersTools.CatSystem2.Scenes;
 
 namespace TriggersTools.CatSystem2 {
-	partial class SceneScript {
+	partial class CstScene {
 		#region Constants
 
 		private const string ChoicePattern = @"(?'index'\d+)[ \t]+(?'goto'\w+)[ \t]+(?'text'.*)";
@@ -243,7 +243,7 @@ namespace TriggersTools.CatSystem2 {
 		public static string HumanReadableScene(this KifintEntry entry) {
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream())
-				return SceneScript.HumanReadable(stream, entry.FileName);
+				return CstScene.HumanReadable(stream, entry.FileName);
 		}
 		/// <summary>
 		///  Loads and decompiles the CST scene script entry and outputs it to the specified human readable file.
@@ -257,7 +257,7 @@ namespace TriggersTools.CatSystem2 {
 		public static void HumanReadableSceneToFile(this KifintEntry entry, string outFile) {
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream())
-				SceneScript.HumanReadableToFile(stream, entry.FileName, outFile);
+				CstScene.HumanReadableToFile(stream, entry.FileName, outFile);
 		}
 		/// <summary>
 		///  Loads and decompiles the CST scene script entry and outputs it to the specified human readable stream.
@@ -271,7 +271,7 @@ namespace TriggersTools.CatSystem2 {
 		public static void HumanReadableSceneToStream(this KifintEntry entry, Stream outStream) {
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream())
-				SceneScript.HumanReadableToStream(stream, entry.FileName, outStream);
+				CstScene.HumanReadableToStream(stream, entry.FileName, outStream);
 		}
 
 		#endregion
@@ -291,7 +291,7 @@ namespace TriggersTools.CatSystem2 {
 		public static string HumanReadableScene(this KifintEntry entry, KifintStream kifintStream) {
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream(kifintStream))
-				return SceneScript.HumanReadable(stream, entry.FileName);
+				return CstScene.HumanReadable(stream, entry.FileName);
 		}
 		/// <summary>
 		///  Loads and decompiles the CST scene script entry and outputs it to the specified human readable file.
@@ -308,7 +308,7 @@ namespace TriggersTools.CatSystem2 {
 		{
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream(kifintStream))
-				SceneScript.HumanReadableToFile(stream, entry.FileName, outFile);
+				CstScene.HumanReadableToFile(stream, entry.FileName, outFile);
 		}
 		/// <summary>
 		///  Loads and decompiles the CST scene script entry and outputs it to the specified human readable stream.
@@ -325,7 +325,7 @@ namespace TriggersTools.CatSystem2 {
 		{
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream(kifintStream))
-				SceneScript.HumanReadableToStream(stream, entry.FileName, outStream);
+				CstScene.HumanReadableToStream(stream, entry.FileName, outStream);
 		}
 
 		#endregion

@@ -4,7 +4,31 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net462</TargetFramework>
     <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    <RootNamespace>TriggersToosls.CatSystem2.GrisaiaNoContext</RootNamespace>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <DefineConstants>TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <WarningLevel>2</WarningLevel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="TriggersTools.Build.CopyrightYear" Version="1.0.0" />
+    <PackageReference Include="TriggersTools.SharpUtils" Version="1.0.1-build-42" />
+    <PackageReference Include="TriggersTools.Windows.Resources" Version="1.0.0-build-3" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\TriggersTools.CatSystem2\TriggersTools.CatSystem2.csproj" />

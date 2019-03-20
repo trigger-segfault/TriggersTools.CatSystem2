@@ -42,7 +42,7 @@ namespace TriggersTools.CatSystem2.Testing {
 		[DllImport("kernel32.dll", EntryPoint = "CopyMemory", SetLastError = false)]
 		private static unsafe extern void CopyMemory(void* dest, void* src, IntPtr count);
 		static void Main(string[] args) {
-			Stopwatch buf1w = new Stopwatch();
+			/*Stopwatch buf1w = new Stopwatch();
 			Stopwatch buf2w = new Stopwatch();
 			const int maxSize = 64 * 64 * 2;
 			IntPtr src = Marshal.AllocHGlobal(maxSize);
@@ -97,7 +97,7 @@ namespace TriggersTools.CatSystem2.Testing {
 			}
 			Console.WriteLine(buf1w.ElapsedMilliseconds);
 			Console.WriteLine(buf2w.ElapsedMilliseconds);
-			Console.ReadLine();
+			Console.ReadLine();*/
 			JsonTest jtest = new JsonTest("");
 			jtest.A = 100;
 			jtest.B = 200;
@@ -106,24 +106,80 @@ namespace TriggersTools.CatSystem2.Testing {
 			string rawPath = @"C:\Users\Onii-chan\Pictures\Sprites\Grisaia\Cs2\Raw2";
 			string hg3Path = @"C:\Users\Onii-chan\Pictures\Sprites\Grisaia\Cs2\Hg3";
 			string outputPath = @"C:\Users\Onii-chan\Pictures\Sprites\Grisaia\Cs2\Output2";
+			string outputPath2 = @"C:\Users\Onii-chan\Pictures\Sprites\Grisaia\Cs2\Output3";
 			string outputExpandPath = @"C:\Users\Onii-chan\Pictures\Sprites\Grisaia\Cs2\OutputExpand";
-			Directory.CreateDirectory(outputPath);
+			string output1 = "hg3-1";
+			string output2 = "hg3-2";
+			Directory.CreateDirectory(output1);
+			Directory.CreateDirectory(output2);
 			int hg3Index = 0;
 			Console.Write($"\r{hg3Index}");
-			HgxImage.Extract(@"C:\Programs\Tools\CatSystem2_v401\tool\img_flipped.hg3");
+			//HgxImage.Extract(@"C:\Programs\Tools\CatSystem2_v401\tool\img_flipped.hg3");
 			var hg3Cs2Files = Directory.EnumerateFiles(rawPath, "*.hg3");//.SkipWhile(s => !s.EndsWith("click.hg3"));
-			foreach (string file in hg3Cs2Files) {
+			Stopwatch hwatch = new Stopwatch();
+			Stopwatch hwatch2 = new Stopwatch();
+			/*foreach (string file in hg3Cs2Files) {
 				Console.Write($"\r{hg3Index++}");
-				HgxImage.Extract(file);
+				hwatch.Start();
 				HgxImage hg3Image = HgxImage.ExtractImages(file, outputPath, HgxOptions.None);
+				hwatch.Stop();
+				hwatch2.Start();
+				using (var stream = File.OpenRead(file)) {
+					HgxImage hg3Image2 = HgxImage.Extract(stream, file);
+					hg3Image2.ExtractImages(stream, outputPath2, HgxOptions.None);
+				}
+				hwatch2.Stop();
 				//hg3Image = HgxImage.ExtractImages(file, outputExpandPath, HgxOptions.Expand);
 				//hg3Image.SaveJsonToDirectory(hg3Path);
+			}*/
+			Console.WriteLine($"\r{hg3Index}");
+			Console.WriteLine(hwatch.ElapsedMilliseconds); hwatch.Reset();
+			Console.WriteLine(hwatch2.ElapsedMilliseconds); hwatch2.Reset();
+			string grisaiaInstallDir = @"C:\Programs\Games\Frontwing\The Fruit of Grisaia";
+			string grisaiaExe = Path.Combine(grisaiaInstallDir, "Grisaia.exe");
+			string grisaiaConfigInt = Path.Combine(grisaiaInstallDir, "config.int");
+			VCodes grisaiaVCodes = VCodes.Load(grisaiaExe);
+			KifintLookup lookup = KifintArchive.LoadLookup(KifintType.Image, grisaiaInstallDir, grisaiaVCodes.VCode2);
+			CatDebug.SpeedTestHgx = true;
+			using (KifintStream kifintStream = new KifintStream()) {
+				lookup["sys_mwnd03.hg3"].ExtractToFile("sys_mwnd03.hg3");
+				hg3Index = 0;
+				int top = Console.CursorTop;
+				Console.CursorVisible = false;
+				/*Console.WriteLine($"\r{hg3Index}");
+				Console.WriteLine(hwatch.ElapsedMilliseconds); hwatch.Reset();
+				Console.WriteLine(hwatch2.ElapsedMilliseconds); hwatch2.Reset();*/
+				foreach (KifintEntry entry in lookup) {
+					if (entry.Extension != ".hg3")
+						continue;
+					hwatch.Start();
+					HgxImage hg3Image = entry.ExtractHgxAndImages(kifintStream, output1, HgxOptions.None);
+					hwatch.Stop();
+					hwatch2.Start();
+					using (var stream = entry.ExtractToStream(kifintStream)) {
+						HgxImage hg3Image2 = entry.ExtractHgx(kifintStream);
+						hg3Image2.ExtractImages(stream, output2, HgxOptions.None);
+					}
+					hwatch2.Stop();
+					//if (hg3Index % 25 == 0) {
+						Console.WriteLine($"\r{hg3Index++}");
+						Console.WriteLine(hwatch.ElapsedMilliseconds);
+						Console.Write(hwatch2.ElapsedMilliseconds);
+						Console.CursorTop = top;
+					/*}
+					else {
+						Console.Write($"\r{hg3Index++}");
+					}*/
+				}
+				Console.CursorVisible = true;
 			}
 			Console.WriteLine($"\r{hg3Index}");
+			Console.WriteLine(hwatch.ElapsedMilliseconds); hwatch.Reset();
+			Console.WriteLine(hwatch2.ElapsedMilliseconds); hwatch2.Reset();
 			Console.WriteLine("FINISHED");
 			Console.ReadLine();
-			var screen = ScreenScript.Extract(@"C:\Users\Onii-chan\Source\C#\TriggersTools\CatSystem2\samples\CatTesting\bin\Debug\fcgview.fes");
-			var screen2 = ScreenScript.Extract(@"C:\Programs\Tools\CatSystem2_v401\system\fes\cgview.fes");
+			var screen = FesScreen.Extract(@"C:\Users\Onii-chan\Source\C#\TriggersTools\CatSystem2\samples\CatTesting\bin\Debug\fcgview.fes");
+			var screen2 = FesScreen.Extract(@"C:\Programs\Tools\CatSystem2_v401\system\fes\cgview.fes");
 			//SceneScript.DecompileToFile(@)
 			string vc2 = string.Empty;
 			Stopwatch watchNative = new Stopwatch();
@@ -411,7 +467,7 @@ namespace TriggersTools.CatSystem2.Testing {
 			//StringsScraper.BinarySearch("cs2_open.exe", "page");
 			//foreach (string file in Directory.GetFiles(@"C:\Programs\Tools\CatSystem2_v401\system\scene", "*.cst")) {
 			foreach (string file in Directory.GetFiles(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)\scene", "*.cst")) {
-				SceneScript scene2 = SceneScript.Extract(file);
+				CstScene scene2 = CstScene.Extract(file);
 				foreach (ISceneLine line in scene2) {
 					if (line.Type == SceneLineType.Page) {
 						Console.WriteLine(file);
@@ -432,7 +488,7 @@ namespace TriggersTools.CatSystem2.Testing {
 			//byte[] data = File.ReadAllBytes("mc.exe");
 			//for (int i = 0; i <)
 			//StringsScraper.BinarySearch("mc.exe", "page");
-			SceneScript scene = SceneScript.Extract(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)\scene\ama_006.cst");
+			CstScene scene = CstScene.Extract(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)\scene\ama_006.cst");
 
 			foreach (ISceneLine line in scene) {
 				if (line.Type == SceneLineType.Command) {
@@ -442,10 +498,10 @@ namespace TriggersTools.CatSystem2.Testing {
 			//var h = LoadLibrary(@"C:\Users\Onii-chan\AppData\Local\Temp\TriggersToolsGames\CatSystem2\asmodean.dll");
 			//Embedded
 			var hg3 = HgxImage.ExtractImages(@"C:\Programs\Tools\CatSystem2_v401\system\image\sys_confirm.hg3", ".", HgxOptions.None);
-			string grisaiaInstallDir = @"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)";
-			string grisaiaExe = Path.Combine(grisaiaInstallDir, "Grisaia2.bin.bak");
-			string grisaiaConfigInt = Path.Combine(grisaiaInstallDir, "config.int");
-			//VCodes grisaiaVCodes = VCodes.Load(grisaiaExe);
+			grisaiaInstallDir = @"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)";
+			grisaiaExe = Path.Combine(grisaiaInstallDir, "Grisaia2.bin.bak");
+			grisaiaConfigInt = Path.Combine(grisaiaInstallDir, "config.int");
+			grisaiaVCodes = VCodes.Load(grisaiaExe);
 			//KifintLookup lookup = Kifint.DecryptLookup(KifintType.Config, grisaiaInstallDir, grisaiaVCodes.VCode2);
 			//lookup["startup.xml"].ExtractToFile("startup2.xml");
 			/*File.Copy("startup2.xml", "startup.xml", true);

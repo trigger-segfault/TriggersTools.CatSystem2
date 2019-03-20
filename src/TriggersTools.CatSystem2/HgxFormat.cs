@@ -8,10 +8,10 @@ using Newtonsoft.Json;
 
 namespace TriggersTools.CatSystem2 {
 	/// <summary>
-	///  The HG-X type of an <see cref="HgxImage"/>. Either HG-2 or HG3.
+	///  The HG-X format of an <see cref="HgxImage"/>. Either HG-2 or HG3.
 	/// </summary>
-	public enum HgxType : byte {
-		/// <summary>No HG-X type. This is invalid.</summary>
+	public enum HgxFormat : byte {
+		/// <summary>No HG-X format. This is invalid.</summary>
 		[Description("HG-X")]
 		None = 0,
 		/// <summary>This is an HG-2 image.</summary>
