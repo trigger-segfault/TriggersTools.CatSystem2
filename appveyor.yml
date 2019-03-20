@@ -1,0 +1,65 @@
+version: '0.0.1.{build}'
+environment:
+  baseVersion: '1.0.0'
+  
+image: Visual Studio 2017
+configuration: Release
+platform: Any CPU
+
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '$(packageVersion)'
+  package_version: '$(packageVersion)'
+  assembly_version: '$(buildVersion)'
+  file_version: '$(buildVersion)'
+  informational_version: '$(packageVersion)'
+
+build:
+  project: src/TriggersTools.CatSystem2/TriggersTools.CatSystem2.csproj
+  verbosity: minimal
+
+branches:
+  only:
+    - master
+
+before_build:
+- nuget restore
+
+init:
+- ps: >-
+    $env:runNugetDeploy  = "false";
+    $env:runNugetRelease = "false"; 
+    
+    if (!$env:APPVEYOR_REPO_COMMIT_MESSAGE_EXTENDED) { $env:APPVEYOR_REPO_COMMIT_MESSAGE_EXTENDED = " " }
+    if ($env:APPVEYOR_REPO_COMMIT_MESSAGE_EXTENDED.Contains("[release]")) {
+      echo "==== RELEASE BUILD ====";
+
+      $env:runNugetDeploy  = "true";
+      $env:runNugetRelease = "true";
+      $env:buildVersion    = "$env:baseVersion.0";
+      $env:packageVersion  = "$env:baseVersion";
+    } elseif ($env:APPVEYOR_REPO_COMMIT_MESSAGE_EXTENDED.Contains("[build]")) {
+      echo "==== PRE-RELEASE BUILD ====";
+
+      $env:runNugetDeploy  = "true";
+      $env:buildVersion    = "$env:baseVersion.$env:appveyor_build_number";
+      $env:packageVersion  = "$env:baseVersion-build-$env:appveyor_build_number";
+    } else {
+      echo "==== TEST BUILD ====";
+
+      $env:buildVersion    = "$env:baseVersion.$env:appveyor_build_number";
+      $env:packageVersion  = "$env:baseVersion-test-$env:appveyor_build_number";
+    }
+    Update-AppveyorBuild -Version $env:buildVersion;
+
+artifacts:
+- path: '**\*.nupkg'
+
+deploy:
+  provider: NuGet
+  api_key:
+    secure: QVGLofIy2zySjb1ZW8e730tg6PxVB+++YvaJh/Dc54LA6h6u+2Cf4davQ9PPGn7E
+  artifact: /.*\.nupkg/
+  on:
+    runNugetDeploy: true

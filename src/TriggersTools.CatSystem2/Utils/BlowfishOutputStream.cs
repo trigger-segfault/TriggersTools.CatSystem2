@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 using TriggersTools.SharpUtils.Exceptions;
 using TriggersTools.SharpUtils.Mathematics;
 
+#if NET451
+using Buffer = TriggersTools.CatSystem2.Utils.BufferMemoryCopy;
+#endif
+
 namespace TriggersTools.CatSystem2.Utils {
 	/// <summary>
 	///  An output stream for encrypting blowfish data as it's written. This does NOT support seeking.
@@ -165,7 +169,7 @@ namespace TriggersTools.CatSystem2.Utils {
 			GetWriteBlocks(count, out int flushCount, out bool flushEncrypt, out int newCount, out int edgeCount);
 
 			if (flushCount != 0) {
-				Buffer.BlockCopy(buffer, offset, decryptedBuffer, virtualPosition % 8, flushCount);
+				Array.Copy(buffer, offset, decryptedBuffer, virtualPosition % 8, flushCount);
 				Blowfish.Encrypt(decryptedBuffer, 8);
 				stream.Write(decryptedBuffer, 0, 8);
 				virtualPosition += flushCount;
@@ -176,7 +180,7 @@ namespace TriggersTools.CatSystem2.Utils {
 			}
 
 			if (newCount != 0) {
-				Buffer.BlockCopy(buffer, offset, decryptedBuffer, 0, newCount);
+				Array.Copy(buffer, offset, decryptedBuffer, 0, newCount);
 				Blowfish.Encrypt(decryptedBuffer, newCount);
 				stream.Write(decryptedBuffer, 0, newCount);
 				virtualPosition += newCount;
@@ -184,7 +188,7 @@ namespace TriggersTools.CatSystem2.Utils {
 			}
 
 			if (edgeCount != 0) {
-				Buffer.BlockCopy(buffer, offset, decryptedBuffer, 0, edgeCount);
+				Array.Copy(buffer, offset, decryptedBuffer, 0, edgeCount);
 				virtualPosition += edgeCount;
 				//offset += edgeCount;
 			}

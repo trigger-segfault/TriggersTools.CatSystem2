@@ -9,7 +9,6 @@ using System.Text;
 using TriggersTools.CatSystem2.Attributes;
 using TriggersTools.CatSystem2.Structs;
 using TriggersTools.CatSystem2.Utils;
-using TriggersTools.IO;
 using TriggersTools.SharpUtils.Enums;
 using TriggersTools.SharpUtils.Exceptions;
 using TriggersTools.SharpUtils.IO;

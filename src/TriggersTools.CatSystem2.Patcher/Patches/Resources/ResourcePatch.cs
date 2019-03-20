@@ -1,5 +1,5 @@
 ﻿using System;
-using TriggersTools.Resources;
+using TriggersTools.Windows.Resources;
 
 namespace TriggersTools.CatSystem2.Patcher.Patches {
 	/// <summary>

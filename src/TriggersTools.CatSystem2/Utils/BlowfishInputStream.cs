@@ -166,7 +166,7 @@ namespace TriggersTools.CatSystem2.Utils {
 
 			if (leftoverCount != 0) {
 				int decryptedIndex = (virtualPosition - decryptedPosition);
-				Buffer.BlockCopy(decryptedBuffer, decryptedIndex, buffer, offset, leftoverCount);
+				Array.Copy(decryptedBuffer, decryptedIndex, buffer, offset, leftoverCount);
 				offset += leftoverCount;
 				virtualPosition += leftoverCount;
 			}
@@ -180,7 +180,7 @@ namespace TriggersTools.CatSystem2.Utils {
 
 			if (edgeCount != 0) {
 				ReadAndDecryptToBuffer(virtualPosition);
-				Buffer.BlockCopy(decryptedBuffer, 0, buffer, offset, edgeCount);
+				Array.Copy(decryptedBuffer, 0, buffer, offset, edgeCount);
 				//offset += edgeCount;
 				virtualPosition += edgeCount;
 			}

@@ -9,8 +9,8 @@ using TriggersTools.CatSystem2.Patcher.Patches;
 //using ClrPlus.Windows.PeBinary.Utility;
 using TriggersTools.SharpUtils.IO;
 using System.Text.RegularExpressions;
-using TriggersTools.Resources.Manifest;
-using TriggersTools.Resources;
+using TriggersTools.Windows.Resources.Manifest;
+using TriggersTools.Windows.Resources;
 using System.ComponentModel;
 
 namespace TriggersTools.CatSystem2.Patcher {

@@ -1,125 +1,96 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B8EE9405-8DCF-4F59-8E14-486B6EB1B870}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TriggersTools.CatSystem2.Patcher</RootNamespace>
-    <AssemblyName>TriggersTools.CatSystem2.Patcher</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
+    <TargetFrameworks>net451;netstandard2.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
-    <PlatformTarget>x86</PlatformTarget>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PackageId>TriggersTools.CatSystem2.Patcher</PackageId>
+    <Authors>Robert Jordan</Authors>
+    <Copyright>Copyright © Robert Jordan {YEAR}</Copyright>
+    <Company>Trigger's Tools &amp; Games</Company>
+    <Product>TriggersTools.CatSystem2.Patcher</Product>
+    <PackageTags>catsystem2, visual-novel, visual novel, vn, translation</PackageTags>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/trigger-death/TriggersTools.CatSystem2</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/trigger-death/TriggersTools.CatSystem2</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/trigger-death/TriggersTools.CatSystem2/blob/master/License.md</PackageLicenseUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/trigger-death/TriggersTools.CatSystem2/master/NuGetIcon.png</PackageIconUrl>
+    <Version>1.0.2</Version>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <WarningLevel>2</WarningLevel>
   </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Constants.cs" />
-    <Compile Include="Patches\BinaryRange.cs" />
-    <Compile Include="Patches\BinaryStringsPatch.cs" />
-    <Compile Include="Patches\ResolveXmlCommentErrorsPatch.cs" />
-    <Compile Include="Programs\AC\ACPatcher.cs" />
-    <Compile Include="Programs\CS2\CS2DebugQuizDialogPatch.cs" />
-    <Compile Include="Programs\CS2\CS2DebugDialogPatch.cs" />
-    <Compile Include="Programs\CS2\CS2ChangeWallpaperDialogPatch.cs" />
-    <Compile Include="Programs\CS2\CS2SetStringVariableDialogPatch.cs" />
-    <Compile Include="Programs\CS2\CS2Patcher.cs" />
-    <Compile Include="Patches\Resources\StringTableStringsPatch.cs" />
-    <Compile Include="Patches\Resources\MenuStringsPatch.cs" />
-    <Compile Include="Patches\Resources\ManifestResourceFragmentPatch.cs" />
-    <Compile Include="Patches\Resources\MenuResourcePatch.cs" />
-    <Compile Include="Patches\Resources\DialogResourcePatch.cs" />
-    <Compile Include="Patches\Resources\ManifestResourcePatch.cs" />
-    <Compile Include="Patches\Resources\DialogStringsPatch.cs" />
-    <Compile Include="Patches\Resources\TypeFacePatch.cs" />
-    <Compile Include="Patches\Resources\PatchSignaturePatch.cs" />
-    <Compile Include="Patches\Resources\ResourcePatch.cs" />
-    <Compile Include="Patches\Resources\EnableVisualStylesPatch.cs" />
-    <Compile Include="ProgramPatcher.cs" />
-    <EmbeddedResource Include="Resources\EnableVisualStylesFragment.xml" />
-    <Compile Include="Programs\CS2\CS2DebugInfoDialogPatch.cs" />
-    <Compile Include="Programs\CS2\CS2XmlDebugPatch.cs" />
-    <Compile Include="Programs\FES\FESPatcher.cs" />
-    <Compile Include="Programs\MC\MCPatcher.cs" />
-    <Compile Include="Programs\ZT\ZTPatcher.cs" />
-    <Compile Include="StringsScraper.cs" />
-    <Compile Include="Programs\WGC\WGCMenuPatch.cs" />
-    <Compile Include="Programs\WGC\WGCSettingsDialogPatch.cs" />
-    <Compile Include="Programs\WGC\WGCPatcher.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="Resources\CS2\cs2_debug_key.dat" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>12.0.1</Version>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1"  />
+    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
+    <PackageReference Include="TriggersTools.Build.CopyrightYear" Version="1.0.0" />
+    <PackageReference Include="TriggersTools.SharpUtils" Version="1.0.1-build-42">
+      <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="System.Collections.Immutable">
-      <Version>1.5.0</Version>
-    </PackageReference>
-    <PackageReference Include="TriggersTools.Build.CopyrightYear">
-      <Version>1.0.0</Version>
+    <PackageReference Include="TriggersTools.Windows.Resources" Version="1.0.0-build-3">
+      <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\TriggersTools.CatSystem2\TriggersTools.CatSystem2.csproj">
-      <Project>{b2dd81e6-00cb-4bd1-93ff-b9d4e464dbc8}</Project>
-      <Name>TriggersTools.CatSystem2</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TriggersTools.Resources\TriggersTools.Resources.csproj">
-      <Project>{2c45462e-7d5a-4923-93a0-20ef5f332220}</Project>
-      <Name>TriggersTools.Resources</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TriggersTools.SharpUtils\TriggersTools.SharpUtils.csproj">
-      <Project>{7c4f08a0-0cce-4196-b84e-f7c334beed06}</Project>
-      <Name>TriggersTools.SharpUtils</Name>
-    </ProjectReference>
+    <None Remove="Resources\AC\binary.txt" />
+    <None Remove="Resources\CS2\binary - Copy.txt" />
+    <None Remove="Resources\CS2\binary.txt" />
+    <None Remove="Resources\CS2\debug_keys.xml" />
+    <None Remove="Resources\CS2\dialog_101.txt" />
+    <None Remove="Resources\CS2\dialog_1049.txt" />
+    <None Remove="Resources\CS2\dialog_1052.txt" />
+    <None Remove="Resources\CS2\dialog_1064.txt" />
+    <None Remove="Resources\CS2\dialog_107.txt" />
+    <None Remove="Resources\CS2\dialog_112.txt" />
+    <None Remove="Resources\CS2\dialog_1155.txt" />
+    <None Remove="Resources\CS2\dialog_129.txt" />
+    <None Remove="Resources\CS2\dialog_139.txt" />
+    <None Remove="Resources\CS2\dialog_201.txt" />
+    <None Remove="Resources\CS2\dialog_203.txt" />
+    <None Remove="Resources\CS2\dialog_204.txt" />
+    <None Remove="Resources\CS2\dialog_206.txt" />
+    <None Remove="Resources\CS2\dialog_207.txt" />
+    <None Remove="Resources\CS2\dialog_208.txt" />
+    <None Remove="Resources\CS2\dialog_209.txt" />
+    <None Remove="Resources\CS2\dialog_210.txt" />
+    <None Remove="Resources\CS2\dialog_211.txt" />
+    <None Remove="Resources\CS2\dialog_212.txt" />
+    <None Remove="Resources\CS2\dialog_213.txt" />
+    <None Remove="Resources\CS2\dialog_214.txt" />
+    <None Remove="Resources\CS2\dialog_215.txt" />
+    <None Remove="Resources\CS2\dialog_216.txt" />
+    <None Remove="Resources\CS2\dialog_9.txt" />
+    <None Remove="Resources\CS2\language.txt" />
+    <None Remove="Resources\EnableVisualStylesFragment.xml" />
+    <None Remove="Resources\FES\binary.txt" />
+    <None Remove="Resources\MC\binary.txt" />
+    <None Remove="Resources\WGC\binary.txt" />
+    <None Remove="Resources\WGC\dialog_132.txt" />
+    <None Remove="Resources\WGC\dialog_144.txt" />
+    <None Remove="Resources\WGC\dialog_145.txt" />
+    <None Remove="Resources\WGC\menu_109.txt" />
+    <None Remove="Resources\WGC\menu_137.txt" />
+    <None Remove="Resources\WGC\string_7.txt" />
+    <None Remove="Resources\ZT\binary.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\WGC\dialog_132.txt" />
-    <EmbeddedResource Include="Resources\WGC\dialog_144.txt" />
-    <EmbeddedResource Include="Resources\WGC\dialog_145.txt" />
-    <EmbeddedResource Include="Resources\WGC\menu_109.txt" />
-    <EmbeddedResource Include="Resources\WGC\menu_137.txt" />
-    <EmbeddedResource Include="Resources\WGC\string_7.txt" />
-  </ItemGroup>
+
   <ItemGroup>
     <EmbeddedResource Include="Resources\AC\binary.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\MC\binary.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\FES\binary.txt" />
-  </ItemGroup>
-  <ItemGroup>
+    <EmbeddedResource Include="Resources\CS2\binary - Copy.txt" />
     <EmbeddedResource Include="Resources\CS2\binary.txt" />
+    <EmbeddedResource Include="Resources\CS2\debug_keys.xml" />
     <EmbeddedResource Include="Resources\CS2\dialog_101.txt" />
     <EmbeddedResource Include="Resources\CS2\dialog_1049.txt" />
     <EmbeddedResource Include="Resources\CS2\dialog_1052.txt" />
@@ -144,16 +115,22 @@
     <EmbeddedResource Include="Resources\CS2\dialog_215.txt" />
     <EmbeddedResource Include="Resources\CS2\dialog_216.txt" />
     <EmbeddedResource Include="Resources\CS2\dialog_9.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\CS2\binary - Copy.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\CS2\debug_keys.xml" />
     <EmbeddedResource Include="Resources\CS2\language.txt" />
+    <EmbeddedResource Include="Resources\EnableVisualStylesFragment.xml" />
+    <EmbeddedResource Include="Resources\FES\binary.txt" />
+    <EmbeddedResource Include="Resources\MC\binary.txt" />
     <EmbeddedResource Include="Resources\WGC\binary.txt" />
+    <EmbeddedResource Include="Resources\WGC\dialog_132.txt" />
+    <EmbeddedResource Include="Resources\WGC\dialog_144.txt" />
+    <EmbeddedResource Include="Resources\WGC\dialog_145.txt" />
+    <EmbeddedResource Include="Resources\WGC\menu_109.txt" />
+    <EmbeddedResource Include="Resources\WGC\menu_137.txt" />
+    <EmbeddedResource Include="Resources\WGC\string_7.txt" />
     <EmbeddedResource Include="Resources\ZT\binary.txt" />
   </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\TriggersTools.CatSystem2\TriggersTools.CatSystem2.csproj" />
+  </ItemGroup>
+
 </Project>

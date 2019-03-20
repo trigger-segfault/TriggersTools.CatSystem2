@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -8,26 +9,103 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using TriggersTools.CatSystem2.Patcher;
-using TriggersTools.CatSystem2.Patcher.Patches;
-using TriggersTools.SharpUtils.IO;
-using System.Diagnostics;
+/*using TriggersTools.CatSystem2.Patcher;
+using TriggersTools.CatSystem2.Patcher.Patches;*/
+/*using TriggersTools.SharpUtils.IO;
 using TriggersTools.Resources.Dialog;
 using TriggersTools.Resources.Menu;
 using TriggersTools.Resources;
-using Newtonsoft.Json;
-using TriggersTools.CatSystem2.Patcher.Programs.CS2;
+using Newtonsoft.Json;*/
+//using TriggersTools.CatSystem2.Patcher.Programs.CS2;
 using TriggersTools.CatSystem2.Scenes;
 using TriggersTools.CatSystem2.Scenes.Commands;
+using TriggersTools.CatSystem2;
+using Newtonsoft.Json;
 
 namespace TriggersTools.CatSystem2.Testing {
-	class Program {
+	class JsonTest {
+		[JsonProperty("A")]
+		public int A { get; internal set; }
+		[JsonProperty("B")]
+		public int B { get; internal set; }
+
+		private JsonTest() {
+
+		}
+		internal JsonTest(string s) {
+
+		}
+	}
+	unsafe class Program {
 		[DllImport("kernel32", SetLastError = true, CharSet = CharSet.Unicode)]
 		public static extern IntPtr LoadLibrary(string lpFileName);
+		[DllImport("kernel32.dll", EntryPoint = "CopyMemory", SetLastError = false)]
+		private static unsafe extern void CopyMemory(void* dest, void* src, IntPtr count);
 		static void Main(string[] args) {
+			Stopwatch buf1w = new Stopwatch();
+			Stopwatch buf2w = new Stopwatch();
+			const int maxSize = 64 * 64 * 2;
+			IntPtr src = Marshal.AllocHGlobal(maxSize);
+			IntPtr dst = Marshal.AllocHGlobal(maxSize);
+			for (int i = 1; i <= 64; i++) {
+				int size = i * i;
+
+				for (int j = 0; j < 10000; j++) {
+					Buffer.MemoryCopy(src.ToPointer(), dst.ToPointer(), size, size);
+					Buffer451.MemoryCopy(src.ToPointer(), dst.ToPointer(), size, size);
+				}
+			}
+			for (int i = 1; i <= 64; i++) {
+				int size = i * i;
+
+				for (int j = 0; j < 100000; j++) {
+					buf1w.Start();
+					Buffer.MemoryCopy(src.ToPointer(), dst.ToPointer(), size, size);
+					buf1w.Stop();
+					buf2w.Start();
+					Buffer451.MemoryCopy(src.ToPointer(), dst.ToPointer(), size, size);
+					buf2w.Stop();
+				}
+			}
+			Marshal.FreeHGlobal(src);
+			Marshal.FreeHGlobal(dst);
+			Console.WriteLine(buf1w.ElapsedMilliseconds);
+			Console.WriteLine(buf2w.ElapsedMilliseconds);
+			byte[] src2 = new byte[maxSize];
+			byte[] dst2 = new byte[maxSize];
+			buf1w.Restart();
+			buf2w.Restart();
+			for (int i = 1; i <= 64; i++) {
+				int size = i * i;
+
+				for (int j = 0; j < 10000; j++) {
+					Buffer.BlockCopy(src2, 0, dst2, 0, size);
+					Array.Copy(src2, 0, dst2, 0, size);
+				}
+			}
+			for (int i = 1; i <= 64; i++) {
+				int size = i * i;
+
+				for (int j = 0; j < 500000; j++) {
+					buf1w.Start();
+					Buffer.BlockCopy(src2, 0, dst2, 0, size);
+					buf1w.Stop();
+					buf2w.Start();
+					Array.Copy(src2, 0, dst2, 0, size);
+					buf2w.Stop();
+				}
+			}
+			Console.WriteLine(buf1w.ElapsedMilliseconds);
+			Console.WriteLine(buf2w.ElapsedMilliseconds);
+			Console.ReadLine();
+			JsonTest jtest = new JsonTest("");
+			jtest.A = 100;
+			jtest.B = 200;
+			string json = JsonConvert.SerializeObject(jtest, Formatting.Indented);
+			JsonTest jtest2 = JsonConvert.DeserializeObject<JsonTest>(json);
 			string rawPath = @"C:\Users\Onii-chan\Pictures\Sprites\Grisaia\Cs2\Raw2";
 			string hg3Path = @"C:\Users\Onii-chan\Pictures\Sprites\Grisaia\Cs2\Hg3";
-			string outputPath = @"C:\Users\Onii-chan\Pictures\Sprites\Grisaia\Cs2\Output";
+			string outputPath = @"C:\Users\Onii-chan\Pictures\Sprites\Grisaia\Cs2\Output2";
 			string outputExpandPath = @"C:\Users\Onii-chan\Pictures\Sprites\Grisaia\Cs2\OutputExpand";
 			Directory.CreateDirectory(outputPath);
 			int hg3Index = 0;
@@ -37,7 +115,7 @@ namespace TriggersTools.CatSystem2.Testing {
 			foreach (string file in hg3Cs2Files) {
 				Console.Write($"\r{hg3Index++}");
 				HgxImage.Extract(file);
-				//HgxImage hg3Image = HgxImage.ExtractImages(file, outputPath, HgxOptions.None);
+				HgxImage hg3Image = HgxImage.ExtractImages(file, outputPath, HgxOptions.None);
 				//hg3Image = HgxImage.ExtractImages(file, outputExpandPath, HgxOptions.Expand);
 				//hg3Image.SaveJsonToDirectory(hg3Path);
 			}
@@ -328,9 +406,9 @@ namespace TriggersTools.CatSystem2.Testing {
 			Console.ReadLine();
 			Environment.Exit(0);
 			HgxImage.ExtractImages(@"C:\Programs\Tools\CatSystem2_v401\tool\img_test2.hg3", ".", HgxOptions.None);
-			StringsScraper.BinaryScrape("cs2_open.exe", "strings/null/cs2", 0x5B6458, 0x5B7558);
+			//StringsScraper.BinaryScrape("cs2_open.exe", "strings/null/cs2", 0x5B6458, 0x5B7558);
 			Console.ReadLine();
-			StringsScraper.BinarySearch("cs2_open.exe", "page");
+			//StringsScraper.BinarySearch("cs2_open.exe", "page");
 			//foreach (string file in Directory.GetFiles(@"C:\Programs\Tools\CatSystem2_v401\system\scene", "*.cst")) {
 			foreach (string file in Directory.GetFiles(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)\scene", "*.cst")) {
 				SceneScript scene2 = SceneScript.Extract(file);
@@ -342,7 +420,7 @@ namespace TriggersTools.CatSystem2.Testing {
 			}
 			Console.Write("FINISHED");
 			Console.ReadLine();
-			using (FileStream fp = File.OpenRead("mc.exe")) {
+			/*using (FileStream fp = File.OpenRead("mc.exe")) {
 				BinaryReader reader = new BinaryReader(fp);
 				while (!fp.IsEndOfStream()) {
 					ushort type = reader.ReadUInt16();
@@ -350,10 +428,10 @@ namespace TriggersTools.CatSystem2.Testing {
 						Console.WriteLine($"{fp.Position:X8}");
 					}
 				}
-			}
+			}*/
 			//byte[] data = File.ReadAllBytes("mc.exe");
 			//for (int i = 0; i <)
-			StringsScraper.BinarySearch("mc.exe", "page");
+			//StringsScraper.BinarySearch("mc.exe", "page");
 			SceneScript scene = SceneScript.Extract(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)\scene\ama_006.cst");
 
 			foreach (ISceneLine line in scene) {
@@ -370,7 +448,7 @@ namespace TriggersTools.CatSystem2.Testing {
 			//VCodes grisaiaVCodes = VCodes.Load(grisaiaExe);
 			//KifintLookup lookup = Kifint.DecryptLookup(KifintType.Config, grisaiaInstallDir, grisaiaVCodes.VCode2);
 			//lookup["startup.xml"].ExtractToFile("startup2.xml");
-			File.Copy("startup2.xml", "startup.xml", true);
+			/*File.Copy("startup2.xml", "startup.xml", true);
 			var patcher = new ResolveXmlCommentErrorsPatch("startup.xml");
 			var patcher2 = new CS2XmlDebugPatch("startup.xml", true, "TriggersTools.CatSystem2.Patcher.Resources.CS2");
 			patcher.Patch();
@@ -384,7 +462,7 @@ namespace TriggersTools.CatSystem2.Testing {
 				Console.WriteLine(swatch.ElapsedMilliseconds);
 				Console.WriteLine(exeFile ?? string.Empty);
 			}
-			Console.ReadLine();
+			Console.ReadLine();*/
 			//vcodes.Save(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)\Grisaia2.bin");
 			//File.WriteAllText("vcodes.json", JsonConvert.SerializeObject(vcodes, Formatting.Indented));
 			//vcodes.KeyCode = vcodes.KeyCode;
@@ -405,77 +483,6 @@ namespace TriggersTools.CatSystem2.Testing {
 			byte[] bs = { 1, 0 };
 			byte[] decompressedA;
 			//byte[] decompressedB;
-			for (int i = 0; i < 3; i++) {
-				Stopwatch watch = new Stopwatch();
-				using (FileStream fs = File.OpenRead("asa.zt")) {
-					BinaryReader reader = new BinaryReader(fs);
-					int nextEntry = 0;
-					long startPosition = fs.Position;
-					//do {
-					fs.Position = startPosition + nextEntry;
-					startPosition = fs.Position;
-					nextEntry = reader.ReadInt32();
-					reader.ReadInt32();
-					int offsetToData = reader.ReadInt32();
-					reader.ReadInt32();
-					string fileName = reader.ReadFixedString(256, '\0');
-					int reserved = reader.ReadInt32();
-					int compressedLength = reader.ReadInt32();
-					int decompressedLength = reader.ReadInt32();
-					byte[] compressed = reader.ReadBytes(compressedLength);
-					watch.Restart();
-					byte[] decompressed = new byte[decompressedLength];
-					//ZLib.Uncompress(decompressed, ref decompressedLength, compressed, compressedLength);
-					decompressedA = decompressed;
-					Console.WriteLine(watch.ElapsedMilliseconds);
-					/*Console.WriteLine(offsetToData);
-					Console.WriteLine($"{fs:Position:X8}");
-					Console.WriteLine(decompressedLength);
-
-					Console.WriteLine(decompressedLength);*/
-
-					//File.WriteAllBytes(Path.Combine("ztout/2", fileName), decompressed);
-
-					//} while (nextEntry != 0);
-				}
-				using (FileStream fs = File.OpenRead("asa.zt")) {
-					BinaryReader reader = new BinaryReader(fs);
-					int nextEntry = 0;
-					long startPosition = fs.Position;
-					//do {
-					fs.Position = startPosition + nextEntry;
-					startPosition = fs.Position;
-					nextEntry = reader.ReadInt32();
-					reader.ReadInt32();
-					int offsetToData = reader.ReadInt32();
-					reader.ReadInt32();
-					string fileName = reader.ReadFixedString(256, '\0');
-					int reserved = reader.ReadInt32();
-					int compressedLength = reader.ReadInt32();
-					int decompressedLength = reader.ReadInt32();
-					byte[] compressed = reader.ReadBytes(compressedLength);
-					watch.Restart();
-					//decompressedB = null;// ZlibStream.UncompressBuffer(compressed);
-					Console.WriteLine(watch.ElapsedMilliseconds);
-					/*using (var ms = new MemoryStream())
-					using (ZlibStream zs = new ZlibStream(ms, CompressionMode.Decompress)) {
-						//byte[] decompressed = new byte[decompressedLength];
-						zs.Read(compressed, 0, compressedLength);
-						decompressedB = ms.ToArray();
-					}*/
-					//byte[] decompressed = new byte[decompressedLength];
-					/*Console.WriteLine(offsetToData);
-					Console.WriteLine($"{fs:Position:X8}");
-					Console.WriteLine(decompressedLength);
-
-					//ZLib.Uncompress(decompressed, ref decompressedLength, compressed, compressedLength);
-					Console.WriteLine(decompressedLength);
-
-					File.WriteAllBytes(Path.Combine("ztout/2", fileName), decompressed);*/
-
-					//} while (nextEntry != 0);
-				}
-			}
 			//344AC
 			//@"C:\Programs\Tools\CatSystem2_v401\psds\BA01_1.hg2"
 			Directory.CreateDirectory("hg3");
@@ -485,24 +492,24 @@ namespace TriggersTools.CatSystem2.Testing {
 				"hg3", HgxOptions.None);
 			hg3Img.SaveJsonToDirectory("hg3");
 			Console.OutputEncoding = CatUtils.ShiftJIS;
-			ZTPatcher zt2 = new ZTPatcher {
+			/*ZTPatcher zt2 = new ZTPatcher {
 				InstallDir = ".",
 			};
 			zt2.Patch();
 			WGCPatcher wgc2 = new WGCPatcher {
 				InstallDir = ".",
 			};
-			wgc2.Patch();
+			wgc2.Patch();*/
 			Console.ReadLine();
 			string[] lines = File.ReadAllLines("strings/wgc/binary.txt");
-			StringsScraper.BinaryValidate(lines);
+			//StringsScraper.BinaryValidate(lines);
 			Console.ReadLine();
 			lines = File.ReadAllLines("strings/zt/binary.txt");
-			StringsScraper.BinaryValidate(lines);
+			//StringsScraper.BinaryValidate(lines);
 			Console.ReadLine();
-			StringsScraper.BinarySearch("WGC.exe", "img_jpg");//256C28, 256C8C
+			//StringsScraper.BinarySearch("WGC.exe", "img_jpg");//256C28, 256C8C
 			Console.ReadLine();
-			BinaryRange[] rangess = {
+			/*BinaryRange[] rangess = {
 				new BinaryRange(0x211DD4, 0x211DEC),
 				new BinaryRange(0x211E54, 0x211FA8),
 				new BinaryRange(0x212078, 0x212138),
@@ -521,7 +528,7 @@ namespace TriggersTools.CatSystem2.Testing {
 			StringsScraper.BinaryScrape("WGC.exe", "strings/wgc", rangess); //2120A0
 
 			Console.ReadLine();
-			StringsScraper.BinaryScrape("ztpack.exe", "strings/zt", 0x344AC, 0x345F8);
+			StringsScraper.BinaryScrape("ztpack.exe", "strings/zt", 0x344AC, 0x345F8);*/
 			Console.ReadLine();
 			/*var resInfo = new ResourceInfo("cs2_open_en.exe");
 			File.Copy("cs2_open_en.exe", "cs2_open_en2.exe", true);
@@ -552,7 +559,7 @@ namespace TriggersTools.CatSystem2.Testing {
 			Thread.Sleep(400);
 			Resource.SaveTo("cs2_open_en2.exe", new Resource[] { menuRes, dialogRes });*/
 
-			CS2Patcher cs2Patcher = new CS2Patcher {
+			/*CS2Patcher cs2Patcher = new CS2Patcher {
 				InstallDir = ".",
 			};
 			Console.WriteLine(cs2Patcher.Patch());
@@ -562,7 +569,7 @@ namespace TriggersTools.CatSystem2.Testing {
 			};
 			Console.WriteLine(wgc.Patch());
 			Console.WriteLine("FINISHED");
-			Console.ReadLine();
+			Console.ReadLine();*/
 			//ResourceInfo reInfo = new ResourceInfo();
 			//reInfo.Load(@"C:\Programs\Games\Frontwing\Labyrinth of Grisaia - Copy (2)\Grisaia2.bin.bak");
 			//Console.Write("");
@@ -623,13 +630,13 @@ namespace TriggersTools.CatSystem2.Testing {
 				writer.Write(zt.Skip(0x194).ToArray());
 			}*/
 			//StringsScraper.BinaryValidate(File.ReadAllLines("strings/cs2/binary_5.txt"));
-			CS2Patcher cs2 = new CS2Patcher {
+			/*CS2Patcher cs2 = new CS2Patcher {
 				InstallDir = ".",
 			};
 			//Console.WriteLine(cs2.Patch("cs2_open.exe", "cs2_open_en.exe"));
 			Console.WriteLine(cs2.Patch());
 			Console.WriteLine("FINISHED");
-			Console.ReadLine();
+			Console.ReadLine();*/
 			/*using (StreamWriter writer = File.CreateText("ranges_out.txt")) {
 				List<int> starts = new List<int>();
 				List<int> ends = new List<int>();
@@ -677,7 +684,7 @@ namespace TriggersTools.CatSystem2.Testing {
 			Console.WriteLine(cs2.Patch());
 			Console.WriteLine("FINISHED");
 			Console.ReadLine();*/
-			var ranges = new BinaryRange[] {
+			/*var ranges = new BinaryRange[] {
 				new BinaryRange(0x58CFA0, 0x58CFC0),
 				new BinaryRange(0x590960, 0x590B7C),
 				new BinaryRange(0x590C14, 0x590C38),
@@ -736,12 +743,12 @@ namespace TriggersTools.CatSystem2.Testing {
 				new BinaryRange(0x5B4518, 0x5B4534),
 				new BinaryRange(0x5B464C, 0x5B4850),
 				new BinaryRange(0x5B4FB4, 0x5B50D4),
-			};
+			};*/
 			/*Console.OutputEncoding = CatUtils.ShiftJIS;
 			StringsScraper.ResourceScrape("cs2_open.exe", "strings/cs2");
 			Console.WriteLine("FINISHED");
 			Console.ReadLine();*/
-			StringsScraper.BinaryScrape("cs2_open.exe", "strings/cs2", ranges);
+			//StringsScraper.BinaryScrape("cs2_open.exe", "strings/cs2", ranges);
 			Console.WriteLine("FINISHED");
 			Console.ReadLine();
 			//StringsScraper.BinarySearch("cs2_open.exe", "--全て表示--");//596368
@@ -831,7 +838,7 @@ namespace TriggersTools.CatSystem2.Testing {
 			//StringsScraper.BinaryScrape("fes.exe", "strings/fes", 0x3D828, 0x3DC68);
 			//Console.Beep();
 			//Console.ReadLine();
-			ACPatcher ac = new ACPatcher {
+			/*ACPatcher ac = new ACPatcher {
 				InstallDir = ".",
 			};
 			Console.WriteLine(ac.Patch());
@@ -846,7 +853,7 @@ namespace TriggersTools.CatSystem2.Testing {
 			FESPatcher fes = new FESPatcher {
 				InstallDir = ".",
 			};
-			Console.WriteLine(fes.Patch());
+			Console.WriteLine(fes.Patch());*/
 			//WGCPatcher wgc = new WGCPatcher {
 			//	InstallDir = ".",
 			//};

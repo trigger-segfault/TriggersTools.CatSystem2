@@ -70,8 +70,8 @@ namespace TriggersTools.CatSystem2 {
 		/// <summary>
 		///  Gets the depth of the original image format in bits.
 		/// </summary>
-		[JsonProperty("depth_bits")]
-		public int DepthBits { get; private set; }
+		[JsonProperty("bit_depth")]
+		public int BitDepth { get; private set; }
 		
 		/// <summary>
 		///  This is likely a boolean value that determines if transparency is used by the image.
@@ -197,7 +197,7 @@ namespace TriggersTools.CatSystem2 {
 			TotalHeight = stdInfo.TotalHeight;
 			OffsetX = stdInfo.OffsetX;
 			OffsetY = stdInfo.OffsetY;
-			DepthBits = stdInfo.DepthBits;
+			BitDepth = stdInfo.DepthBits;
 			IsTransparent = stdInfo.IsTransparent != 0;
 			BaseX = stdInfo.BaseX;
 			BaseY = stdInfo.BaseY;
@@ -211,7 +211,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <param name="hg2Image">The HG-2 image containing this frame.</param>
 		internal HgxFrame(Hg2FrameInfo frameInfo, HgxImage hg2Image) {
 			HgxImage = hg2Image;
-			Attributes = Array.Empty<Hg3Attribute>();
+			Attributes = new Hg3Attribute[0];// Array.Empty<Hg3Attribute>();
 			HG2IMG img = frameInfo.Img;
 			HG2IMG_BASE? imgEx = frameInfo.ImgBase;
 			Id = img.Id;
@@ -221,7 +221,7 @@ namespace TriggersTools.CatSystem2 {
 			TotalHeight = img.TotalHeight;
 			OffsetX = img.OffsetX;
 			OffsetY = img.OffsetY;
-			DepthBits = img.DepthBits;
+			BitDepth = img.DepthBits;
 			IsTransparent = img.IsTransparent != 0;
 			BaseX = imgEx?.BaseX ?? 0;
 			BaseY = imgEx?.BaseY ?? 0;

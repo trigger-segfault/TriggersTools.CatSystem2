@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TriggersTools.Resources;
-using TriggersTools.Resources.Dialog;
+using TriggersTools.Windows.Resources;
+using TriggersTools.Windows.Resources.Dialog;
 
 namespace TriggersTools.CatSystem2.Patcher.Patches {
 	public class DialogStringsPatch : DialogResourcePatch {

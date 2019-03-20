@@ -21,7 +21,7 @@ namespace TriggersTools.CatSystem2 {
 		/// <summary>
 		///  The current file version for the HG-X json format.
 		/// </summary>
-		public const int CurrentVersion = 4;
+		public const int CurrentVersion = 5;
 
 		#endregion
 

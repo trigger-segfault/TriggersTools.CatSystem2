@@ -13,7 +13,7 @@ namespace TriggersTools.CatSystem2.Scenes.Commands.Abstract {
 	public abstract class SceneCommand : SceneCommandBase, ISceneCommand {
 		#region Constants
 
-		private static readonly IReadOnlyList<string> NoParameters = Array.Empty<string>();
+		private static readonly IReadOnlyList<string> NoParameters = new string[0];// Array.Empty<string>();
 
 		#endregion
 

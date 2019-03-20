@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using TriggersTools.Resources.Manifest;
+using TriggersTools.Windows.Resources.Manifest;
 
 namespace TriggersTools.CatSystem2.Patcher.Patches {
 	public abstract class ManifestResourcePatch : ResourcePatch<ManifestResource> {

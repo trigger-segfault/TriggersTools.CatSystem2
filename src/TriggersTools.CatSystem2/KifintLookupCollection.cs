@@ -139,6 +139,15 @@ namespace TriggersTools.CatSystem2 {
 		///  Gets the number of loaded lookups.
 		/// </summary>
 		public int Count => lookups.Count;
+#if NET451
+		public IEnumerable<KifintLookup> TypeValues => knownLookups.Values;
+		public IEnumerable<KifintType> TypeKeys => knownLookups.Keys;
+		public IEnumerable<KifintLookup> UnknownNameValues => unknownLookups.Values;
+		/// <summary>
+		///  Gets the collection of keys for all unknown name lookups.
+		/// </summary>
+		public IEnumerable<string> UnknownNameKeys => unknownLookups.Keys;
+#else
 		public IReadOnlyCollection<KifintLookup> TypeValues => knownLookups.Values;
 		public IReadOnlyCollection<KifintType> TypeKeys => knownLookups.Keys;
 		public IReadOnlyCollection<KifintLookup> UnknownNameValues => unknownLookups.Values;
@@ -146,6 +155,7 @@ namespace TriggersTools.CatSystem2 {
 		///  Gets the collection of keys for all unknown name lookups.
 		/// </summary>
 		public IReadOnlyCollection<string> UnknownNameKeys => unknownLookups.Keys;
+#endif
 
 		#endregion
 
