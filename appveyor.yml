@@ -23,9 +23,6 @@ branches:
   only:
     - master
 
-before_build:
-- nuget restore
-
 init:
 - ps: >-
     $env:runNugetDeploy  = "false";
@@ -53,9 +50,12 @@ init:
     }
     Update-AppveyorBuild -Version $env:buildVersion;
 
+before_build:
+- nuget restore
+- ps: >-
     $env:csprojToReplace = (Get-Content -path src/TriggersTools.CatSystem2/TriggersTools.CatSystem2.csproj -raw);
     $env:csprojToReplace = ($env:csprojToReplace -replace 'CAT_DEBUG','NO_CAT_DEBUG');
-    Set-Content -path src/TriggersTools.CatSystem2/TriggersTools.CatSystem2-B.csproj "$env:csprojToReplace";
+    Set-Content -path src/TriggersTools.CatSystem2/TriggersTools.CatSystem2.csproj "$env:csprojToReplace";
 
 artifacts:
 - path: '**\*.nupkg'
