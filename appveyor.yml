@@ -54,7 +54,6 @@ before_build:
 - ps: >-
     $csprojToReplace = (Get-Content -Path src/TriggersTools.CatSystem2/TriggersTools.CatSystem2.csproj -Raw);
     $csprojToReplace = ($csprojToReplace -Replace "CAT_DEBUG","NO_CAT_DEBUG");
-    $csprojToReplace = ($csprojToReplace -Replace "{YEAR}",(Get-Date).ToUniversalTime().ToString("yyyy"));
     Set-Content -Path src/TriggersTools.CatSystem2/TriggersTools.CatSystem2.csproj -Encoding "UTF8" "$csprojToReplace";
 - nuget restore
 

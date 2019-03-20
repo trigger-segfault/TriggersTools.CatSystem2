@@ -25,9 +25,8 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
-    <PackageReference Include="TriggersTools.Build.CopyrightYear" Version="1.0.0" />
-    <PackageReference Include="TriggersTools.SharpUtils" Version="1.0.1-build-42" />
-    <PackageReference Include="TriggersTools.Windows.Resources" Version="1.0.0-build-3" />
+    <PackageReference Include="TriggersTools.SharpUtils" Version="1.0.1-build-44" />
+    <PackageReference Include="TriggersTools.Windows.Resources" Version="1.0.0-build-6" />
   </ItemGroup>
 
   <ItemGroup>

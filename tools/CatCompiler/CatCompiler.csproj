@@ -10,7 +10,7 @@
     <AssemblyTitle>$(Product)</AssemblyTitle>
     <Company>Trigger's Tools &amp; Games</Company>
     <Authors>Robert Jordan</Authors>
-    <Copyright>Copyright © Robert Jordan {YEAR}</Copyright>
+    <Copyright>Copyright © Robert Jordan $([System.DateTime]::Now.Year)</Copyright>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -25,9 +25,5 @@
     <DebugSymbols>true</DebugSymbols>
     <WarningLevel>2</WarningLevel>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="TriggersTools.Build.CopyrightYear" Version="1.0.0" />
-  </ItemGroup>
 
 </Project>
