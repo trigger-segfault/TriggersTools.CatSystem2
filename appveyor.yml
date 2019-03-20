@@ -51,11 +51,12 @@ init:
     Update-AppveyorBuild -Version $env:buildVersion;
 
 before_build:
-- nuget restore
 - ps: >-
-    $env:csprojToReplace = (Get-Content -path src/TriggersTools.CatSystem2/TriggersTools.CatSystem2.csproj -raw);
-    $env:csprojToReplace = ($env:csprojToReplace -replace 'CAT_DEBUG','NO_CAT_DEBUG');
-    Set-Content -path src/TriggersTools.CatSystem2/TriggersTools.CatSystem2.csproj "$env:csprojToReplace";
+    $csprojToReplace = (Get-Content -Path src/TriggersTools.CatSystem2/TriggersTools.CatSystem2.csproj -Raw);
+    $csprojToReplace = ($csprojToReplace -Replace "CAT_DEBUG","NO_CAT_DEBUG");
+    $csprojToReplace = ($csprojToReplace -Replace "{YEAR}",(Get-Date).ToUniversalTime().ToString("yyyy"));
+    Set-Content -Path src/TriggersTools.CatSystem2/TriggersTools.CatSystem2.csproj -Encoding "UTF8" "$csprojToReplace";
+- nuget restore
 
 artifacts:
 - path: '**\*.nupkg'
