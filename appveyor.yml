@@ -53,9 +53,9 @@ init:
     }
     Update-AppveyorBuild -Version $env:buildVersion;
 
-    ((Get-Content -path src/TriggersTools.CatSystem2/TriggersTools.CatSystem2.csproj -raw)
-      -replace 'CAT_DEBUG','NO_CAT_DEBUG'
-    ) | Set-Content -path src/TriggersTools.CatSystem2/TriggersTools.CatSystem2.csproj
+    $env:csprojToReplace = (Get-Content -path src/TriggersTools.CatSystem2/TriggersTools.CatSystem2.csproj -raw);
+    $env:csprojToReplace = ($env:csprojToReplace -replace 'CAT_DEBUG','NO_CAT_DEBUG');
+    Set-Content -path src/TriggersTools.CatSystem2/TriggersTools.CatSystem2-B.csproj "$env:csprojToReplace";
 
 artifacts:
 - path: '**\*.nupkg'
