@@ -1,5 +1,7 @@
 # TriggersTools.CatSystem2 ![AppIcon](https://i.imgur.com/RxP6ZZL.png)
 
+[![NuGet Version](https://img.shields.io/nuget/vpre/TriggersTools.CatSystem2.svg?style=flat)](https://www.nuget.org/packages/TriggersTools.CatSystem2/)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/TriggersTools.CatSystem2.svg?style=flat)](https://www.nuget.org/packages/TriggersTools.CatSystem2/)
 [![Creation Date](https://img.shields.io/badge/created-february%202019-A642FF.svg?style=flat)](https://github.com/trigger-death/TriggersTools.CatSystem2/commit/b5a6288423842d3289f9770d0294d01b105348be)
 [![Discord](https://img.shields.io/discord/436949335947870238.svg?style=flat&logo=discord&label=chat&colorB=7389DC&link=https://discord.gg/vB7jUbY)](https://discord.gg/vB7jUbY)
 
