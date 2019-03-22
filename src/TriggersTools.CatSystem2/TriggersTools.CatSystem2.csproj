@@ -15,10 +15,8 @@
     <PackageLicenseUrl>https://github.com/trigger-death/TriggersTools.CatSystem2/blob/master/License.md</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/trigger-death/TriggersTools.CatSystem2</RepositoryUrl>
-    <PackageTags>catsystem2, visual-novel, visual novel, vn, translation</PackageTags>
+    <PackageTags>catsystem2 visual novel vn translation</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.0</Version>
-    <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -43,7 +41,7 @@
     <PackageReference Include="TriggersTools.SharpUtils" Version="1.0.1-build-44">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="TriggersTools.Windows.Resources" Version="1.0.0-build-6">
+    <PackageReference Include="TriggersTools.Windows.Resources" Version="1.0.0-build-7">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
@@ -69,19 +67,22 @@
   </ItemGroup>
 
   <!-- Build and embed native dlls -->
-  <Target Name="BuildAsmodean" AfterTargets="ResolveAssemblyReferences">
+  <!--<Target Name="BuildAsmodean" AfterTargets="ResolveAssemblyReferences">-->
+  <Target Name="BuildAsmodean" BeforeTargets="DispatchToInnerBuilds">
+    <Message Importance="high" Text="Building: asmodean.dlls, x86, x64" />
     <MSBuild Projects="..\Asmodean\asmodean.vcxproj" Properties="Configuration=Release;Platform=Win32;OutputPath=..\Asmodean\bin\Release\x86" Targets="Build" />
     <MSBuild Projects="..\Asmodean\asmodean.vcxproj" Properties="Configuration=Release;Platform=x64;OutputPath=..\Asmodean\bin\Release\x64" Targets="Build" />
   </Target>
   <!-- https://gist.github.com/thoemmi/3724333 -->
-  <Target Name="EmbedReferencedAssemblies" AfterTargets="ResolveAssemblyReferences">
+  <!--<Target Name="EmbedNativeDlls" AfterTargets="ResolveAssemblyReferences">-->
+  <Target Name="EmbedNativeDlls" AfterTargets="BeforeBuild">
     <ItemGroup>
-      <!-- Get list of assemblies to copy -->
+      <!-- Setup list of assemblies to embed -->
       <x86AssembliesToEmbed Include="..\..\libs\zlib\bin\x86\zlib1.dll" />
       <x64AssembliesToEmbed Include="..\..\libs\zlib\bin\x64\zlib1.dll" />
       <x86AssembliesToEmbed Include="..\Asmodean\bin\Release\x86\asmodean.dll" />
       <x64AssembliesToEmbed Include="..\Asmodean\bin\Release\x64\asmodean.dll" />
-      <!--<AssembliesToEmbed Include="@(ReferenceCopyLocalPaths)" Condition="'%(Filename)%(Extension)' == 'zlib1.dll'" />-->
+      
       <!-- Add these assemblies to the list of embedded resources -->
       <EmbeddedResource Include="@(x86AssembliesToEmbed)">
         <LogicalName>%(Filename).x86%(Extension)</LogicalName>
@@ -90,10 +91,10 @@
         <LogicalName>%(Filename).x64%(Extension)</LogicalName>
       </EmbeddedResource>
       <!-- No need to copy the assmblies locally anymore -->
-      <ReferenceCopyLocalPaths Remove="@(x86AssembliesToEmbed)" />
-      <ReferenceCopyLocalPaths Remove="@(x64AssembliesToEmbed)" />
+      <!--<ReferenceCopyLocalPaths Remove="@(x86AssembliesToEmbed)" />
+      <ReferenceCopyLocalPaths Remove="@(x64AssembliesToEmbed)" />-->
     </ItemGroup>
-    <Message Importance="high" Text="Embedding: @(x86AssembliesToEmbed->'%(Filename)%(Extension)', ', ')" />
-    <Message Importance="high" Text="Embedding: @(x64AssembliesToEmbed->'%(Filename)%(Extension)', ', ')" />
+    <Message Importance="low" Text="Embedding: @(x86AssembliesToEmbed->'%(Filename)%(Extension)', ', ')" />
+    <Message Importance="low" Text="Embedding: @(x64AssembliesToEmbed->'%(Filename)%(Extension)', ', ')" />
   </Target>
 </Project>

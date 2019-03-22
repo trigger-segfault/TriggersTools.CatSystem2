@@ -23,13 +23,11 @@ namespace TriggersTools.CatSystem2.Utils {
 
 		static Asmodean() {
 			// Make sure the zlib1.dll is extracted and loaded because asmodean.dll needs it.
-			try {
-				Zlib.CompressedBounds(0);
-				//int unused = 0;
-				//Zlib.Compress(Array.Empty<byte>(), ref unused, Array.Empty<byte>(), 0);
-			} catch { }
+			// We'll just call a method that won't error out on us.
+			Zlib.CompressedBounds(0);
+
 			string arch = (Environment.Is64BitProcess ? "x64" : "x86");
-			string path = Path.Combine(CatUtils.TempDir, arch);
+			string path = Path.Combine(CatUtils.NativeDllExtractPath, arch);
 			Directory.CreateDirectory(path);
 
 			// Load the embedded asmodean dll

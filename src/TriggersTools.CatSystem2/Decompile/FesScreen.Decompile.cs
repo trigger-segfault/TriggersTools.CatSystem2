@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using TriggersTools.SharpUtils.Mathematics;
 
 namespace TriggersTools.CatSystem2 {
 	partial class FesScreen {
@@ -13,12 +14,20 @@ namespace TriggersTools.CatSystem2 {
 		/// <summary>
 		///  Gets the header types that should always have a indent level of zero.
 		/// </summary>
-		private static readonly IReadOnlyList<string> FlatHeaders = new string[] {
+		private static readonly IReadOnlyList<string> ObjectHeaders = new string[] {
 			"OBJECT",
 			"KEYBLOCK",
 		};
+		private const string DefineHeader = "DEFINE";
+		private const string MacroHeader = "MACRO";
 		private static readonly string LinePattern =
-			$@"^(?'hdr'#(?'flathdr'(?:{string.Join("|", FlatHeaders)})(?:[ \t]|$))?)" +
+			$@"^(?'hdr'#(" +
+				$@"(?'object'(?:{string.Join("|", ObjectHeaders)})(?:[ \t]|$))" +
+				$@"|" +
+				$@"(?'define'{DefineHeader})" +
+				$@"|" +
+				$@"(?'macro'{MacroHeader})" +
+			$@")?)" +
 			//@"|(?'if'if[ \t]*\(.+?\)[ \t]*(?'inline'.+)?$)" +
 			@"|(?'if'if[ \t]*\(.+\)[ \t]*$)" +
 			@"|(?'else'else[ \t]*$)" +
@@ -46,24 +55,26 @@ namespace TriggersTools.CatSystem2 {
 		/// </summary>
 		/// <param name="fesFile">The file path to the FES script script file to extract.</param>
 		/// <param name="outFile">The output file to write the decompiled script to.</param>
+		/// <param name="encoding">The output encoding, <see cref="CatUtils.ShiftJIS"/> if null.</param>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="fesFile"/> or <paramref name="outFile"/> is null.
 		/// </exception>
-		public static void DecompileToFile(string fesFile, string outFile) {
-			Extract(fesFile).DecompileToFile(outFile);
+		public static void DecompileToFile(string fesFile, string outFile, Encoding encoding = null) {
+			Extract(fesFile).DecompileToFile(outFile, encoding);
 		}
 		/// <summary>
 		///  Loads and decompiles the FES script script file and outputs it to the specified stream.
 		/// </summary>
 		/// <param name="fesFile">The file path to the FES script script file to extract.</param>
 		/// <param name="outStream">The output stream to write the decompiled script to.</param>
+		/// <param name="encoding">The output encoding, <see cref="CatUtils.ShiftJIS"/> if null.</param>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="fesFile"/> or <paramref name="outStream"/> is null.
 		/// </exception>
-		public static void DecompileToStream(string fesFile, Stream outStream) {
-			Extract(fesFile).DecompileToStream(outStream);
+		public static void DecompileToStream(string fesFile, Stream outStream, Encoding encoding = null) {
+			Extract(fesFile).DecompileToStream(outStream, encoding);
 		}
 
 		#endregion
@@ -89,12 +100,14 @@ namespace TriggersTools.CatSystem2 {
 		/// <param name="stream">The stream to extract the script script from.</param>
 		/// <param name="fileName">The path or name of the script script file being extracted.</param>
 		/// <param name="outFile">The output file to write the decompiled script to.</param>
+		/// <param name="encoding">The output encoding, <see cref="CatUtils.ShiftJIS"/> if null.</param>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="stream"/>, <paramref name="fileName"/>, or <paramref name="outFile"/> is null.
 		/// </exception>
-		public static void DecompileToFile(Stream inStream, string fileName, string outFile) {
-			Extract(inStream, fileName).DecompileToFile(outFile);
+		public static void DecompileToFile(Stream inStream, string fileName, string outFile, Encoding encoding = null)
+		{
+			Extract(inStream, fileName).DecompileToFile(outFile, encoding);
 		}
 		/// <summary>
 		///  Loads and decompiles the FES script script stream and outputs it to the specified stream.
@@ -102,12 +115,15 @@ namespace TriggersTools.CatSystem2 {
 		/// <param name="stream">The stream to extract the script script from.</param>
 		/// <param name="fileName">The path or name of the script script file being extracted.</param>
 		/// <param name="outStream">The output stream to write the decompiled script to.</param>
+		/// <param name="encoding">The output encoding, <see cref="CatUtils.ShiftJIS"/> if null.</param>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="stream"/>, <paramref name="fileName"/>, or <paramref name="outStream"/> is null.
 		/// </exception>
-		public static void DecompileToStream(Stream inStream, string fileName, Stream outStream) {
-			Extract(inStream, fileName).DecompileToStream(outStream);
+		public static void DecompileToStream(Stream inStream, string fileName, Stream outStream,
+			Encoding encoding = null)
+		{
+			Extract(inStream, fileName).DecompileToStream(outStream, encoding);
 		}
 
 		#endregion
@@ -128,24 +144,26 @@ namespace TriggersTools.CatSystem2 {
 		///  Decompiles the FES script script and outputs it to the specified file.
 		/// </summary>
 		/// <param name="outFile">The output file to write the decompiled script to.</param>
+		/// <param name="encoding">The output encoding, <see cref="CatUtils.ShiftJIS"/> if null.</param>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="outFile"/> is null.
 		/// </exception>
-		public void DecompileToFile(string outFile) {
-			using (StreamWriter writer = new StreamWriter(outFile, false, Encoding.UTF8))
+		public void DecompileToFile(string outFile, Encoding encoding = null) {
+			using (StreamWriter writer = new StreamWriter(outFile, false, encoding ?? CatUtils.ShiftJIS))
 				DecompileInternal(writer);
 		}
 		/// <summary>
 		///  Decompiles the FES script script and outputs it to the specified stream.
 		/// </summary>
 		/// <param name="outStream">The output stream to write the decompiled script to.</param>
+		/// <param name="encoding">The output encoding, <see cref="CatUtils.ShiftJIS"/> if null.</param>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="outStream"/> is null.
 		/// </exception>
-		public void DecompileToStream(Stream outStream) {
-			using (StreamWriter writer = new StreamWriter(outStream, Encoding.UTF8))
+		public void DecompileToStream(Stream outStream, Encoding encoding = null) {
+			using (StreamWriter writer = new StreamWriter(outStream, encoding ?? CatUtils.ShiftJIS))
 				DecompileInternal(writer);
 		}
 
@@ -153,12 +171,56 @@ namespace TriggersTools.CatSystem2 {
 
 		#region Decompile (Internal)
 
+		private int[] ReadSpacing(int index, int maxParts) {
+			List<int> objectSpacing = new List<int>();
+			Match match;
+			do {
+				int[] spacing = ReadSpacing(Lines[index++], maxParts);
+				for (int i = 0; i < spacing.Length; i++) {
+					if (i == objectSpacing.Count)
+						objectSpacing.Add(spacing[i]);
+					else
+						objectSpacing[i] = Math.Max(objectSpacing[i], spacing[i]);
+				}
+			} while (!(match = LineRegex.Match(Lines[index])).Groups["hdr"].Success);
+			return objectSpacing.ToArray();
+		}
+		private int[] ReadSpacing(string line, int maxParts) {
+			string[] parts = line.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+			int length = Math.Min(parts.Length, (maxParts != -1 ? maxParts : int.MaxValue));
+			int[] spacing = new int[length];
+			for (int i = 0; i < spacing.Length; i++)
+				// Spacing should leave at least 1 space of room
+				spacing[i] = MathUtils.Pad(parts[i].Length + 1, 4);
+			return spacing;
+		}
+		private void WriteSpaced(string line, int[] spacing, TextWriter writer) {
+			string[] parts = line.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+			for (int i = 0; i < parts.Length; i++) {
+				string part = parts[i];
+				bool lastPart = (i + 1 == parts.Length);
+				if (i < spacing.Length && !lastPart) {
+					int tabs = MathUtils.Pad(spacing[i] - part.Length, 4) / 4;
+					writer.Write(part);
+					writer.Write(new string('\t', tabs));
+				}
+				else {
+					writer.Write(part);
+					if (i + 1 < parts.Length)
+						writer.Write(' ');
+				}
+			}
+			writer.WriteLine();
+		}
+
 		/// <summary>
 		///  Decompiles the FES screen script and writes it to the text writer.
 		/// </summary>
 		/// <param name="writer">The text writer to write the decompiled script to.</param>
 		private void DecompileInternal(TextWriter writer) {
-			bool isFlat = false; // Forces the tag level to be zero
+			bool isSpaced = false; // Forces the tag level to be one lower, (should really always be zero)
+			bool isObject = false;
+			int[] spacing = null;
 			int level = 1; // The indent level of the text
 
 			for (int i = 0; i < Count; i++) {
@@ -167,16 +229,59 @@ namespace TriggersTools.CatSystem2 {
 				if (match.Groups["hdr"].Success) {
 					if (i != 0)
 						writer.WriteLine();
-					writer.WriteLine(line);
-					isFlat = match.Groups["flathdr"].Success;
+					isSpaced = (match.Groups["object"].Success ||
+								match.Groups["define"].Success ||
+								match.Groups["macro"].Success);
+					if (isSpaced) {
+						isObject = match.Groups["object"].Success;
+						int maxParts = (match.Groups["macro"].Success ? 1 : -1);
+						spacing = ReadSpacing((isObject ? i : (i + 1)), maxParts);
+					}
+					else {
+						isObject = false;
+						spacing = null;
+					}
+					if (isObject)
+						WriteSpaced(line, spacing, writer);
+					else
+						writer.WriteLine(line);
+
+					level = 1;
 				}
 				else {
 					if (match.Groups["endif"].Success || match.Groups["else"].Success)
 						level = Math.Max(1, level - 1);
+					
+					writer.Write(new string('\t', level - (isObject ? 1 : 0)));
 
-					if (!isFlat)
-						writer.Write(new string('\t', level));
-					writer.WriteLine(line);
+					// Try to inline if statements
+					if (match.Groups["if"].Success && i + 2 < Count) {
+						Match statement = LineRegex.Match(Lines[i + 1]);
+						Match endif = LineRegex.Match(Lines[i + 2]);
+						// Is the next line a statement and after that an endif?
+						if (!statement.Groups["if"].Success && !statement.Groups["else"].Success &&
+							!statement.Groups["endif"].Success && !statement.Groups["hdr"].Success &&
+							endif.Groups["endif"].Success)
+						{
+							// Skip the endif and write the statement on the same line as the if
+							writer.Write(line);
+							writer.Write(' ');
+							line = Lines[i + 1];
+							if (isSpaced)
+								WriteSpaced(line, spacing, writer);
+							else
+								writer.WriteLine(line);
+							// Ignore the statement and endif lines now
+							i += 2;
+							// Continue here, this will also avoid rewriting
+							// the line and incrementing the level
+							continue;
+						}
+					}
+					if (isSpaced)
+						WriteSpaced(line, spacing, writer);
+					else
+						writer.WriteLine(line);
 
 					if (match.Groups["if"].Success || match.Groups["else"].Success)
 						level++;
@@ -209,28 +314,31 @@ namespace TriggersTools.CatSystem2 {
 		/// </summary>
 		/// <param name="entry">The entry to extract from.</param>
 		/// <param name="outFile">The output file to write the decompiled script to.</param>
+		/// <param name="encoding">The output encoding, <see cref="CatUtils.ShiftJIS"/> if null.</param>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="entry"/> or <paramref name="outFile"/> is null.
 		/// </exception>
-		public static void DecompileScreenToFile(this KifintEntry entry, string outFile) {
+		public static void DecompileScreenToFile(this KifintEntry entry, string outFile, Encoding encoding = null) {
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream())
-				FesScreen.DecompileToFile(stream, entry.FileName, outFile);
+				FesScreen.DecompileToFile(stream, entry.FileName, outFile, encoding);
 		}
 		/// <summary>
 		///  Loads and decompiles the FES screen script entry and outputs it to the specified stream.
 		/// </summary>
 		/// <param name="entry">The entry to extract from.</param>
 		/// <param name="outStream">The output stream to write the decompiled script to.</param>
+		/// <param name="encoding">The output encoding, <see cref="CatUtils.ShiftJIS"/> if null.</param>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="entry"/> or <paramref name="outStream"/> is null.
 		/// </exception>
-		public static void DecompileScreenToStream(this KifintEntry entry, Stream outStream) {
+		public static void DecompileScreenToStream(this KifintEntry entry, Stream outStream, Encoding encoding = null)
+		{
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream())
-				FesScreen.DecompileToStream(stream, entry.FileName, outStream);
+				FesScreen.DecompileToStream(stream, entry.FileName, outStream, encoding);
 		}
 
 		#endregion
@@ -258,14 +366,17 @@ namespace TriggersTools.CatSystem2 {
 		/// <param name="entry">The entry to extract from.</param>
 		/// <param name="kifintStream">The stream to the open KIFINT archive.</param>
 		/// <param name="outFile">The output file to write the decompiled script to.</param>
+		/// <param name="encoding">The output encoding, <see cref="CatUtils.ShiftJIS"/> if null.</param>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="entry"/>, <paramref name="kifintStream"/>, or <paramref name="outFile"/> is null.
 		/// </exception>
-		public static void DecompileScreenToFile(this KifintEntry entry, KifintStream kifintStream, string outFile) {
+		public static void DecompileScreenToFile(this KifintEntry entry, KifintStream kifintStream, string outFile,
+			Encoding encoding = null)
+		{
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream(kifintStream))
-				FesScreen.DecompileToFile(stream, entry.FileName, outFile);
+				FesScreen.DecompileToFile(stream, entry.FileName, outFile, encoding);
 		}
 		/// <summary>
 		///  Loads and decompiles the FES screen script entry and outputs it to the specified stream.
@@ -273,16 +384,17 @@ namespace TriggersTools.CatSystem2 {
 		/// <param name="entry">The entry to extract from.</param>
 		/// <param name="kifintStream">The stream to the open KIFINT archive.</param>
 		/// <param name="outStream">The output stream to write the decompiled script to.</param>
+		/// <param name="encoding">The output encoding, <see cref="CatUtils.ShiftJIS"/> if null.</param>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="entry"/>, <paramref name="kifintStream"/>, or <paramref name="outStream"/> is null.
 		/// </exception>
 		public static void DecompileScreenToStream(this KifintEntry entry, KifintStream kifintStream,
-			Stream outStream)
+			Stream outStream, Encoding encoding = null)
 		{
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream(kifintStream))
-				FesScreen.DecompileToStream(stream, entry.FileName, outStream);
+				FesScreen.DecompileToStream(stream, entry.FileName, outStream, encoding);
 		}
 
 		#endregion

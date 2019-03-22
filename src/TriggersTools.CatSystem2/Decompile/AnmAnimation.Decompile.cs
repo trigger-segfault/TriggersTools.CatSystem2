@@ -25,24 +25,26 @@ namespace TriggersTools.CatSystem2 {
 		/// </summary>
 		/// <param name="anmFile">The file path to the ANM animation script file to extract.</param>
 		/// <param name="outFile">The output file to write the decompiled script to.</param>
+		/// <param name="encoding">The output encoding, <see cref="CatUtils.ShiftJIS"/> if null.</param>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="anmFile"/> or <paramref name="outFile"/> is null.
 		/// </exception>
-		public static void DecompileToFile(string anmFile, string outFile) {
-			Extract(anmFile).DecompileToFile(outFile);
+		public static void DecompileToFile(string anmFile, string outFile, Encoding encoding = null) {
+			Extract(anmFile).DecompileToFile(outFile, encoding);
 		}
 		/// <summary>
 		///  Loads and decompiles the ANM animation script file and outputs it to the specified stream.
 		/// </summary>
 		/// <param name="anmFile">The file path to the ANM animation script file to extract.</param>
 		/// <param name="outStream">The output stream to write the decompiled script to.</param>
+		/// <param name="encoding">The output encoding, <see cref="CatUtils.ShiftJIS"/> if null.</param>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="anmFile"/> or <paramref name="outStream"/> is null.
 		/// </exception>
-		public static void DecompileToStream(string anmFile, Stream outStream) {
-			Extract(anmFile).DecompileToStream(outStream);
+		public static void DecompileToStream(string anmFile, Stream outStream, Encoding encoding = null) {
+			Extract(anmFile).DecompileToStream(outStream, encoding);
 		}
 
 		#endregion
@@ -68,12 +70,14 @@ namespace TriggersTools.CatSystem2 {
 		/// <param name="stream">The stream to extract the animation script from.</param>
 		/// <param name="fileName">The path or name of the animation script file being extracted.</param>
 		/// <param name="outFile">The output file to write the decompiled script to.</param>
+		/// <param name="encoding">The output encoding, <see cref="CatUtils.ShiftJIS"/> if null.</param>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="stream"/>, <paramref name="fileName"/>, or <paramref name="outFile"/> is null.
 		/// </exception>
-		public static void DecompileToFile(Stream inStream, string fileName, string outFile) {
-			Extract(inStream, fileName).DecompileToFile(outFile);
+		public static void DecompileToFile(Stream inStream, string fileName, string outFile, Encoding encoding = null)
+		{
+			Extract(inStream, fileName).DecompileToFile(outFile, encoding);
 		}
 		/// <summary>
 		///  Loads and decompiles the ANM animation script stream and outputs it to the specified stream.
@@ -81,12 +85,15 @@ namespace TriggersTools.CatSystem2 {
 		/// <param name="stream">The stream to extract the animation script from.</param>
 		/// <param name="fileName">The path or name of the animation script file being extracted.</param>
 		/// <param name="outStream">The output stream to write the decompiled script to.</param>
+		/// <param name="encoding">The output encoding, <see cref="CatUtils.ShiftJIS"/> if null.</param>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="stream"/>, <paramref name="fileName"/>, or <paramref name="outStream"/> is null.
 		/// </exception>
-		public static void DecompileToStream(Stream inStream, string fileName, Stream outStream) {
-			Extract(inStream, fileName).DecompileToStream(outStream);
+		public static void DecompileToStream(Stream inStream, string fileName, Stream outStream,
+			Encoding encoding = null)
+		{
+			Extract(inStream, fileName).DecompileToStream(outStream, encoding);
 		}
 
 		#endregion
@@ -107,24 +114,26 @@ namespace TriggersTools.CatSystem2 {
 		///  Decompiles the ANM animation script and outputs it to the specified file.
 		/// </summary>
 		/// <param name="outFile">The output file to write the decompiled script to.</param>
+		/// <param name="encoding">The output encoding, <see cref="CatUtils.ShiftJIS"/> if null.</param>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="outFile"/> is null.
 		/// </exception>
-		public void DecompileToFile(string outFile) {
-			using (StreamWriter writer = new StreamWriter(outFile, false, Encoding.UTF8))
+		public void DecompileToFile(string outFile, Encoding encoding = null) {
+			using (StreamWriter writer = new StreamWriter(outFile, false, encoding ?? CatUtils.ShiftJIS))
 				DecompileInternal(writer);
 		}
 		/// <summary>
 		///  Decompiles the ANM animation script and outputs it to the specified stream.
 		/// </summary>
 		/// <param name="outStream">The output stream to write the decompiled script to.</param>
+		/// <param name="encoding">The output encoding, <see cref="CatUtils.ShiftJIS"/> if null.</param>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="outStream"/> is null.
 		/// </exception>
-		public void DecompileToStream(Stream outStream) {
-			using (StreamWriter writer = new StreamWriter(outStream, Encoding.UTF8))
+		public void DecompileToStream(Stream outStream, Encoding encoding = null) {
+			using (StreamWriter writer = new StreamWriter(outStream, encoding ?? CatUtils.ShiftJIS))
 				DecompileInternal(writer);
 		}
 
@@ -229,28 +238,32 @@ namespace TriggersTools.CatSystem2 {
 		/// </summary>
 		/// <param name="entry">The entry to extract from.</param>
 		/// <param name="outFile">The output file to write the decompiled script to.</param>
+		/// <param name="encoding">The output encoding, <see cref="CatUtils.ShiftJIS"/> if null.</param>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="entry"/> or <paramref name="outFile"/> is null.
 		/// </exception>
-		public static void DecompileAnimationToFile(this KifintEntry entry, string outFile) {
+		public static void DecompileAnimationToFile(this KifintEntry entry, string outFile, Encoding encoding = null) {
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream())
-				AnmAnimation.DecompileToFile(stream, entry.FileName, outFile);
+				AnmAnimation.DecompileToFile(stream, entry.FileName, outFile, encoding);
 		}
 		/// <summary>
 		///  Loads and decompiles the ANM animation script entry and outputs it to the specified stream.
 		/// </summary>
 		/// <param name="entry">The entry to extract from.</param>
 		/// <param name="outStream">The output stream to write the decompiled script to.</param>
+		/// <param name="encoding">The output encoding, <see cref="CatUtils.ShiftJIS"/> if null.</param>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="entry"/> or <paramref name="outStream"/> is null.
 		/// </exception>
-		public static void DecompileAnimationToStream(this KifintEntry entry, Stream outStream) {
+		public static void DecompileAnimationToStream(this KifintEntry entry, Stream outStream,
+			Encoding encoding = null)
+		{
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream())
-				AnmAnimation.DecompileToStream(stream, entry.FileName, outStream);
+				AnmAnimation.DecompileToStream(stream, entry.FileName, outStream, encoding);
 		}
 
 		#endregion
@@ -278,16 +291,17 @@ namespace TriggersTools.CatSystem2 {
 		/// <param name="entry">The entry to extract from.</param>
 		/// <param name="kifintStream">The stream to the open KIFINT archive.</param>
 		/// <param name="outFile">The output file to write the decompiled script to.</param>
+		/// <param name="encoding">The output encoding, <see cref="CatUtils.ShiftJIS"/> if null.</param>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="entry"/>, <paramref name="kifintStream"/>, or <paramref name="outFile"/> is null.
 		/// </exception>
 		public static void DecompileAnimationToFile(this KifintEntry entry, KifintStream kifintStream,
-			string outFile)
+			string outFile, Encoding encoding = null)
 		{
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream(kifintStream))
-				AnmAnimation.DecompileToFile(stream, entry.FileName, outFile);
+				AnmAnimation.DecompileToFile(stream, entry.FileName, outFile, encoding);
 		}
 		/// <summary>
 		///  Loads and decompiles the ANM animation script entry and outputs it to the specified stream.
@@ -295,16 +309,17 @@ namespace TriggersTools.CatSystem2 {
 		/// <param name="entry">The entry to extract from.</param>
 		/// <param name="kifintStream">The stream to the open KIFINT archive.</param>
 		/// <param name="outStream">The output stream to write the decompiled script to.</param>
+		/// <param name="encoding">The output encoding, <see cref="CatUtils.ShiftJIS"/> if null.</param>
 		/// 
 		/// <exception cref="ArgumentNullException">
 		///  <paramref name="entry"/>, <paramref name="kifintStream"/>, or <paramref name="outStream"/> is null.
 		/// </exception>
 		public static void DecompileAnimationToStream(this KifintEntry entry, KifintStream kifintStream,
-			Stream outStream)
+			Stream outStream, Encoding encoding = null)
 		{
 			if (entry == null) throw new ArgumentNullException(nameof(entry));
 			using (var stream = entry.ExtractToStream(kifintStream))
-				AnmAnimation.DecompileToStream(stream, entry.FileName, outStream);
+				AnmAnimation.DecompileToStream(stream, entry.FileName, outStream, encoding);
 		}
 
 		#endregion
