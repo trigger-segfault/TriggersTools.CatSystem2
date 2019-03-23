@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>f30f9a60-01c7-45a9-adb6-376ee84e21d3</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>TriggersTools.CatSystem2.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AnmAnimation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AnmLine.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\AnimationCommandAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\CommandNameAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\KifintTypeAttributes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CatCompiler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CatDebug.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CatUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CstScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Decompile\AnmAnimation.Decompile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Decompile\CstScene.Decompile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Decompile\CstScene.HumanReadable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Decompile\FesScreen.Decompile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exceptions\ExtractException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exceptions\HgxException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exceptions\ModuleResourceException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extract\AnmAnimation.Extract.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extract\CstScene.Extract.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extract\FesScreen.Extract.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extract\Hg2Image.Extract.Private.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extract\Hg3Image.Extract.Private.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extract\HgxImage.Extract.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extract\HgxImage.Extract.Private.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extract\HgxImage.ProcessImageManaged.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extract\KifintArchive.Extract.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extract\KifintArchive.Extract.Private.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extract\Structs\AnmAnimation.Structs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extract\Structs\CstScene.Structs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extract\Structs\FesScreen.Structs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extract\Structs\Hg2Image.Classes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extract\Structs\Hg2Image.Structs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extract\Structs\Hg3Image.Classes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extract\Structs\Hg3Image.Structs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extract\Structs\HgxImage.Structs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extract\Structs\KifintArchive.Structs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extract\Structs\ZtPackage.Structs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extract\ZtPackage.Extract.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FesScreen.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hg3Attribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HgxFormat.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HgxFrame.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HgxImage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HgxOptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonColorConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonStringEnumConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)KifintArchive.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)KifintCallbacks.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)KifintEntry.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)KifintList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)KifintLookup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)KifintLookupCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)KifintStream.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)KifintType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NewtonsoftJsonAttributes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\Commands\Abstract\SceneCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\Commands\Abstract\SceneCommandBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\Commands\Abstract\SoundCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\Commands\ChoiceCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\Commands\ConditionCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\Commands\GenericCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\Commands\ISceneCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\Commands\MesdrawCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\Commands\NovelCommand.cs" />
+    <None Include="$(MSBuildThisFileDirectory)Scenes\Commands\SceneCommandInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\Commands\SceneTitleCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\Commands\Sounds\SoundInitCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\Commands\Sounds\SoundLoopCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\Commands\Sounds\SoundMoveCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\Commands\Sounds\SoundPauseCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\Commands\Sounds\SoundPlayCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\Commands\Sounds\SoundReplayCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\Commands\Sounds\SoundType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\Commands\StringCommand.cs" />
+    <None Include="$(MSBuildThisFileDirectory)Scenes\Commands\VariableCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\EvaluateToken.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\ISceneLine.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\SceneInput.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\SceneLineType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\SceneMessage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\SceneName.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\ScenePage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\SceneUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\Script\SceneInstance.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\StringToken.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scenes\Text\IScriptRun.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\Asmodean.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\Blowfish.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\BlowfishInputStream.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\BlowfishManaged.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\BlowfishManaged.SBlocks.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\BlowfishNative.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\BlowfishOutputStream.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\BufferMemoryCopy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\MersenneTwister.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\Zlib.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VCodes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VCodes.Find.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ZtEntry.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ZtPackage.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Scenes\Commands\Sounds\Abstract\" />
+  </ItemGroup>
+</Project>

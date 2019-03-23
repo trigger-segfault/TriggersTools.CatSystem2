@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Project Settings -->
+  <PropertyGroup>
+    <TargetFrameworks>net451;net46;netstandard2.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RootNamespace>TriggersTools.CatSystem2</RootNamespace>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <!-- Package Settings -->
+  <PropertyGroup>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Robert Jordan</Authors>
+    <Company>Trigger's Tools &amp; Games</Company>
+    <Copyright>Copyright © Robert Jordan $([System.DateTime]::Now.Year)</Copyright>
+    <PackageTags>catsystem2 visual novel vn translation</PackageTags>
+
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/trigger-death/TriggersTools.CatSystem2</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/trigger-death/TriggersTools.CatSystem2</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/trigger-death/TriggersTools.CatSystem2/blob/master/License.md</PackageLicenseUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/trigger-death/TriggersTools.CatSystem2/master/NuGetIcon.png</PackageIconUrl>
+  </PropertyGroup>
+
+  <!-- ILRepack Properties -->
+  <PropertyGroup>
+    <ILRepackTargetsFile>$(SolutionDir)src\ILRepack.targets</ILRepackTargetsFile>
+  </PropertyGroup>
+
+  <!-- Configurations -->
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <WarningLevel>2</WarningLevel>
+    <NoWarn>1701;1702;1570;1572;1574;1734;NU5125</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <NativeZlib Condition="$(DefineConstants.Contains('NATIVE_ZLIB'))">true</NativeZlib>
+    <NativeAsmodean Condition="$(DefineConstants.Contains('NATIVE_ASMODEAN'))">true</NativeAsmodean>
+    <!--<TargetPlatform Condition="$(DefineConstants.Contains('TARGET_X86'))">x86</TargetPlatform>
+    <TargetPlatform Condition="$(DefineConstants.Contains('TARGET_X64'))">x64</TargetPlatform>
+    <TargetPlatform Condition="!$(DefineConstants.Contains('TARGET_X86')) AND !$(DefineConstants.Contains('TARGET_X64'))">
+      Any CPU
+    </TargetPlatform>-->
+  </PropertyGroup>
+
+  <!-- Build and embed native dlls -->
+  <Target Name="BuildAsmodean" BeforeTargets="DispatchToInnerBuilds" Condition="'$(NativeAsmodean)'=='true'">
+    <Message Importance="high" Text="Building: asmodean.dlls" />
+
+    <MSBuild Projects="..\Asmodean\asmodean.vcxproj" Targets="Build"
+             Properties="Configuration=Release;Platform=Win32;OutputPath=..\Asmodean\bin\Release\x86"
+             Condition="'$(TargetPlatform)'!='x64'" />
+    <MSBuild Projects="..\Asmodean\asmodean.vcxproj" Targets="Build"
+             Properties="Configuration=Release;Platform=x64;OutputPath=..\Asmodean\bin\Release\x64"
+             Condition="'$(TargetPlatform)'!='x86'" />
+  </Target>
+
+  <!-- https://gist.github.com/thoemmi/3724333 -->
+  <Target Name="EmbedNativeDlls" AfterTargets="BeforeBuild" Condition="'$(NativeZlib)'=='true' OR '$(NativeAsmodean)'=='true'">
+    <ItemGroup>
+      <!-- Setup list of assemblies to embed -->
+      <x86AssembliesToEmbed Include="..\..\libs\zlib\bin\x86\zlib1.dll" Condition="'$(NativeZlib)'=='true' AND '$(TargetPlatform)'!='x64'" />
+      <x64AssembliesToEmbed Include="..\..\libs\zlib\bin\x64\zlib1.dll" Condition="'$(NativeZlib)'=='true' AND '$(TargetPlatform)'!='x86'" />
+      <x86AssembliesToEmbed Include="..\Asmodean\bin\Release\x86\asmodean.dll" Condition="'$(NativeAsmodean)'=='true' AND '$(TargetPlatform)'!='x64'" />
+      <x64AssembliesToEmbed Include="..\Asmodean\bin\Release\x64\asmodean.dll" Condition="'$(NativeAsmodean)'=='true' AND '$(TargetPlatform)'!='x86'" />
+
+      <!-- Add these assemblies to the list of embedded resources -->
+      <EmbeddedResource Include="@(x86AssembliesToEmbed)">
+        <LogicalName>%(Filename).x86%(Extension)</LogicalName>
+      </EmbeddedResource>
+      <EmbeddedResource Include="@(x64AssembliesToEmbed)">
+        <LogicalName>%(Filename).x64%(Extension)</LogicalName>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <Message Importance="low" Text="Embedding: @(x86AssembliesToEmbed->'%(Filename)%(Extension)', ', ')" />
+    <Message Importance="low" Text="Embedding: @(x64AssembliesToEmbed->'%(Filename)%(Extension)', ', ')" />
+  </Target>
+
+</Project>

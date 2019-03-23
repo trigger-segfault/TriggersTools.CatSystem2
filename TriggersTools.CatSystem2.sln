@@ -23,9 +23,22 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Native", "Native", "{628F27
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrisaiaNoContext", "tools\GrisaiaNoContext\GrisaiaNoContext.csproj", "{0203F079-7699-4AE3-9C5F-F5ED7AE66228}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatDecompiler", "tools\CatDecompiler\CatDecompiler.csproj", "{8313297B-6409-49E9-986C-7568E05D50DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CatDecompiler", "tools\CatDecompiler\CatDecompiler.csproj", "{8313297B-6409-49E9-986C-7568E05D50DA}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "TriggersTools.CatSystem2.Shared", "src\TriggersTools.CatSystem2.Shared\TriggersTools.CatSystem2.Shared.shproj", "{F30F9A60-01C7-45A9-ADB6-376EE84E21D3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TriggersTools.CatSystem2.Lightweight", "src\TriggersTools.CatSystem2.Lightweight\TriggersTools.CatSystem2.Lightweight.csproj", "{DFA01F98-4B4D-4C07-9D9C-670A353DC488}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Targets", "Targets", "{2696253D-7A1D-4D95-83F6-8AE55BF9A71F}"
+	ProjectSection(SolutionItems) = preProject
+		src\CatSystem2.props = src\CatSystem2.props
+		src\ILRepack.targets = src\ILRepack.targets
+	EndProjectSection
 EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		src\TriggersTools.CatSystem2.Shared\TriggersTools.CatSystem2.Shared.projitems*{f30f9a60-01c7-45a9-adb6-376ee84e21d3}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
@@ -118,6 +131,18 @@ Global
 		{8313297B-6409-49E9-986C-7568E05D50DA}.Release|x64.Build.0 = Release|Any CPU
 		{8313297B-6409-49E9-986C-7568E05D50DA}.Release|x86.ActiveCfg = Release|Any CPU
 		{8313297B-6409-49E9-986C-7568E05D50DA}.Release|x86.Build.0 = Release|Any CPU
+		{DFA01F98-4B4D-4C07-9D9C-670A353DC488}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFA01F98-4B4D-4C07-9D9C-670A353DC488}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFA01F98-4B4D-4C07-9D9C-670A353DC488}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DFA01F98-4B4D-4C07-9D9C-670A353DC488}.Debug|x64.Build.0 = Debug|Any CPU
+		{DFA01F98-4B4D-4C07-9D9C-670A353DC488}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DFA01F98-4B4D-4C07-9D9C-670A353DC488}.Debug|x86.Build.0 = Debug|Any CPU
+		{DFA01F98-4B4D-4C07-9D9C-670A353DC488}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFA01F98-4B4D-4C07-9D9C-670A353DC488}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFA01F98-4B4D-4C07-9D9C-670A353DC488}.Release|x64.ActiveCfg = Release|Any CPU
+		{DFA01F98-4B4D-4C07-9D9C-670A353DC488}.Release|x64.Build.0 = Release|Any CPU
+		{DFA01F98-4B4D-4C07-9D9C-670A353DC488}.Release|x86.ActiveCfg = Release|Any CPU
+		{DFA01F98-4B4D-4C07-9D9C-670A353DC488}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -131,6 +156,9 @@ Global
 		{628F2722-3462-454B-8604-3D2DA7A656BB} = {4DFB0B89-3FA5-43C7-A85E-E5155BBBF1A8}
 		{0203F079-7699-4AE3-9C5F-F5ED7AE66228} = {C9477D30-8131-44C6-8A2F-ECEA0F18206B}
 		{8313297B-6409-49E9-986C-7568E05D50DA} = {C9477D30-8131-44C6-8A2F-ECEA0F18206B}
+		{F30F9A60-01C7-45A9-ADB6-376EE84E21D3} = {4DFB0B89-3FA5-43C7-A85E-E5155BBBF1A8}
+		{DFA01F98-4B4D-4C07-9D9C-670A353DC488} = {4DFB0B89-3FA5-43C7-A85E-E5155BBBF1A8}
+		{2696253D-7A1D-4D95-83F6-8AE55BF9A71F} = {4DFB0B89-3FA5-43C7-A85E-E5155BBBF1A8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D0E861E3-7E91-4D96-83FB-C5C8C891D553}

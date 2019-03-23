@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\TriggersTools.CatSystem2\TriggersTools.CatSystem2.csproj" />
+    <ProjectReference Include="..\..\src\TriggersTools.CatSystem2.Lightweight\TriggersTools.CatSystem2.Lightweight.csproj" />
   </ItemGroup>
 
 </Project>

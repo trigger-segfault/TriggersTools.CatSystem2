@@ -10,10 +10,6 @@
       <InputAssemblies Include="@(ReferencePathWithRefAssemblies)" Condition="'%(FileName)' == 'TriggersTools.SharpUtils'" />
       <InputAssemblies Include="@(ReferencePathWithRefAssemblies)" Condition="'%(FileName)' == 'TriggersTools.Windows.Resources'" />
       <InputAssemblies Include="@(ReferencePathWithRefAssemblies)" Condition="'%(FileName)' == 'TriggersTools.Windows.Resources.Core'" />
-      <InputAssemblies Include="@(ReferencePathWithRefAssemblies)" Condition="'%(FileName)' == 'TriggersTools.CatSystem2'" />
-      <InputAssemblies Include="@(ReferencePathWithRefAssemblies)" Condition="'%(FileName)' == 'TriggersTools.CatSystem2.Lightweight'" />
-      <InputAssemblies Include="@(ReferencePathWithRefAssemblies)" Condition="'%(FileName)' == 'Newtonsoft.Json'" />
-      <InputAssemblies Include="@(ReferencePathWithRefAssemblies)" Condition="'%(FileName)' == 'System.Collections.Immutable'" />
 
       <!-- Set the assemblies that will be copied and referenced -->
       <CopyAssemblies Include="@(ReferencePathWithRefAssemblies)" Exclude="@(InputAssemblies)" />

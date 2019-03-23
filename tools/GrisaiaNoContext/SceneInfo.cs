@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -10,6 +9,7 @@ using TriggersTools.CatSystem2;
 using TriggersTools.CatSystem2.Scenes;
 using TriggersTools.CatSystem2.Scenes.Commands;
 using TriggersTools.CatSystem2.Scenes.Commands.Sounds;
+using TriggersTools.SharpUtils.Collections;
 
 namespace TriggersTools.CatSystem2.GrisaiaNoContext {
 	public class SceneInfo {
@@ -27,8 +27,8 @@ namespace TriggersTools.CatSystem2.GrisaiaNoContext {
 			List<Choice> choices = new List<Choice>();
 			ReadScene(messages, choices);
 			//ReadNovelRanges(novelRanges);
-			Messages = messages.ToImmutableArray();
-			Choices = choices.ToImmutableArray();
+			Messages = messages.ToImmutableArrayLW();
+			Choices = choices.ToImmutableArrayLW();
 			//NovelRanges = novelRanges.ToImmutableArray();
 		}
 		
@@ -139,9 +139,9 @@ namespace TriggersTools.CatSystem2.GrisaiaNoContext {
 				Message m = new Message {
 					GroupId = groupId,
 					Script = Script,
-					Names = Names.ToImmutableArray(),
-					Messages = Messages.ToImmutableArray(),
-					Voices = Voices.ToImmutableArray(),
+					Names = Names.ToImmutableArrayLW(),
+					Messages = Messages.ToImmutableArrayLW(),
+					Voices = Voices.ToImmutableArrayLW(),
 				};
 				Names.Clear();
 				Messages.Clear();

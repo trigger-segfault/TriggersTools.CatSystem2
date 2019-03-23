@@ -2,10 +2,10 @@
 
   <!-- Configurations -->
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-    <DefineConstants>TRACE;DEBUG;NATIVE_ZLIB;NATIVE_ASMODEAN;JSON;CAT_DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NATIVE_ZLIB;CAT_DEBUG</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <DefineConstants>TRACE;NATIVE_ZLIB;NATIVE_ASMODEAN;JSON;CAT_DEBUG</DefineConstants>
+    <DefineConstants>TRACE;NATIVE_ZLIB;CAT_DEBUG</DefineConstants>
   </PropertyGroup>
 
   <!-- Global Properties -->
@@ -13,10 +13,13 @@
 
   <!-- Package Settings -->
   <PropertyGroup>
-    <PackageId>TriggersTools.CatSystem2</PackageId>
-    <Product>TriggersTools.CatSystem2</Product>
-    <Description>A library for working with CatSystem2 visual novel engine file formats.</Description>
+    <PackageId>TriggersTools.CatSystem2.Lightweight</PackageId>
+    <Product>TriggersTools.CatSystem2.Lightweight</Product>
+    <Description>A library for working with CatSystem2 visual novel engine file formats. This package excludes Newtonsoft.Json.</Description>
     <PackageTags>catsystem2 visual novel vn translation</PackageTags>
+
+    <!-- Don't generate this package until we're ready -->
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <!-- Shared Project -->
@@ -27,7 +30,6 @@
     <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.16.1">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="TriggersTools.SharpUtils" Version="1.0.1-build-45">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -38,5 +40,4 @@
   <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
     <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
   </ItemGroup>
-  
 </Project>
