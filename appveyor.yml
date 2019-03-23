@@ -8,7 +8,7 @@ platform: Any CPU
 
 dotnet_csproj:
   patch: true
-  file: 'src/TriggersTools.CatSystem2/TriggersTools.CatSystem2.csproj'
+  file: 'src\TriggersTools.CatSystem2\TriggersTools.CatSystem2.csproj'
   version: '$(packageVersion)'
   package_version: '$(packageVersion)'
   assembly_version: '$(buildVersion)'
