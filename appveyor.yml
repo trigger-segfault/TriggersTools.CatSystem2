@@ -1,6 +1,6 @@
 version: '0.0.1.{build}'
 environment:
-  baseVersion: '1.0.0'
+  baseVersion: '1.0.1'
   
 image: Visual Studio 2017
 configuration: Release
