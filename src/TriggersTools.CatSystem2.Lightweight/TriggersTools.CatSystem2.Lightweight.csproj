@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <!-- Global Properties -->
-  <Import Project="$(SolutionDir)src\CatSystem2.props" />
+  <Import Project="..\CatSystem2.props" />
 
   <!-- Package Settings -->
   <PropertyGroup>

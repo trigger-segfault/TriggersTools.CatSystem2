@@ -1,5 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <!-- Project Settings -->
+  <PropertyGroup>
+    <TargetFrameworks>net451;net46;netstandard2.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RootNamespace>TriggersTools.CatSystem2</RootNamespace>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+  
   <!-- Configurations -->
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <DefineConstants>TRACE;DEBUG;NATIVE_ZLIB;NATIVE_ASMODEAN;JSON;CAT_DEBUG</DefineConstants>
@@ -9,7 +18,7 @@
   </PropertyGroup>
 
   <!-- Global Properties -->
-  <Import Project="$(SolutionDir)src\CatSystem2.props" />
+  <Import Project="..\CatSystem2.props" />
 
   <!-- Package Settings -->
   <PropertyGroup>
@@ -17,6 +26,18 @@
     <Product>TriggersTools.CatSystem2</Product>
     <Description>A library for working with CatSystem2 visual novel engine file formats.</Description>
     <PackageTags>catsystem2 visual novel vn translation</PackageTags>
+
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Robert Jordan</Authors>
+    <Company>Trigger's Tools &amp; Games</Company>
+    <Copyright>Copyright © Robert Jordan $([System.DateTime]::Now.Year)</Copyright>
+    <PackageTags>catsystem2 visual novel vn translation</PackageTags>
+
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/trigger-death/TriggersTools.CatSystem2</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/trigger-death/TriggersTools.CatSystem2</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/trigger-death/TriggersTools.CatSystem2/blob/master/License.md</PackageLicenseUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/trigger-death/TriggersTools.CatSystem2/master/NuGetIcon.png</PackageIconUrl>
   </PropertyGroup>
 
   <!-- Shared Project -->
