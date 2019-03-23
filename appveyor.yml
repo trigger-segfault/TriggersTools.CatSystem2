@@ -41,12 +41,12 @@ init:
 
       $env:runNugetDeploy  = "true";
       $env:buildVersion    = "$env:baseVersion.$env:appveyor_build_number";
-      $env:packageVersion  = "$env:baseVersion-build-$env:appveyor_build_number";
+      $env:packageVersion  = "$env:baseVersion-build.$env:appveyor_build_number";
     } else {
       echo "==== TEST BUILD ====";
 
       $env:buildVersion    = "$env:baseVersion.$env:appveyor_build_number";
-      $env:packageVersion  = "$env:baseVersion-test-$env:appveyor_build_number";
+      $env:packageVersion  = "$env:baseVersion-test.$env:appveyor_build_number";
     }
     Update-AppveyorBuild -Version $env:buildVersion;
 
