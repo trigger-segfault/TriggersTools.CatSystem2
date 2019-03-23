@@ -27,7 +27,7 @@
 
   <!-- ILRepack Properties -->
   <PropertyGroup>
-    <ILRepackTargetsFile>$(SolutionDir)src\ILRepack.targets</ILRepackTargetsFile>
+    <ILRepackTargetsFile>$(MSBuildThisFileDirectory)ILRepack.targets</ILRepackTargetsFile>
   </PropertyGroup>
 
   <!-- Configurations -->

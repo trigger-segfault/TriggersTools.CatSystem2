@@ -16,6 +16,7 @@ dotnet_csproj:
   informational_version: '$(packageVersion)'
 
 build:
+  project: src/TriggersTools.CatSystem2/TriggersTools.CatSystem2.csproj
   verbosity: minimal
 
 branches:

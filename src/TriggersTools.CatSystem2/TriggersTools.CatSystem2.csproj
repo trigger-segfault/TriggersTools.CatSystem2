@@ -18,7 +18,7 @@
   </PropertyGroup>
 
   <!-- Global Properties -->
-  <Import Project="$(SolutionDir)src\CatSystem2.props" />
+  <Import Project="$(MSBuildThisFileDirectory)..\CatSystem2.props" />
 
   <!-- Package Settings -->
   <PropertyGroup>
