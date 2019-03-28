@@ -49,7 +49,7 @@ namespace TriggersTools.CatSystem2.Patcher {
 		public static void ResourceScrape(string fileName, string outputDir) {
 			Directory.CreateDirectory(outputDir);
 			StringBuilder language = new StringBuilder();
-			ResourceInfo resourceInfo = new ResourceInfo(fileName);
+			ResourceInfo resourceInfo = new ResourceInfo(fileName, ResourceKnownTypes.LoadSettings);
 			foreach (Resource resource in resourceInfo) {
 				StringBuilder normal = new StringBuilder();
 				string path = null;

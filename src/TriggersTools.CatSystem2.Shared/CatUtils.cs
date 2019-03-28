@@ -372,6 +372,7 @@ namespace TriggersTools.CatSystem2 {
 		}
 		/// <summary>
 		///  Attempts to locate the first executable with V_CODEs in the CatSytem2 game install directory.
+		///  Checks every extension except .bak.
 		/// </summary>
 		/// <param name="installDir">The installation directory to check the files of.</param>
 		/// <returns>The file path of an executable that contains V_CODEs, or null if none was found.</returns>
@@ -383,7 +384,22 @@ namespace TriggersTools.CatSystem2 {
 			return FindCatExecutables(installDir).FirstOrDefault();
 		}
 		/// <summary>
+		///  Attempts to locate the first executable with V_CODEs in the CatSytem2 game install directory.
+		///  Only checks the specified extensions.
+		/// </summary>
+		/// <param name="installDir">The installation directory to check the files of.</param>
+		/// <param name="extensions">The extensions of the files to check.</param>
+		/// <returns>The file path of an executable that contains V_CODEs, or null if none was found.</returns>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="installDir"/> is null.
+		/// </exception>
+		public static string FindCatExecutable(string installDir, params string[] extensions) {
+			return FindCatExecutables(installDir, extensions).FirstOrDefault();
+		}
+		/// <summary>
 		///  Attempts to locate all executables with V_CODEs in the CatSytem2 game install directory.
+		///  Checks every extension except .bak.
 		/// </summary>
 		/// <param name="installDir">The installation directory to check the files of.</param>
 		/// <returns>A collection of executable paths that contain V_CODEs.</returns>
@@ -395,7 +411,26 @@ namespace TriggersTools.CatSystem2 {
 			foreach (string file in Directory.EnumerateFiles(installDir)) {
 				string ext = Path.GetExtension(file).ToLower();
 				if (ext != ".bak" && IsCatExecutable(file))
-					yield return installDir;
+					yield return file;
+			}
+		}
+		/// <summary>
+		///  Attempts to locate all executables with V_CODEs in the CatSytem2 game install directory.
+		///  Only checks the specified extensions.
+		/// </summary>
+		/// <param name="installDir">The installation directory to check the files of.</param>
+		/// <param name="extensions">The extensions of the files to check.</param>
+		/// <returns>A collection of executable paths that contain V_CODEs.</returns>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="installDir"/> is null.
+		/// </exception>
+		public static IEnumerable<string> FindCatExecutables(string installDir, params string[] extensions) {
+			foreach (string file in Directory.EnumerateFiles(installDir)) {
+				string ext = Path.GetExtension(file);
+				bool extMatches = extensions.Any(e => e.Equals(ext, StringComparison.InvariantCultureIgnoreCase));
+				if (extMatches && IsCatExecutable(file))
+					yield return file;
 			}
 		}
 

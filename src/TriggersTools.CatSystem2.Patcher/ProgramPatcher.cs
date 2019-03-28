@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using TriggersTools.Windows.Resources.Manifest;
 using TriggersTools.Windows.Resources;
 using System.ComponentModel;
+using TriggersTools.SharpUtils.Exceptions;
 
 namespace TriggersTools.CatSystem2.Patcher {
 	/*/// <summary>
@@ -176,13 +177,21 @@ namespace TriggersTools.CatSystem2.Patcher {
 				// Backup the executable
 				File.Copy(Executable, ExecutableBackup);
 			}
-			
+
 			// Attempt to patch the executable
-			bool result = PatchInternal();
+			bool result = false;
+			Exception exception = null;
+			try {
+				result = PatchInternal();
+			} catch (Exception ex) {
+				exception = ex;
+			}
 
 			if (!result) {
 				// Restore the backup executable and overwrite the botched patch
 				File.Copy(ExecutableBackup, Executable, true);
+				Restore();
+				exception?.Rethrow();
 			}
 
 			return result;
@@ -193,6 +202,10 @@ namespace TriggersTools.CatSystem2.Patcher {
 				if (PEInfo.Scan(srcFileName).MD5 != MD5)
 					return false;
 			}*/
+
+			if (!PrePatch())
+				return false;
+
 			if (BinaryPatches.Count != 0) {
 				Thread.Sleep(300);
 				using (Stream inStream = File.OpenRead(ExecutableBackup))
@@ -206,7 +219,7 @@ namespace TriggersTools.CatSystem2.Patcher {
 				}
 			}
 			if (signaturePatcher != null || ResourcePatches.Count != 0) {
-				ResourceInfo resourceInfo = new ResourceInfo(Executable);
+				ResourceInfo resourceInfo = new ResourceInfo(Executable, ResourceKnownTypes.LoadSettings);
 
 				HashSet<Resource> patchedResources = new HashSet<Resource>();
 
@@ -220,7 +233,7 @@ namespace TriggersTools.CatSystem2.Patcher {
 				}
 				//foreach (Resource resource in resourceInfo.Resources.Values.SelectMany(list => list)) {
 				foreach (Resource resource in resourceInfo) {
-						foreach (IResourcePatch patch in ResourcePatches) {
+					foreach (IResourcePatch patch in ResourcePatches) {
 						if (patch.IsPatchable(resource)) {
 							if (!patch.Patch(resource))
 								return false;
@@ -233,10 +246,31 @@ namespace TriggersTools.CatSystem2.Patcher {
 					return false;
 			}
 
-			if (!AdditionalPatch())
+			if (!PostPatch())
 				return false;
 			
 
+			return true;
+		}
+
+		protected static bool RestoreFile(string file) {
+			string bak = $"{file}.bak";
+			if (File.Exists(bak)) {
+				if (!FileRetry(() => File.Copy(bak, file, true)))
+					return false;
+			}
+			return true;
+		}
+		protected static bool BackupFile(string file, bool restore) {
+			string bak = $"{file}.bak";
+			if (!File.Exists(bak)) {
+				if (!FileRetry(() => File.Copy(file, bak)))
+					return false;
+			}
+			else if (restore) {
+				if (!FileRetry(() => File.Copy(bak, file, true)))
+					return false;
+			}
 			return true;
 		}
 
@@ -301,7 +335,9 @@ namespace TriggersTools.CatSystem2.Patcher {
 			return null;
 		}
 
-		protected virtual bool AdditionalPatch() => true;
+		protected virtual bool PrePatch() => true;
+		protected virtual bool PostPatch() => true;
+		protected virtual void Restore() { }
 
 		#endregion
 	}

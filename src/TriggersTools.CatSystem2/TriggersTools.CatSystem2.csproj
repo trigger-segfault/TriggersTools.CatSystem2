@@ -49,12 +49,10 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
-    <PackageReference Include="TriggersTools.SharpUtils" Version="1.0.1-build-45">
+    <PackageReference Include="TriggersTools.SharpUtils" Version="1.0.3-build-000049">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="TriggersTools.Windows.Resources.Core" Version="1.0.0-build-9">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
+    <PackageReference Include="TriggersTools.Windows.Resources.Core" Version="1.0.2-build-000011" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
     <PackageReference Include="System.Drawing.Common" Version="4.5.1" />

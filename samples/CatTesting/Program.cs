@@ -21,6 +21,7 @@ using Newtonsoft.Json;
 using TriggersTools.CatSystem2.Scenes;
 using TriggersTools.CatSystem2.Scenes.Commands;
 using TriggersTools.CatSystem2;
+using TriggersTools.CatSystem2.Patcher;
 
 namespace TriggersTools.CatSystem2.Testing {
 	class JsonTest {
@@ -42,6 +43,12 @@ namespace TriggersTools.CatSystem2.Testing {
 		[DllImport("kernel32.dll", EntryPoint = "CopyMemory", SetLastError = false)]
 		private static unsafe extern void CopyMemory(void* dest, void* src, IntPtr count);
 		static void Main(string[] args) {
+			CS2Patcher cs2Patch = new CS2Patcher {
+				InstallDir = @"C:\Programs\Games\Frontwing\Eden of Grisaia - Copy (2)",
+			};
+			Console.WriteLine(cs2Patch.Patch());
+			Console.WriteLine("FINISHED");
+			Console.ReadLine();
 			/*Stopwatch buf1w = new Stopwatch();
 			Stopwatch buf2w = new Stopwatch();
 			const int maxSize = 64 * 64 * 2;

@@ -53,7 +53,7 @@ namespace TriggersTools.CatSystem2.Patcher.Patches {
 		/// <param name="name">The resource name.</param>
 		/// <param name="language">The optional resource langauge.</param>
 		public ResourcePatch(ResourceId name, ushort? language = null) {
-			Name = name.ToString();
+			Name = name;
 			if (language.HasValue)
 				Language = language.Value;
 			IgnoreLanguage = !language.HasValue;
@@ -76,6 +76,13 @@ namespace TriggersTools.CatSystem2.Patcher.Patches {
 		/// <param name="resource">The resource to patch.</param>
 		/// <returns>True if this patch can be used on this resource.</returns>
 		public virtual bool IsPatchable(Resource resource) {
+			if (GetType() == typeof(DialogStringsPatch)) {
+				if (Name != ResourceId.Null && resource.Name != Name)
+					return false;
+				if (resource?.GetType() != typeof(T))
+					return false;
+				return true;
+			}
 			if (Name != ResourceId.Null && resource.Name != Name)
 				return false;
 			return resource?.GetType() == typeof(T);

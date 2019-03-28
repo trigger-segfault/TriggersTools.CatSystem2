@@ -1,9 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 using Newtonsoft.Json;
 using TriggersTools.SharpUtils.Text;
 using TriggersTools.Windows.Resources;
 using TriggersTools.CatSystem2.Utils;
+using TriggersTools.CatSystem2.Exceptions;
 
 namespace TriggersTools.CatSystem2 {
 	/// <summary>
@@ -12,12 +14,13 @@ namespace TriggersTools.CatSystem2 {
 	public sealed partial class VCodes {
 		#region Constants
 
-		public const string KeyCodeType = "KEY_CODE";
-		public const string KeyCodeName = "KEY";
-		public const string VCodeType = "V_CODE";
-		public const string VCodeName = "DATA";
-		public const string VCode2Type = "V_CODE2";
-		public const string VCode2Name = "DATA";
+		private const string KeyCodeType = "KEY_CODE";
+		private const string KeyCodeName = "KEY";
+		private const string VCodeType = "V_CODE";
+		private const string VCodeName = "DATA";
+		private const string VCode2Type = "V_CODE2";
+		private const string VCode2Name = "DATA";
+		private const ushort Language = CatUtils.LanguageIdentifier;
 
 		private static readonly byte[] Cs2KeyCode = { 0xBA, 0xA4, 0xA3, 0xA9, 0xA0, 0xA4, 0xA1, 0xA1 };
 		private static readonly byte[] Cs2VCodes = {
@@ -71,12 +74,18 @@ namespace TriggersTools.CatSystem2 {
 		private VCodes(string exeFile) {
 			// We're using this here so that we can dispose of the loaded module after we're done.
 			// We'll still keep the loaded resources.
-			using (resInfo = new ResourceInfo(exeFile, false)) {
-				IntPtr hModule = resInfo.ModuleHandle;
-				ushort language = CatUtils.LanguageIdentifier;
-				resInfo.Add(keyCodeRes = new GenericResource(hModule, KeyCodeType, KeyCodeName, language));
-				resInfo.Add(vcodeRes = new GenericResource(hModule, VCodeType, VCodeName, language));
-				resInfo.Add(vcode2Res = new GenericResource(hModule, VCode2Type, VCode2Name, language));
+			try {
+				using (resInfo = new ResourceInfo(exeFile, false)) {
+					IntPtr hModule = resInfo.ModuleHandle;
+					keyCodeRes = resInfo.LoadGeneric(KeyCodeType, KeyCodeName, Language);
+					vcodeRes = resInfo.LoadGeneric(VCodeType, VCodeName, Language);
+					vcode2Res = resInfo.LoadGeneric(VCode2Type, VCode2Name, Language);
+					/*resInfo.Add(keyCodeRes = new GenericResource(hModule, KeyCodeType, KeyCodeName, Language));
+					resInfo.Add(vcodeRes = new GenericResource(hModule, VCodeType, VCodeName, Language));
+					resInfo.Add(vcode2Res = new GenericResource(hModule, VCode2Type, VCode2Name, Language));*/
+				}
+			} catch (ResourceIOException ex) {
+				throw new VCodesException(ex);
 			}
 		}
 
@@ -165,7 +174,43 @@ namespace TriggersTools.CatSystem2 {
 				throw new ArgumentNullException(nameof(exeFile));
 			if (string.IsNullOrWhiteSpace(exeFile))
 				throw new ArgumentException($"{nameof(exeFile)} is empty or whitespace!", nameof(exeFile));
-			resInfo.Save(exeFile);
+			try {
+				resInfo.Save(exeFile);
+			} catch (ResourceIOException ex) {
+				throw new VCodesException(ex);
+			}
+		}
+
+		#endregion
+
+		#region HasVCodes
+
+		/// <summary>
+		///  Returns true if the executable file has V_CODE resources.
+		/// </summary>
+		/// <param name="exeFile">The executable file to check.</param>
+		/// <returns>True if the executable file has V_CODE resources.</returns>
+		/// 
+		/// <exception cref="ArgumentNullException">
+		///  <paramref name="exeFile"/> is null.
+		/// </exception>
+		/// <exception cref="ArgumentException">
+		///  <paramref name="exeFile"/> is empty or whitespace.
+		/// </exception>
+		/// <exception cref="FileNotFoundException">
+		///  <paramref name="exeFile"/> could not be found.
+		/// </exception>
+		public static bool HasVCodes(string exeFile) {
+			if (exeFile == null)
+				throw new ArgumentNullException(nameof(exeFile));
+			if (string.IsNullOrWhiteSpace(exeFile))
+				throw new ArgumentException($"{nameof(exeFile)} is empty or whitespace!", nameof(exeFile));
+			try {
+				new VCodes(exeFile);
+				return true;
+			} catch (ResourceIOException) {
+				return false;
+			}
 		}
 
 		#endregion
@@ -236,7 +281,7 @@ namespace TriggersTools.CatSystem2 {
 		///  Gets the string representation of the V_CODEs.
 		/// </summary>
 		/// <returns>The string representation of the V_CODEs.</returns>
-		public override string ToString() => $"V_CODE=\"{VCode}\" V_CODE2={VCode2}";
+		public override string ToString() => $"V_CODE=\"{VCode}\" V_CODE2=\"{VCode2}\"";
 
 		#endregion
 	}

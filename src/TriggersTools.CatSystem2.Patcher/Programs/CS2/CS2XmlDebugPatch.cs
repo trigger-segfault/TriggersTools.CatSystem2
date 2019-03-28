@@ -11,12 +11,12 @@ using TriggersTools.SharpUtils.IO;
 namespace TriggersTools.CatSystem2.Patcher.Programs.CS2 {
 	public class CS2XmlDebugPatch {
 		public string XmlFile { get; }
-		public string DebugKeysXmlFragment { get; }
+		public string DebugKeybindsXmlFragment { get; }
 		public bool DebugSaveFolder { get; }
 
 		public CS2XmlDebugPatch(string xmlFile, bool debugSaveFolder, string resourcePath) {
-			string debugKeysXmlPath = Embedded.Combine(resourcePath, "debug_keys.xml");
-			DebugKeysXmlFragment = Embedded.ReadAllText(debugKeysXmlPath);
+			string debugKeybindsXmlPath = Embedded.Combine(resourcePath, "debug_keybinds.xml");
+			DebugKeybindsXmlFragment = Embedded.ReadAllText(debugKeybindsXmlPath);
 			XmlFile = xmlFile;
 			DebugSaveFolder = debugSaveFolder;
 		}
@@ -67,7 +67,7 @@ namespace TriggersTools.CatSystem2.Patcher.Programs.CS2 {
 
 			// Add debug keys back to game, (translated)
 			XmlDocumentFragment debugKeysFrag = doc.CreateDocumentFragment();
-			debugKeysFrag.InnerXml = DebugKeysXmlFragment;
+			debugKeysFrag.InnerXml = DebugKeybindsXmlFragment;
 			if (doc.SelectSingleNode("//document/KEYCUSTOMIZE") is XmlElement keyCustomize) {
 				for (int i = 0; i < debugKeysFrag.ChildNodes.Count; i++) {
 					XmlNode node = debugKeysFrag.ChildNodes[i];

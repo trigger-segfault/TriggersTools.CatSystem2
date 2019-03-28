@@ -30,10 +30,10 @@
     <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.16.1">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="TriggersTools.SharpUtils" Version="1.0.1-build-45">
+    <PackageReference Include="TriggersTools.SharpUtils" Version="1.0.3-build-000049">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="TriggersTools.Windows.Resources.Core" Version="1.0.0-build-9">
+    <PackageReference Include="TriggersTools.Windows.Resources.Core" Version="1.0.2-build-000011">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>

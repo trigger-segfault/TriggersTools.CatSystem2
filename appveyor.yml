@@ -1,6 +1,9 @@
 version: '0.0.1.{build}'
 environment:
-  baseVersion: '1.0.1'
+  baseVersion: '1.0.2'
+  releaseBuild: ''
+  preLabel: 'build'
+  prePadding: 6
   
 image: Visual Studio 2017
 configuration: Release
@@ -26,27 +29,41 @@ branches:
 init:
 - ps: >-
     $env:runNugetDeploy  = "false";
-    $env:runNugetRelease = "false"; 
-    
+
+    if ($env:releaseBuild) {
+      $releaseBuildVersion   = "$env:baseVersion.$env:releaseBuild";
+      $releasePackageVersion = "$env:baseVersion.$env:releaseBuild";
+    } else {
+      $releaseBuildVersion   = "$env:baseVersion.0";
+      $releasePackageVersion = "$env:baseVersion";
+    }
+    $preBuildVersion    = "$env:baseVersion.$env:appveyor_build_number";
+    $preCounterPadded   = "$env:appveyor_build_number".PadLeft($env:prePadding, "0");
+    $prePackageVersion  = "$env:baseVersion-$env:preLabel-$preCounterPadded";
+
     if (!$env:APPVEYOR_REPO_COMMIT_MESSAGE_EXTENDED) { $env:APPVEYOR_REPO_COMMIT_MESSAGE_EXTENDED = " " }
     if ($env:APPVEYOR_REPO_COMMIT_MESSAGE_EXTENDED.Contains("[release]")) {
       echo "==== RELEASE BUILD ====";
 
       $env:runNugetDeploy  = "true";
-      $env:runNugetRelease = "true";
-      $env:buildVersion    = "$env:baseVersion.0";
-      $env:packageVersion  = "$env:baseVersion";
+      $env:buildVersion    = "$releaseBuildVersion";
+      $env:packageVersion  = "$releasePackageVersion";
     } elseif ($env:APPVEYOR_REPO_COMMIT_MESSAGE_EXTENDED.Contains("[build]")) {
       echo "==== PRE-RELEASE BUILD ====";
 
       $env:runNugetDeploy  = "true";
-      $env:buildVersion    = "$env:baseVersion.$env:appveyor_build_number";
-      $env:packageVersion  = "$env:baseVersion-build.$env:appveyor_build_number";
+      $env:buildVersion    = "$preBuildVersion";
+      $env:packageVersion  = "$prePackageVersion";
     } else {
       echo "==== TEST BUILD ====";
 
-      $env:buildVersion    = "$env:baseVersion.$env:appveyor_build_number";
-      $env:packageVersion  = "$env:baseVersion-test.$env:appveyor_build_number";
+      echo "Prerelease Build Version = $preBuildVersion";
+      echo "Prerelease Package Version = $prePackageVersion";
+      echo "Release Build Version = $releaseBuildVersion";
+      echo "Release Package Version = $releasePackageVersion";
+
+      $env:buildVersion    = "$preBuildVersion";
+      $env:packageVersion  = "$prePackageVersion";
     }
     Update-AppveyorBuild -Version $env:buildVersion;
 

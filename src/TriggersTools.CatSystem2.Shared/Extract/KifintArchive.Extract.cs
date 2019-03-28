@@ -339,7 +339,7 @@ namespace TriggersTools.CatSystem2 {
 		}
 
 		#endregion
-		
+
 		#region Extract
 		
 		/// <summary>

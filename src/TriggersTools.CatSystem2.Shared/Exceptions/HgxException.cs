@@ -8,7 +8,7 @@ namespace TriggersTools.CatSystem2.Exceptions {
 	/// <summary>
 	///  An exception thrown during failure to extract an <see cref="HgxImage"/>.
 	/// </summary>
-	public class HgxException : ExtractException {
+	public class HgxException : CatExtractException {
 		#region Constants
 
 		/// <summary>
@@ -20,13 +20,13 @@ namespace TriggersTools.CatSystem2.Exceptions {
 
 		#region Constructors
 
-		public HgxException() : base(CorruptMessage) { }
-		public HgxException(string message) : base($"{message} {CorruptMessage}") { }
-		public HgxException(string message, Exception innerException)
+		internal HgxException() : base(CorruptMessage) { }
+		internal HgxException(string message) : base($"{message} {CorruptMessage}") { }
+		internal HgxException(string message, Exception innerException)
 			: base($"{message} {CorruptMessage}", innerException)
 		{
 		}
-		public HgxException(Exception innerException)
+		internal HgxException(Exception innerException)
 			: base($"{innerException.Message} {CorruptMessage}", innerException)
 		{
 		}
